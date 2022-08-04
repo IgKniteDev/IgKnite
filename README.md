@@ -25,7 +25,7 @@ The original idea for IgKnite has long been in the brainstorming sessions of a f
 
 <br><br>
 
-## [License]()
+## [License](LICENSE)
 
 ```
 MIT License
