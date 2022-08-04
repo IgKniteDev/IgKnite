@@ -9,6 +9,11 @@ That one Discord bot with fully open-source slash powers!
 
 </div>
 
+<br>
+
+:warning: | This project is still under development and does not have a proper release yet.
+---|---
+
 <br><br>
 
 ## Motive
