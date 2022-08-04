@@ -7,12 +7,12 @@ That one Discord bot with fully open-source slash powers!
 ![GitHub Watchers](https://img.shields.io/github/watchers/hitblast/IgKnite?color=white&label=Watchers)
 ![GitHub Stars](https://img.shields.io/github/stars/hitblast/IgKnite?color=black&style=social)
 
-</div>
-
 <br>
 
 :warning: | This project is still under development and does not have a proper release yet.
 ---|---
+
+</div>
 
 <br><br>
 
