@@ -52,21 +52,21 @@ except UndefinedValueError:
     exit()
 
 
-# Overriding commands.InteractionBot to set up our own instance.
-class Bot(commands.InteractionBot):
+# Overriding commands.AutoShardedInteractionBot to set up our own instance.
+class Bot(commands.AutoShardedInteractionBot):
     def __init__(self):
         super().__init__(intents=disnake.Intents.all())
         self.task_update_presence.start()
 
-    async def on_connect(self):
+    async def on_connect(self) -> None:
         os.system('clear')
         print(f'{self.user} | Connected to Discord\n')
 
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         print(f'Deployed in {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.')
 
     @tasks.loop(seconds=200)
-    async def task_update_presence(self):
+    async def task_update_presence(self) -> None:
         await self.change_presence(
             status=disnake.Status.dnd,
             activity=disnake.Activity(
@@ -76,18 +76,19 @@ class Bot(commands.InteractionBot):
         )
 
     @task_update_presence.before_loop
-    async def task_before_updating_presence(self):
+    async def task_before_updating_presence(self) -> None:
         await self.wait_until_ready()
 
-    async def on_message(self, message: disnake.Message):
+    async def on_message(self, message: disnake.Message) -> None:
         if message.author == self.user:
             return
 
 
-# Set up an instance of Bot and install uvloop for async optimization.
+# Set up an instance of Bot.
 bot = Bot()
 
 
 # Run the bot.
 if __name__ == '__main__':
+    bot.load_extensions('cogs')
     bot.run(tokens['discord'])
