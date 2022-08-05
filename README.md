@@ -26,7 +26,7 @@ The goal, in this case, is simply to create a Discord bot that uses Discord's bl
 
 ## Tech Stack
 
-The original idea for IgKnite has long been in the brainstorming sessions of a few developers. In fact, a bot wrapped with the [discord.py](https://github.com/Rapptz/discord.py) library was also put together to be hosted for the public. Following that very idea, IgKnite will be wrapped with the [disnake](https://github.com/DisnakeDev/disnake) library **(for now, until discord.py catches up)** and will have its future development done with the help of other Python libraries as well. The noting will be done gradually with the development of the first release.
+The original idea for IgKnite has long been in the brainstorming sessions of a few developers. In fact, a bot wrapped with the [discord.py](https://github.com/Rapptz/discord.py) library was also put together to be hosted for the public. Following that very idea, IgKnite is being wrapped with the [disnake](https://github.com/DisnakeDev/disnake) library **(for now, until discord.py catches up)** and will have its future development done with the help of other Python libraries as well. The noting will be done gradually with the development of the first release.
 
 <br><br>
 
