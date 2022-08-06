@@ -1,5 +1,5 @@
 '''
-The core package for IgKnite
+The core package for IgKnite.
 ---
 
 MIT License
@@ -27,5 +27,5 @@ SOFTWARE.
 
 
 # Set version number.
-__version_info__ = ('2022', '8', '5')
+__version_info__ = ('2022', '8', '6')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)

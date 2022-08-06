@@ -71,7 +71,7 @@ class Bot(commands.AutoShardedInteractionBot):
             status=disnake.Status.dnd,
             activity=disnake.Activity(
                 type=disnake.ActivityType.listening,
-                name=f'Injected in {len(self.guilds)} server(s)!'
+                name=f'slashes inside {len(self.guilds)} server(s)!'
             )
         )
 
