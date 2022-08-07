@@ -27,5 +27,5 @@ SOFTWARE.
 
 
 # Set version number.
-__version_info__ = ('2022', '8', '6')  # Year.Month.Day
+__version_info__ = ('2022', '8', '7')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
