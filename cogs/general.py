@@ -27,6 +27,8 @@ SOFTWARE.
 
 
 # Imports.
+import time
+
 import disnake
 from disnake import Option, OptionType
 from disnake.ext import commands
@@ -36,9 +38,6 @@ from disnake.ext import commands
 class General(commands.Cog):
     def __init__(self, bot: commands.AutoShardedInteractionBot) -> None:
         self.bot = bot
-
-    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
-        await inter.response.defer()
 
     @commands.slash_command(
         name='avatar',
@@ -58,6 +57,34 @@ class General(commands.Cog):
             )
         )
         await inter.send(embed=embed)
+
+    @commands.slash_command(
+        name='ping',
+        description='Shows my current response time.'
+    )
+    @commands.guild_only()
+    async def _ping(self, inter: disnake.CommandInter) -> None:
+        system_latency = round(self.bot.latency * 1000)
+
+        start_time = time.time()
+        await inter.response.defer()
+        end_time = time.time()
+
+        api_latency = round((end_time - start_time) * 1000)
+
+        embed = (
+            disnake.Embed().add_field(
+                name='System Latency',
+                value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
+                inline=False
+            ).add_field(
+                name='API Latency',
+                value=f'{api_latency}ms'
+            ).set_footer(
+                icon_url=inter.author.avatar
+            )
+        )
+        await inter.edit_original_message(content=None, embed=embed)
 
 
 # The setup() function for the cog.
