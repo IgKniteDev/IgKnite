@@ -95,5 +95,5 @@ bot = Bot()
 
 # Run the bot.
 if __name__ == '__main__':
-    bot.load_extensions('cogs')
+    bot.load_extension('cogs')
     bot.run(tokens['discord'])
