@@ -46,7 +46,8 @@ class General(commands.Cog):
         description='Displays the avatar / profile picture of a server member.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user)
-        ]
+        ],
+        dm_permission=False
     )
     async def _avatar(self, inter: disnake.CommandInter, member: disnake.Member = None):
         member = inter.author if not member else member
@@ -60,9 +61,9 @@ class General(commands.Cog):
 
     @commands.slash_command(
         name='ping',
-        description='Shows my current response time.'
+        description='Shows my current response time.',
+        dm_permission=False
     )
-    @commands.guild_only()
     async def _ping(self, inter: disnake.CommandInter) -> None:
         system_latency = round(self.bot.latency * 1000)
 
