@@ -41,7 +41,7 @@ def generate_footer() -> str:
     return random.choice(samples)
 
 
-# Override disnake.Embed class to form custom embeds.
+# Overwrite disnake.Embed class to form custom embeds.
 class ClassicEmbed(disnake.Embed):
     '''
     Represents an embed common to all the normal commands.
