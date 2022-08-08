@@ -1,5 +1,5 @@
 '''
-The core package for IgKnite.
+Global variables and instances for the core package.
 ---
 
 MIT License
@@ -26,10 +26,15 @@ SOFTWARE.
 '''
 
 
-# Initialize scripts.
-from . import global_ as global_
+def initialize() -> None:
+    '''
+    Initialize the global variables required to run all commands properly inside IgKnite.\n
+    - Note: This function only needs to be called 'once' inside the root script (main.py).
+    '''
 
+    # Structure:
+    #
+    # global variable_name
+    # variable_name: type = value
 
-# Set version number.
-__version_info__ = ('2022', '8', '7')  # Year.Month.Day
-__version__ = '.'.join(__version_info__)
+    pass
