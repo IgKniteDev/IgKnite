@@ -62,7 +62,6 @@ class General(commands.Cog):
     @commands.slash_command(
         name='ping',
         description='Shows my current response time.',
-        dm_permission=False
     )
     async def _ping(self, inter: disnake.CommandInter) -> None:
         system_latency = round(self.bot.latency * 1000)
