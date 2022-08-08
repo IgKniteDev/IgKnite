@@ -33,6 +33,8 @@ import disnake
 from disnake import Option, OptionType
 from disnake.ext import commands
 
+import core
+
 
 # The actual cog.
 class General(commands.Cog):
@@ -49,13 +51,11 @@ class General(commands.Cog):
     async def _avatar(self, inter: disnake.CommandInter, member: disnake.Member = None):
         member = inter.author if not member else member
 
-        embed = (
-            disnake.Embed(
-                title='Here\'s what I found!',
-            ).set_image(
-                url=member.avatar
-            )
+        embed = core.embeds.ClassicEmbed(inter).set_image(
+            url=member.avatar
         )
+        embed.title = 'Here\'s what I found!'
+
         await inter.send(embed=embed)
 
     @commands.slash_command(
@@ -67,23 +67,20 @@ class General(commands.Cog):
         system_latency = round(self.bot.latency * 1000)
 
         start_time = time.time()
-        await inter.response.defer()
+        await inter.response.defer()  # TODO: Might need to rethink the structure for this command.
         end_time = time.time()
 
         api_latency = round((end_time - start_time) * 1000)
 
-        embed = (
-            disnake.Embed().add_field(
-                name='System Latency',
-                value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
-                inline=False
-            ).add_field(
-                name='API Latency',
-                value=f'{api_latency}ms'
-            ).set_footer(
-                icon_url=inter.author.avatar
-            )
+        embed = core.embeds.ClassicEmbed(inter).add_field(
+            name='System Latency',
+            value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
+            inline=False
+        ).add_field(
+            name='API Latency',
+            value=f'{api_latency}ms'
         )
+
         await inter.edit_original_message(content=None, embed=embed)
 
 
