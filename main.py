@@ -33,6 +33,11 @@ from disnake.ext import commands, tasks
 
 from decouple import config, UndefinedValueError
 
+from core import global_
+
+
+# Initialize the global variables from core.global_ .
+global_.initialize()
 
 # Fetch the secrets.
 try:
@@ -54,7 +59,7 @@ except UndefinedValueError:
 
 # Overriding commands.AutoShardedInteractionBot to set up our own instance.
 class Bot(commands.AutoShardedInteractionBot):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(intents=disnake.Intents.all())
         self.task_update_presence.start()
 
