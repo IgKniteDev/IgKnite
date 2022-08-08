@@ -58,7 +58,7 @@ class ClassicEmbed(disnake.Embed):
         )
 
 
-class ErrorEmbed(ClassicEmbed):
+class ErrorEmbed(disnake.Embed):
     '''
     Represents an embed common to all error messages.
     '''
