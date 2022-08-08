@@ -51,7 +51,7 @@ try:
 except UndefinedValueError:
     print('''
         One or more secrets have been left undefined.
-        Consider going through the README.md file for proper instructions on setting Veron1CA up.
+        Consider going through the README.md file for proper instructions on setting IgKnite up.
     ''')
     time.sleep(5)
     exit()
