@@ -28,6 +28,7 @@ SOFTWARE.
 
 # Imports.
 import time
+from datetime import datetime
 
 import disnake
 from disnake import Option, OptionType
@@ -82,6 +83,35 @@ class General(commands.Cog):
         )
 
         await inter.edit_original_message(content=None, embed=embed)
+
+    @commands.slash_command(
+        name="guildinfo",
+        description="Shows all important info on the current guild."
+    )
+    @commands.guild_only()
+    async def _guildinfo(self, inter: disnake.CommandInter) -> None:
+        embed = core.embeds.ClassicEmbed(inter).add_field(
+            name="Birth",
+            value=f"{datetime.strptime(str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%b %d, %Y')}",
+        ).add_field(
+            name="Owner",
+            value=f"<@{inter.guild.owner_id}>"
+        ).add_field(
+            name="Members",
+            value=f"{inter.guild.member_count}"
+        ).add_field(
+            name="Roles",
+            value=f"{len(inter.guild.roles)}"
+        ).add_field(
+            name="Channels",
+            value=f"{len(inter.guild.text_channels)+len(inter.guild.voice_channels)}"
+        ).add_field(
+            name="Identifier",
+            value=f"{inter.guild_id}"
+        )
+        if inter.guild.icon is not None:
+            embed.set_thumbnail(url=f"{inter.guild.icon}")
+        await inter.send(embed=embed)
 
 
 # The setup() function for the cog.
