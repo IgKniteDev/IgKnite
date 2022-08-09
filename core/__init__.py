@@ -27,7 +27,7 @@ SOFTWARE.
 
 
 # Initialize scripts.
-from . import embeds as embeds, global_ as global_
+from . import dataclasses as dataclasses, embeds as embeds, global_ as global_
 
 
 # Set version number.
