@@ -3,15 +3,15 @@
 # IgKnite
 That one Discord bot with fully open-source slash powers!
 
-![GitHub License](https://img.shields.io/github/license/hitblast/IgKnite?color=white&label=License)
-![GitHub Watchers](https://img.shields.io/github/watchers/hitblast/IgKnite?color=white&label=Watchers)
-![GitHub Stars](https://img.shields.io/github/stars/hitblast/IgKnite?color=black&style=social)
-[![Linting (flake8)](https://github.com/hitblast/IgKnite/actions/workflows/linting.yml/badge.svg?branch=main)](https://github.com/hitblast/IgKnite/actions/workflows/linting.yml)
-
 <br>
 
 :warning: | This project is still under development and does not have a proper release yet.
 ---|---
+
+![GitHub License](https://img.shields.io/github/license/hitblast/IgKnite?color=white&label=License)
+![GitHub Watchers](https://img.shields.io/github/watchers/hitblast/IgKnite?color=white&label=Watchers)
+![GitHub Stars](https://img.shields.io/github/stars/hitblast/IgKnite?color=black&style=social)
+[![Linting (flake8)](https://github.com/hitblast/IgKnite/actions/workflows/linting.yml/badge.svg?branch=main)](https://github.com/hitblast/IgKnite/actions/workflows/linting.yml)
 
 </div>
 
