@@ -25,15 +25,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-# Imports
-from dataclasses import dataclass, field
-from typing import List
-
-
-@dataclass(frozen=True, order=True)
-class ModRoles:
-    roles: List[str] = field(default_factory=lambda: ['BotAdmin', 'BotMod'])
-
 
 def initialize() -> None:
     '''
