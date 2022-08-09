@@ -42,9 +42,9 @@ class Inspection(commands.Cog):
 
     @commands.slash_command(
         name='guildinfo',
-        description='Shows all important information about the server.'
+        description='Shows all important information about the server.',
+        dm_permission=False
     )
-    @commands.guild_only()
     async def _guildinfo(self, inter: disnake.CommandInter) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
