@@ -36,7 +36,9 @@ def generate_footer() -> str:
     samples = [
         'When pigs fly...',
         'Stunned stork!',
-        'A perfect debugged life doesn\'t exist.'
+        'A perfect debugged life doesn\'t exist.',
+        'Haven\'t I made it obvious?',
+        'Hello World, from the other side!'
     ]
     return random.choice(samples)
 
