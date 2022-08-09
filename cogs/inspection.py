@@ -50,7 +50,9 @@ class Inspection(commands.Cog):
     async def _guildinfo(self, inter: disnake.CommandInter) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
-            value=datetime.strptime(str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%b %d, %Y'),
+            value=datetime.strptime(
+                str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
+            ).strftime('%b %d, %Y'),
         ).add_field(
             name='Owner',
             value=inter.guild.owner.mention
@@ -68,7 +70,7 @@ class Inspection(commands.Cog):
             value=inter.guild_id
         )
 
-        if not inter.guild.icon:
+        if inter.guild.icon:
             embed.set_thumbnail(url=inter.guild.icon)
 
         await inter.send(embed=embed)
@@ -90,7 +92,9 @@ class Inspection(commands.Cog):
             value=member.status
         ).add_field(
             name='Birth',
-            value=datetime.strptime(str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%b %d, %Y')
+            value=datetime.strptime(
+                str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
+            ).strftime('%b %d, %Y')
         ).add_field(
             name='On Mobile',
             value=member.is_on_mobile()
