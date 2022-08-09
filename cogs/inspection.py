@@ -44,15 +44,15 @@ class Inspection(commands.Cog):
 
     @commands.slash_command(
         name='guildinfo',
-        description='Shows all important information about the server.'
+        description='Shows all important information about the server.',
+        dm_permission=False
     )
-    @commands.guild_only()
     async def _guildinfo(self, inter: disnake.CommandInter) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
-            value=datetime.strptime(
+            value=datetime.datetime.strptime(
                 str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
-            ).strftime('%b %d, %Y'),
+            ).strftime('%b %d, %Y')
         ).add_field(
             name='Owner',
             value=inter.guild.owner.mention
