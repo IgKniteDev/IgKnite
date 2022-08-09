@@ -1,5 +1,5 @@
 '''
-The `General` cog for IgKnite.
+The `Inspection` cog for IgKnite.
 ---
 
 MIT License
@@ -27,63 +27,51 @@ SOFTWARE.
 
 
 # Imports.
-import time
+import datetime
 
 import disnake
-from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
 
 
 # The actual cog.
-class General(commands.Cog):
+class Inspection(commands.Cog):
     def __init__(self, bot: commands.AutoShardedInteractionBot) -> None:
         self.bot = bot
 
     @commands.slash_command(
-        name='avatar',
-        description='Displays the avatar / profile picture of a server member.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user)
-        ],
-        dm_permission=False
+        name="guildinfo",
+        description="Shows all important info on the current guild."
     )
-    async def _avatar(self, inter: disnake.CommandInter, member: disnake.Member = None):
-        member = inter.author if not member else member
-
-        embed = core.embeds.ClassicEmbed(inter).set_image(
-            url=member.avatar
+    @commands.guild_only()
+    async def _guildinfo(self, inter: disnake.CommandInter) -> None:
+        embed = core.embeds.ClassicEmbed(inter).add_field(
+            name="Birth",
+            value=f"{datetime.strptime(str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%b %d, %Y')}",
+        ).add_field(
+            name="Owner",
+            value=f"<@{inter.guild.owner_id}>"
+        ).add_field(
+            name="Members",
+            value=f"{inter.guild.member_count}"
+        ).add_field(
+            name="Roles",
+            value=f"{len(inter.guild.roles)}"
+        ).add_field(
+            name="Channels",
+            value=f"{len(inter.guild.text_channels)+len(inter.guild.voice_channels)}"
+        ).add_field(
+            name="Identifier",
+            value=f"{inter.guild_id}"
         )
-        embed.title = 'Here\'s what I found!'
+
+        if not inter.guild.icon:
+            embed.set_thumbnail(url=f"{inter.guild.icon}")
 
         await inter.send(embed=embed)
-
-    @commands.slash_command(
-        name='ping',
-        description='Shows my current response time.',
-    )
-    async def _ping(self, inter: disnake.CommandInter) -> None:
-        system_latency = round(self.bot.latency * 1000)
-
-        start_time = time.time()
-        await inter.response.defer()  # TODO: Might need to rethink the structure for this command.
-        end_time = time.time()
-
-        api_latency = round((end_time - start_time) * 1000)
-
-        embed = core.embeds.ClassicEmbed(inter).add_field(
-            name='System Latency',
-            value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
-            inline=False
-        ).add_field(
-            name='API Latency',
-            value=f'{api_latency}ms'
-        )
-
-        await inter.edit_original_message(content=None, embed=embed)
 
 
 # The setup() function for the cog.
 def setup(bot: commands.AutoShardedInteractionBot) -> None:
-    bot.add_cog(General(bot))
+    bot.add_cog(Inspection(bot))
