@@ -31,5 +31,5 @@ from . import dataclasses as dataclasses, embeds as embeds, global_ as global_
 
 
 # Set version number.
-__version_info__ = ('2022', '8', '8')  # Year.Month.Day
+__version_info__ = ('2022', '8', '9')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
