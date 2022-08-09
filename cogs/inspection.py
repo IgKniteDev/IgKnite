@@ -34,7 +34,7 @@ from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
-from core.global_ import ModRoles
+from core.dataclasses import ModRoles
 
 
 # The actual cog.
@@ -50,7 +50,7 @@ class Inspection(commands.Cog):
     async def _guildinfo(self, inter: disnake.CommandInter) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
-            value=datetime.datetime.strptime(
+            value=datetime.strptime(
                 str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
             ).strftime('%b %d, %Y')
         ).add_field(
@@ -83,7 +83,7 @@ class Inspection(commands.Cog):
         ],
         dm_permission=False
     )
-    @commands.has_any_role(ModRoles().roles[0], ModRoles().roles[1])
+    @commands.has_any_role(ModRoles.mod, ModRoles.admin)
     async def _userinfo(self, inter: disnake.CommandInter, member: disnake.Member = None):
         member = inter.author if not member else member
 
