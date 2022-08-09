@@ -27,12 +27,14 @@ SOFTWARE.
 
 
 # Imports.
-import datetime
+from datetime import datetime
 
 import disnake
+from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
+from core.global_ import ModRoles
 
 
 # The actual cog.
@@ -68,6 +70,47 @@ class Inspection(commands.Cog):
 
         if not inter.guild.icon:
             embed.set_thumbnail(url=inter.guild.icon)
+
+        await inter.send(embed=embed)
+
+    @commands.slash_command(
+        name='userinfo',
+        description='Shows all important information on a user.',
+        options=[
+            Option('member', 'Mention the server member.', OptionType.user)
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(ModRoles().roles[0], ModRoles().roles[1])
+    async def _userinfo(self, inter: disnake.CommandInter, member: disnake.Member = None):
+        member = inter.author if not member else member
+
+        embed = core.embeds.ClassicEmbed(inter).add_field(
+            name='Status',
+            value=member.status
+        ).add_field(
+            name='Birth',
+            value=datetime.strptime(str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%b %d, %Y')
+        ).add_field(
+            name='On Mobile',
+            value=member.is_on_mobile()
+        ).add_field(
+            name='Race',
+            value="Bot" if member.bot else "Human"
+        ).add_field(
+            name='Roles',
+            value=len(member.roles)
+        ).add_field(
+            name='Position',
+            value=f"<@&{member.top_role.id}>"
+        ).add_field(
+            name='Identifier',
+            value=member.id
+        )
+
+        embed.title = member.display_name
+
+        embed.set_thumbnail(url=member.display_avatar)
 
         await inter.send(embed=embed)
 
