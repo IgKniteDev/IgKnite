@@ -88,6 +88,12 @@ class Bot(commands.AutoShardedInteractionBot):
         if message.author == self.user:
             return
 
+    # async def on_slash_command_error(self, inter: disnake.CommandInter, exception: Any) -> None:
+    #     ignored = ()
+
+    #     if isinstance(exception, ignored):
+    #         pass
+
 
 # Set up an instance of Bot.
 bot = Bot()
