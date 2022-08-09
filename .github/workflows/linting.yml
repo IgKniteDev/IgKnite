@@ -1,0 +1,26 @@
+name: Linting (flake8)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  flake8-lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10.6"
+
+      - name: Do the lint!
+        uses: py-actions/flake8@v2
