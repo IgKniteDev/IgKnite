@@ -42,7 +42,7 @@ class Inspection(commands.Cog):
 
     @commands.slash_command(
         name='guildinfo',
-        description='Shows all important info on the current guild.'
+        description='Shows all important information about the server.'
     )
     @commands.guild_only()
     async def _guildinfo(self, inter: disnake.CommandInter) -> None:
