@@ -118,6 +118,42 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
+    @commands.slash_command(
+        name='roleinfo',
+        description='Shows all important information related to a specific role.',
+        options=[
+            Option('role', 'Mention the role.', OptionType.role)
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _roleinfo(self, inter: disnake.CommandInter, role: disnake.Role):
+        embed = core.embeds.ClassicEmbed(inter).add_field(
+            name='Birth',
+            value=datetime.strptime(
+                str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
+            ).strftime('%b %d, %Y')
+        ).add_field(
+            name='Mentionable',
+            value=role.mentionable
+        ).add_field(
+            name='Managed By Integration',
+            value=role.managed
+        ).add_field(
+            name='Managed By Bot',
+            value=role.is_bot_managed()
+        ).add_field(
+            name='Role Position',
+            value=role.position
+        ).add_field(
+            name='Identifier',
+            value=f'`{role.id}`'
+        )
+
+        embed.title = f"Role Information: @{role.name}"
+
+        await inter.send(embed=embed)
+
 
 # The setup() function for the cog.
 def setup(bot: core.bot.IgKnite) -> None:
