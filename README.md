@@ -44,13 +44,16 @@ The goal, in this case, is simply to create a bot that uses Discord's bleeding-e
 
 ## Technologies
 
-The original idea for IgKnite has long been in the brainstorming sessions of a few developers. In fact, a bot wrapped with the [discord.py](https://github.com/Rapptz/discord.py) library was also put together to be hosted for the public. Following that very idea:
+The original idea for IgKnite has long been in the brainstorming sessions of a few developers. In fact, a bot wrapped with the **discord.py** library was also put together to be hosted for the public. Following that very idea, this project now depends on:
 
-- [x] This project uses [disnake](https://github.com/DisnakeDev/disnake) to wrap around Discord's API (for now).
-- [ ] This project will use other open-source projects like [ffmpeg](https://ffmpeg.org) and [PyNaCl](https://pypi.org/project/PyNaCl/) for making its musical functionalities capable.
-- [x] This project will repeatedly use [GitHub Actions](https://github.com/features/actions) over its course for CI/CD deployment. 
+- [x] [disnake](https://github.com/DisnakeDev/disnake) to wrap around Discord's API (for now).
+- [x] [GitHub Actions](https://github.com/features/actions) for CI/CD.
+- [ ] [ffmpeg](https://ffmpeg.org) and [PyNaCl](https://pypi.org/project/PyNaCl/) for making music possible.
 
-Note that IgKnite is still in its very infant stages, so it's quite normal for it to expand this small chain of dependencies over time.
+<br>
+
+Pro Tip | IgKnite is still in its very infant stages, so it's quite normal for it to expand this small chain of dependencies over time.
+---|---
 
 <br><br>
 
