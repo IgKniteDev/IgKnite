@@ -26,6 +26,14 @@ SOFTWARE.
 '''
 
 
+# Imports.
+import time
+from typing import Dict
+
+from decouple import config, UndefinedValueError
+
+
+# The initialize() function.
 def initialize() -> None:
     '''
     Initialize the global variables required to run all commands properly inside IgKnite.\n
@@ -36,5 +44,26 @@ def initialize() -> None:
     #
     # global variable_name
     # variable_name: type = value
+
+    # Fetch the secrets.
+
+    try:
+        global tokens
+        tokens: Dict[str, str] = {
+            'discord': config('DISCORD_TOKEN', cast=str)
+        }
+
+        global owner_ids
+        owner_ids: Dict[str, int | str] = {
+            'discord': config('DISCORD_OWNER_ID', cast=int)
+        }
+
+    except UndefinedValueError:
+        print('''
+            One or more secrets have been left undefined.
+            Consider going through the README.md file for proper instructions on setting IgKnite up.
+        ''')
+        time.sleep(5)
+        exit()
 
     pass
