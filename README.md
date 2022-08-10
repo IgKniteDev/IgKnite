@@ -1,5 +1,9 @@
 <div align="center">
 
+<img src="static/logo_circle.png" width="100">
+
+<br>
+
 # IgKnite
 That one Discord bot with fully open-source slash powers!
 
