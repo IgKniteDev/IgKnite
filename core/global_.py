@@ -28,7 +28,6 @@ SOFTWARE.
 
 # Imports.
 import time
-from typing import Dict
 
 from decouple import config, UndefinedValueError
 
@@ -49,12 +48,12 @@ def initialize() -> None:
 
     try:
         global tokens
-        tokens: Dict[str, str] = {
+        tokens = {
             'discord': config('DISCORD_TOKEN', cast=str)
         }
 
         global owner_ids
-        owner_ids: Dict[str, int | str] = {
+        owner_ids = {
             'discord': config('DISCORD_OWNER_ID', cast=int)
         }
 
