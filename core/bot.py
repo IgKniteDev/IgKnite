@@ -33,8 +33,13 @@ import disnake
 from disnake.ext import commands, tasks
 
 
-# Overriding commands.AutoShardedInteractionBot to set up our own instance.
+# Set up a custom class for core functionality.
 class IgKnite(commands.AutoShardedInteractionBot):
+    '''
+    An overwritten version of `disnake.ext.commands.AutoShardedInteractionBot`.\n
+    Basically works as the core class for all-things IgKnite!
+    '''
+
     def __init__(self) -> None:
         super().__init__(intents=disnake.Intents.all())
         self.task_update_presence.start()

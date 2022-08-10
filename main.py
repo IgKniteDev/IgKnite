@@ -24,35 +24,12 @@ SOFTWARE.
 
 
 # Imports.
-import time
-from typing import Dict
-
-from decouple import config, UndefinedValueError
-
 from core import global_
 from core.bot import IgKnite
 
 
 # Initialize the global variables from core.global_ .
 global_.initialize()
-
-# Fetch the secrets.
-try:
-    tokens: Dict[str, str] = {
-        'discord': config('DISCORD_TOKEN', cast=str)
-    }
-    owner_ids: Dict[str, int | str] = {
-        'discord': config('DISCORD_OWNER_ID', cast=int)
-    }
-
-except UndefinedValueError:
-    print('''
-        One or more secrets have been left undefined.
-        Consider going through the README.md file for proper instructions on setting IgKnite up.
-    ''')
-    time.sleep(5)
-    exit()
-
 
 # Set up an instance of IgKnite.
 bot = IgKnite()
@@ -61,4 +38,4 @@ bot = IgKnite()
 # Run the bot.
 if __name__ == '__main__':
     bot.load_extensions('cogs')
-    bot.run(tokens['discord'])
+    bot.run(global_.tokens['discord'])
