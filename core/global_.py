@@ -4,7 +4,7 @@ Global variables and instances for the core package.
 
 MIT License
 
-Copyright (c) 2022 HitBlast
+Copyright (c) 2022 IgKnite
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
