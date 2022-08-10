@@ -32,7 +32,7 @@ from dataclasses import dataclass
 
 # Decorate pre-existing classes with @dataclass .
 @dataclass(frozen=True)
-class ModRoles:
+class LockRoles:
     '''
     A dataclass used for role-locking.
     '''

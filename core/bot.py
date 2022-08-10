@@ -33,10 +33,10 @@ import disnake
 from disnake.ext import commands, tasks
 
 
-# Overwriting commands.AutoShardedInteractionBot to set up our own instance.
+# Set up a custom class for core functionality.
 class IgKnite(commands.AutoShardedInteractionBot):
     '''
-    An overwritten version of `disnake.ext.commands.AutoShardedInteractionBot`.
+    An overwritten version of `disnake.ext.commands.AutoShardedInteractionBot`.\n
     Basically works as the core class for all-things IgKnite!
     '''
 

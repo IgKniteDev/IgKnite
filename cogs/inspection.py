@@ -34,12 +34,12 @@ from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
-from core.dataclasses import ModRoles
+from core.dataclasses import LockRoles
 
 
 # The actual cog.
 class Inspection(commands.Cog):
-    def __init__(self, bot: commands.AutoShardedInteractionBot) -> None:
+    def __init__(self, bot: core.bot.IgKnite) -> None:
         self.bot = bot
 
     @commands.slash_command(
@@ -47,6 +47,7 @@ class Inspection(commands.Cog):
         description='Shows all important information about the server.',
         dm_permission=False
     )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _guildinfo(self, inter: disnake.CommandInter) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
@@ -83,7 +84,7 @@ class Inspection(commands.Cog):
         ],
         dm_permission=False
     )
-    @commands.has_any_role(ModRoles.mod, ModRoles.admin)
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _userinfo(self, inter: disnake.CommandInter, member: disnake.Member = None):
         member = inter.author if not member else member
 
@@ -110,15 +111,14 @@ class Inspection(commands.Cog):
         ).add_field(
             name='Identifier',
             value=member.id
+        ).set_thumbnail(
+            url=member.display_avatar
         )
-
         embed.title = member.display_name
-
-        embed.set_thumbnail(url=member.display_avatar)
 
         await inter.send(embed=embed)
 
 
 # The setup() function for the cog.
-def setup(bot: commands.AutoShardedInteractionBot) -> None:
+def setup(bot: core.bot.IgKnite) -> None:
     bot.add_cog(Inspection(bot))
