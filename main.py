@@ -24,16 +24,13 @@ SOFTWARE.
 
 
 # Imports.
-import os
 import time
 from typing import Dict
-
-import disnake
-from disnake.ext import commands, tasks
 
 from decouple import config, UndefinedValueError
 
 from core import global_
+from core.bot import IgKnite
 
 
 # Initialize the global variables from core.global_ .
@@ -57,46 +54,8 @@ except UndefinedValueError:
     exit()
 
 
-# Overriding commands.AutoShardedInteractionBot to set up our own instance.
-class Bot(commands.AutoShardedInteractionBot):
-    def __init__(self) -> None:
-        super().__init__(intents=disnake.Intents.all())
-        self.task_update_presence.start()
-
-    async def on_connect(self) -> None:
-        os.system('clear')
-        print(f'{self.user} | Connected to Discord\n')
-
-    async def on_ready(self) -> None:
-        print(f'Deployed in {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.')
-
-    @tasks.loop(seconds=200)
-    async def task_update_presence(self) -> None:
-        await self.change_presence(
-            status=disnake.Status.dnd,
-            activity=disnake.Activity(
-                type=disnake.ActivityType.listening,
-                name=f'slashes inside {len(self.guilds)} server(s)!'
-            )
-        )
-
-    @task_update_presence.before_loop
-    async def task_before_updating_presence(self) -> None:
-        await self.wait_until_ready()
-
-    async def on_message(self, message: disnake.Message) -> None:
-        if message.author == self.user:
-            return
-
-    # async def on_slash_command_error(self, inter: disnake.CommandInter, exception: Any) -> None:
-    #     ignored = ()
-
-    #     if isinstance(exception, ignored):
-    #         pass
-
-
-# Set up an instance of Bot.
-bot = Bot()
+# Set up an instance of IgKnite.
+bot = IgKnite()
 
 
 # Run the bot.
