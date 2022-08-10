@@ -1,7 +1,7 @@
 <div align="center">
 
+<br>
 <img src="static/logo_circle.png" width="100">
-
 <br>
 
 # IgKnite
