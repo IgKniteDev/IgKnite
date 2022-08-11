@@ -50,7 +50,8 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _ban(self, inter: disnake.CommandInter, member: disnake.Member, reason: str = "No reason provided.") -> None:
+    async def _ban(self, inter: disnake.CommandInter, member: disnake.Member, 
+                   reason: str = "No reason provided.") -> None:
         await inter.guild.ban(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
@@ -64,7 +65,8 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _kick(self, inter: disnake.CommandInter, member: disnake.Member, reason: str = "No reason provided.") -> None:
+    async def _kick(self, inter: disnake.CommandInter, member: disnake.Member, 
+                    reason: str = "No reason provided.") -> None:
         await inter.guild.kick(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
 
