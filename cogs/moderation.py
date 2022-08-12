@@ -24,6 +24,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
+
+
 # Imports.
 import disnake
 from disnake import Option, OptionType
@@ -40,7 +42,7 @@ class Moderation(commands.Cog):
 
     @commands.slash_command(
         name='ban',
-        description='Bans a member from server.',
+        description='Bans a member from the server.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user),
             Option('reason', 'Reason for the ban.', OptionType.string)
@@ -48,13 +50,14 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _ban(self, inter: disnake.CommandInter, member: disnake.Member, reason: str = "No reason provided."):
+    async def _ban(self, inter: disnake.CommandInter, member: disnake.Member,
+                   reason: str = "No reason provided.") -> None:
         await inter.guild.ban(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
     @commands.slash_command(
         name='kick',
-        description='Kicks a member from server.',
+        description='Kicks a member from the server.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user),
             Option('reason', 'Reason for the kick.', OptionType.string)
@@ -62,20 +65,21 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _kick(self, inter: disnake.CommandInter, member: disnake.Member, reason: str = "No reason provided."):
+    async def _kick(self, inter: disnake.CommandInter, member: disnake.Member,
+                    reason: str = "No reason provided.") -> None:
         await inter.guild.kick(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
 
     @commands.slash_command(
         name='unban',
-        description='Unbans a member from server.',
+        description='Unbans a member from the server.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user)
         ],
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _unban(self, inter: disnake.CommandInter, member: disnake.Member):
+    async def _unban(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
         await inter.guild.unban(member)
         await inter.send(f'Member **{member.display_name}** has been unbanned!')
 
