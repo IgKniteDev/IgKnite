@@ -49,7 +49,7 @@ class General(commands.Cog):
         ],
         dm_permission=False
     )
-    async def _avatar(self, inter: disnake.CommandInter, member: disnake.Member = None):
+    async def _avatar(self, inter: disnake.CommandInter, member: disnake.Member = None) -> None:
         member = inter.author if not member else member
 
         embed = core.embeds.ClassicEmbed(inter).set_image(
