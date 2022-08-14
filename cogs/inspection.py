@@ -39,7 +39,7 @@ from core.dataclasses import LockRoles
 
 # The actual cog.
 class Inspection(commands.Cog):
-    def __init__(self, bot: core.bot.IgKnite) -> None:
+    def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
     @commands.slash_command(
@@ -155,5 +155,5 @@ class Inspection(commands.Cog):
 
 
 # The setup() function for the cog.
-def setup(bot: core.bot.IgKnite) -> None:
+def setup(bot: core.IgKnite) -> None:
     bot.add_cog(Inspection(bot))
