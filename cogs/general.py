@@ -43,7 +43,7 @@ class General(commands.Cog):
 
     @commands.slash_command(
         name='avatar',
-        description='Displays the avatar / profile picture of a server member.',
+        description='Displays your avatar / the avatar of a server member.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user)
         ],
