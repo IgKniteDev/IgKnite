@@ -85,7 +85,7 @@ class Inspection(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _userinfo(self, inter: disnake.CommandInter, member: disnake.Member = None):
+    async def _userinfo(self, inter: disnake.CommandInter, member: disnake.Member = None) -> None:
         member = inter.author if not member else member
 
         embed = core.embeds.ClassicEmbed(inter).add_field(
@@ -127,7 +127,7 @@ class Inspection(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _roleinfo(self, inter: disnake.CommandInter, role: disnake.Role):
+    async def _roleinfo(self, inter: disnake.CommandInter, role: disnake.Role) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
             value=datetime.strptime(
@@ -149,7 +149,6 @@ class Inspection(commands.Cog):
             name='Identifier',
             value=f'`{role.id}`'
         )
-
         embed.title = f"Role Information: @{role.name}"
 
         await inter.send(embed=embed)
