@@ -42,7 +42,7 @@ class Moderation(commands.Cog):
         name='ban',
         description='Bans a member from server.',
         options=[
-            Option('member', 'Mention the server member.', OptionType.user),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option('reason', 'Reason for the ban.', OptionType.string)
         ],
         dm_permission=False
@@ -56,7 +56,7 @@ class Moderation(commands.Cog):
         name='kick',
         description='Kicks a member from server.',
         options=[
-            Option('member', 'Mention the server member.', OptionType.user),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option('reason', 'Reason for the kick.', OptionType.string)
         ],
         dm_permission=False
@@ -70,7 +70,7 @@ class Moderation(commands.Cog):
         name='unban',
         description='Unbans a member from server.',
         options=[
-            Option('member', 'Mention the server member.', OptionType.user)
+            Option('member', 'Mention the server member.', OptionType.user, required=True)
         ],
         dm_permission=False
     )
