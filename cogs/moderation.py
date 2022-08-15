@@ -87,7 +87,7 @@ class Moderation(commands.Cog):
         name='purge',
         description='Clears messages within the given index.',
         options=[
-            Option('amount', 'Specify the amount.', OptionType.integer)
+            Option('amount', 'Specify the amount. Default is 1.', OptionType.integer)
         ],
         dm_permission=False
     )
@@ -116,7 +116,7 @@ class Moderation(commands.Cog):
         description='Clears messages that are sent by a specific user within the given index.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('amount', 'Specify the amount.', OptionType.integer)
+            Option('amount', 'Specify the amount. Default is 1.', OptionType.integer)
         ],
         dm_permission=False
     )
