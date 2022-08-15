@@ -39,7 +39,7 @@ from core.dataclasses import LockRoles
 
 # The actual cog.
 class Inspection(commands.Cog):
-    def __init__(self, bot: core.bot.IgKnite) -> None:
+    def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
     @commands.slash_command(
@@ -122,7 +122,7 @@ class Inspection(commands.Cog):
         name='roleinfo',
         description='Shows all important information related to a specific role.',
         options=[
-            Option('role', 'Mention the role.', OptionType.role)
+            Option('role', 'Mention the role.', OptionType.role, required=True)
         ],
         dm_permission=False
     )
@@ -153,7 +153,33 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
+    @commands.slash_command(
+        name='audit',
+        description='Views the latest entries of the audit log in detail.',
+        options=[
+            Option("limit", "The limit for showing audit log entries. Has to be within 1 and 100.", OptionType.integer)
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _audit(self, inter: disnake.CommandInter, limit: int = 5):
+        if limit not in range(1, 101):
+            await inter.send(f'{limit} is not within the given range.', ephemeral=True)
+
+        else:
+            embed = core.embeds.ClassicEmbed(inter)
+            embed.title = f'Audit Log ({limit} entries)'
+
+            async for audit_entry in inter.guild.audit_logs(limit=limit):
+                embed.add_field(
+                    name=f'- {audit_entry.action}',
+                    value=f'User: {audit_entry.user} | Target: {audit_entry.target}',
+                    inline=False
+                )
+
+            await inter.send(embed=embed, ephemeral=True)
+
 
 # The setup() function for the cog.
-def setup(bot: core.bot.IgKnite) -> None:
+def setup(bot: core.IgKnite) -> None:
     bot.add_cog(Inspection(bot))

@@ -38,12 +38,12 @@ import core
 
 # The actual cog.
 class General(commands.Cog):
-    def __init__(self, bot: core.bot.IgKnite) -> None:
+    def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
     @commands.slash_command(
         name='avatar',
-        description='Displays the avatar / profile picture of a server member.',
+        description='Displays your avatar / the avatar of a server member.',
         options=[
             Option('member', 'Mention the server member.', OptionType.user)
         ],
@@ -85,5 +85,5 @@ class General(commands.Cog):
 
 
 # The setup() function for the cog.
-def setup(bot: core.bot.IgKnite) -> None:
+def setup(bot: core.IgKnite) -> None:
     bot.add_cog(General(bot))
