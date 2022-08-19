@@ -40,6 +40,7 @@ class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
+    #
     @commands.slash_command(
         name='ban',
         description='Bans a member from the server.',
@@ -55,6 +56,7 @@ class Moderation(commands.Cog):
         await inter.guild.ban(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
+    #
     @commands.slash_command(
         name='kick',
         description='Kicks a member from the server.',
@@ -70,6 +72,7 @@ class Moderation(commands.Cog):
         await inter.guild.kick(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
 
+    #
     @commands.slash_command(
         name='unban',
         description='Unbans a member from the server.',
@@ -83,6 +86,7 @@ class Moderation(commands.Cog):
         await inter.guild.unban(member)
         await inter.send(f'Member **{member.display_name}** has been unbanned!')
 
+    #
     @commands.slash_command(
         name='purge',
         description='Clears messages within the given index.',
@@ -96,6 +100,7 @@ class Moderation(commands.Cog):
         await inter.channel.purge(limit=amount)
         await inter.send(f'Purged {amount} messages!', ephemeral=True)
 
+    #
     @commands.slash_command(
         name='purgeone',
         description='Purges a message by its identifier.',
@@ -111,6 +116,7 @@ class Moderation(commands.Cog):
         ).delete()
         await inter.send("Message has been purged!", ephemeral=True)
 
+    #
     @commands.slash_command(
         name='ripplepurge',
         description='Clears messages that are sent by a specific user within the given index.',
@@ -123,11 +129,14 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _ripplepurge(self, inter: disnake.CommandInter, member: disnake.Member, amount: int = 1) -> None:
         messages = []
+
         async for msg in inter.channel.history():
             if len(messages) == amount:
                 break
+
             if msg.author == member:
                 messages.append(msg)
+
         await inter.channel.delete_messages(messages)
         await inter.send(f'Purged {amount} messages from **{member.name}#{member.discriminator}**', ephemeral=True)
 
