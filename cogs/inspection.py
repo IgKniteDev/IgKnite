@@ -42,6 +42,7 @@ class Inspection(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
+    #
     @commands.slash_command(
         name='guildinfo',
         description='Shows all important information about the server.',
@@ -76,6 +77,7 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
+    #
     @commands.slash_command(
         name='userinfo',
         description='Shows all important information on a user.',
@@ -118,6 +120,7 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
+    #
     @commands.slash_command(
         name='roleinfo',
         description='Shows all important information related to a specific role.',
@@ -153,6 +156,7 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
+    #
     @commands.slash_command(
         name='audit',
         description='Views the latest entries of the audit log in detail.',
