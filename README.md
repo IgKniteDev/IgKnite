@@ -25,7 +25,9 @@ That one Discord bot with fully open-source slash powers!
 
 - [Motive](#motive)
 - [Goals](#goals)
-- [Technologies](#technologies)
+- [Usage](#usage)
+    - [Invite to your server]()
+    - [Self-hosting]()
 - [License](#license)
 
 <br>
@@ -42,20 +44,24 @@ The goal, in this case, is simply to create a bot that uses Discord's bleeding-e
 
 <br><br>
 
-## Technologies
+## Usage
 
-The original idea for IgKnite has long been in the brainstorming sessions of a few developers. In fact, a bot wrapped with the **discord.py** library was also put together to be hosted for the public. Following that very idea, this project now depends on:
+You will be able to get a pre-hosted instance of IgKnite for your Discord server once it's up for production. If you want to, however, get a little bit geeky with setting up IgKnite from 
 
-- [x] [disnake](https://github.com/DisnakeDev/disnake) to wrap around Discord's API (for now).
-- [x] [GitHub Actions](https://github.com/features/actions) for CI/CD.
-- [ ] [ffmpeg](https://ffmpeg.org) and [PyNaCl](https://pypi.org/project/PyNaCl/) for making music possible.
+<br><br>
+
+## Contributors
+
+It'd be almost impossible to build and maintain this project without the minds behind it!
 
 <br>
 
-Pro Tip | IgKnite is still in its very infant stages, so it's quite normal for it to expand this small chain of dependencies over time.
----|---
+<a href="https://github.com/IgKniteDev/IgKnite/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=IgKniteDev/IgKnite" />
+</a>
 
 <br><br>
+
 
 ## License
 
