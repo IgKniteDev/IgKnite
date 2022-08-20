@@ -26,8 +26,7 @@ That one Discord bot with fully open-source slash powers!
 - [Motive](#motive)
 - [Goals](#goals)
 - [Usage](#usage)
-    - [Invite to your server]()
-    - [Self-hosting]()
+- [Contributors](#contributors)
 - [License](#license)
 
 <br>
