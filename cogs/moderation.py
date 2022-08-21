@@ -40,6 +40,9 @@ class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
+    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
+        await inter.response.defer()
+
     #
     @commands.slash_command(
         name='ban',
@@ -96,9 +99,8 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _purge(self, inter: disnake.CommandInter, amount: int = 1) -> None:
+    async def _purge(self, inter: disnake.CommandInter, amount: int = 2) -> None:
         await inter.channel.purge(limit=amount)
-        await inter.send(f'Purged {amount} messages!', ephemeral=True)
 
     #
     @commands.slash_command(
