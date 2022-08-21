@@ -37,15 +37,21 @@ def initialize() -> None:
     '''
     Initialize the global variables required to run all commands properly inside IgKnite.\n
     - Note: This function only needs to be called 'once' inside the root script (main.py).
+
+    ---
+
+    ```python
+
+    # Structure for adding new global variables.
+    # Anything non-relatable to environment variables must be put under the 'else' block.
+
+    global variable_name
+    variable_name = value
+
+    ```
     '''
 
-    # Structure:
-    #
-    # global variable_name
-    # variable_name: type = value
-
     # Fetch the secrets.
-
     try:
         global tokens
         tokens = {
@@ -65,4 +71,6 @@ def initialize() -> None:
         time.sleep(5)
         exit()
 
-    pass
+    else:
+        global snipeables
+        snipeables = []
