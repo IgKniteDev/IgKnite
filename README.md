@@ -45,15 +45,11 @@ The goal, in this case, is simply to create a bot that uses Discord's bleeding-e
 
 ## Usage
 
-You will be able to get a pre-hosted instance of IgKnite for your Discord server once it's up for production. If you want to, however, get a little bit geeky with setting up IgKnite from 
+You will be able to get a pre-hosted instance of IgKnite for your Discord server once it's up for production. If you want to however, get a little bit geeky, you can always set up IgKnite from source.
 
 <br><br>
 
 ## Contributors
-
-It'd be almost impossible to build and maintain this project without the minds behind it!
-
-<br>
 
 <a href="https://github.com/IgKniteDev/IgKnite/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=IgKniteDev/IgKnite" />
