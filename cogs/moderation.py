@@ -142,6 +142,16 @@ class Moderation(commands.Cog):
         await inter.channel.delete_messages(messages)
         await inter.send(f'Purged {amount} messages from **{member.name}#{member.discriminator}**', ephemeral=True)
 
+    #
+    @commands.slash_command(
+        name='snipe',
+        description='Snipes messages within 25 seconds of getting deleted.',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _snipe(self, inter: disnake.CommandInter) -> None:
+        pass
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
