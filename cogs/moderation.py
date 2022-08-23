@@ -61,6 +61,18 @@ class Moderation(commands.Cog):
 
     #
     @commands.slash_command(
+        name='softban',
+        help='Temporarily bans members to delete their messages.',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def softban(self, inter: disnake.CommandInter, member: disnake.User, *, reason: str = 'No reason provided.'):
+        await inter.guild.ban(member, delete_message_days=7, reason=reason)
+        await inter.guild.unban(member)
+        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
+
+    #
+    @commands.slash_command(
         name='kick',
         description='Kicks a member from the server.',
         options=[
