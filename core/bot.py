@@ -27,10 +27,13 @@ SOFTWARE.
 
 
 # Imports.
+import asyncio
 import os
 
 import disnake
 from disnake.ext import commands, tasks
+
+from core import global_
 
 
 # Set up a custom class for core functionality.
@@ -68,3 +71,8 @@ class IgKnite(commands.AutoShardedInteractionBot):
     async def on_message(self, message: disnake.Message) -> None:
         if message.author == self.user:
             return
+
+    async def on_message_delete(self, message: disnake.Message) -> None:
+        global_.snipeables.append(message)
+        await asyncio.sleep(25)
+        global_.snipeables.append(message)

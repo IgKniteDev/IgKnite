@@ -32,6 +32,7 @@ from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
+from core import global_
 from core.dataclasses import LockRoles
 
 
@@ -39,6 +40,9 @@ from core.dataclasses import LockRoles
 class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
+
+    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
+        await inter.response.defer()
 
     #
     @commands.slash_command(
@@ -58,6 +62,22 @@ class Moderation(commands.Cog):
 
     #
     @commands.slash_command(
+        name='softban',
+        description='Temporarily bans members to delete their messages.',
+        options=[
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
+            Option('reason', 'Reason for the ban.', OptionType.string)
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def softban(self, inter: disnake.CommandInter, member: disnake.User, *, reason: str = 'No reason provided.'):
+        await inter.guild.ban(member, delete_message_days=7, reason=reason)
+        await inter.guild.unban(member)
+        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
+
+    #
+    @commands.slash_command(
         name='kick',
         description='Kicks a member from the server.',
         options=[
@@ -71,6 +91,23 @@ class Moderation(commands.Cog):
                     reason: str = "No reason provided.") -> None:
         await inter.guild.kick(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
+
+    #
+    @commands.slash_command(
+        name='timeout',
+        description='Timeouts a member.',
+        options=[
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
+            Option('duration', 'The duration of the timeout. Default is 30 seconds.', OptionType.integer),
+            Option('reason', 'Reason for the ban.', OptionType.string)
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _deafen(self, inter: disnake.CommandInter, member: disnake.Member, duration: int = 30, *,
+                      reason: str = 'No reason provided.'):
+        await member.timeout(duration=duration, reason=reason)
+        await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
 
     #
     @commands.slash_command(
@@ -96,9 +133,8 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _purge(self, inter: disnake.CommandInter, amount: int = 1) -> None:
+    async def _purge(self, inter: disnake.CommandInter, amount: int = 2) -> None:
         await inter.channel.purge(limit=amount)
-        await inter.send(f'Purged {amount} messages!', ephemeral=True)
 
     #
     @commands.slash_command(
@@ -139,6 +175,36 @@ class Moderation(commands.Cog):
 
         await inter.channel.delete_messages(messages)
         await inter.send(f'Purged {amount} messages from **{member.name}#{member.discriminator}**', ephemeral=True)
+
+    #
+    @commands.slash_command(
+        name='snipe',
+        description='Snipes messages within 25 seconds of getting deleted.',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _snipe(self, inter: disnake.CommandInter) -> None:
+        webhook: disnake.Webhook = None
+
+        if global_.snipeables:
+            for snipeable in global_.snipeables:
+                if snipeable.guild == inter.guild:
+                    if (
+                        webhook
+                        and webhook.name == snipeable.author.display_name
+                    ):
+                        pass
+
+                    else:
+                        webhook = await inter.channel.create_webhook(name=snipeable.author.display_name)
+
+                    await webhook.send(snipeable.content, username=snipeable.author.name,
+                                       avatar_url=snipeable.author.avatar_url)
+
+            await webhook.delete()
+
+        else:
+            await inter.send('No messages were found in my list.', ephemeral=True)
 
 
 # The setup() function for the cog.
