@@ -62,7 +62,11 @@ class Moderation(commands.Cog):
     #
     @commands.slash_command(
         name='softban',
-        help='Temporarily bans members to delete their messages.',
+        description='Temporarily bans members to delete their messages.',
+        options=[
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
+            Option('reason', 'Reason for the ban.', OptionType.string)
+        ],
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
@@ -86,6 +90,22 @@ class Moderation(commands.Cog):
                     reason: str = "No reason provided.") -> None:
         await inter.guild.kick(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
+
+    #
+    @commands.slash_command(
+        name='timeout',
+        description='Timeouts a member.',
+        options=[
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
+            Option('duration', 'The duration of the timeout. Default is 30 seconds.', OptionType.integer),
+            Option('reason', 'Reason for the ban.', OptionType.string)
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _deafen(self, inter: disnake.CommandInter, member: disnake.Member, duration: int = 30, *, reason: str = 'No reason provided.'):
+        await member.timeout(duration=duration, reason=reason)
+        await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
 
     #
     @commands.slash_command(
