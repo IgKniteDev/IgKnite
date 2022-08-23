@@ -32,6 +32,7 @@ from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
+from core import global_
 from core.dataclasses import LockRoles
 
 
@@ -183,7 +184,27 @@ class Moderation(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(self, inter: disnake.CommandInter) -> None:
-        pass
+        webhook: disnake.Webhook = None
+
+        if global_.snipeables:
+            for snipeable in global_.snipeables:
+                if snipeable.guild == inter.guild:
+                    if (
+                        webhook
+                        and webhook.name == snipeable.author.display_name
+                    ):
+                        pass
+
+                    else:
+                        webhook = await inter.channel.create_webhook(name=snipeable.author.display_name)
+
+                    await webhook.send(snipeable.content, username=snipeable.author.name,
+                                       avatar_url=snipeable.author.avatar_url)
+
+            await webhook.delete()
+
+        else:
+            await inter.send('No messages were found in my list.', ephemeral=True)
 
 
 # The setup() function for the cog.
