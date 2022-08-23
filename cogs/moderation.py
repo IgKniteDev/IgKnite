@@ -103,7 +103,8 @@ class Moderation(commands.Cog):
         dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _deafen(self, inter: disnake.CommandInter, member: disnake.Member, duration: int = 30, *, reason: str = 'No reason provided.'):
+    async def _deafen(self, inter: disnake.CommandInter, member: disnake.Member, duration: int = 30, *,
+                      reason: str = 'No reason provided.'):
         await member.timeout(duration=duration, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
 
