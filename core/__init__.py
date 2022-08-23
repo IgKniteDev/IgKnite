@@ -27,7 +27,7 @@ SOFTWARE.
 
 
 # Initialize scripts.
-from . import dataclasses as dataclasses, embeds as embeds, global_ as global_
+from . import datacls as datacls, embeds as embeds, global_ as global_
 from .bot import *
 
 
