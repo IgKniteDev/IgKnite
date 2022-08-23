@@ -34,7 +34,7 @@ from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
-from core.dataclasses import LockRoles
+from core.datacls import LockRoles
 
 
 # The actual cog.
