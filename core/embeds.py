@@ -28,7 +28,7 @@ SOFTWARE.
 
 # Imports.
 import random
-import disnake
+import discord
 
 
 # A really simple function to generate random footers!
@@ -43,34 +43,34 @@ def generate_footer() -> str:
     return random.choice(samples)
 
 
-# Overwrite disnake.Embed class to form custom embeds.
-class ClassicEmbed(disnake.Embed):
+# Overwrite discord.Embed class to form custom embeds.
+class ClassicEmbed(discord.Embed):
     '''
     Represents an embed common to all the normal commands.
     '''
 
-    def __init__(self, inter: disnake.ApplicationCommandInteraction) -> None:
+    def __init__(self, inter: discord.Interaction) -> None:
         super().__init__(
             color=3158326
         )
 
         self.set_footer(
             text=generate_footer(),
-            icon_url=inter.author.avatar
+            icon_url=inter.user.avatar
         )
 
 
-class ErrorEmbed(disnake.Embed):
+class ErrorEmbed(discord.Embed):
     '''
     Represents an embed common to all error messages.
     '''
 
-    def __init__(self, inter: disnake.ApplicationCommandInteraction) -> None:
+    def __init__(self, inter: discord.Interaction) -> None:
         super().__init__(
             color=16608388
         )
 
         self.set_footer(
             text=generate_footer(),
-            icon_url=inter.author.avatar
+            icon_url=inter.user.avatar
         )
