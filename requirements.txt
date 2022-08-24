@@ -1,3 +1,4 @@
 python-decouple
 disnake
 PyNaCl
+flet

@@ -33,7 +33,7 @@ from disnake.ext import commands
 
 import core
 from core import global_
-from core.dataclasses import LockRoles
+from core.datacls import LockRoles
 
 
 # The actual cog.
