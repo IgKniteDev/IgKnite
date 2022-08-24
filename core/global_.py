@@ -28,6 +28,7 @@ SOFTWARE.
 
 # Imports.
 import time
+from typing import Dict
 
 from decouple import config, UndefinedValueError
 
@@ -53,14 +54,11 @@ def initialize() -> None:
 
     # Fetch the secrets.
     try:
-        global tokens
-        tokens = {
+        tokens: Dict[str, str] = {
             'discord': config('DISCORD_TOKEN', cast=str)
         }
-
-        global owner_ids
-        owner_ids = {
-            'discord': config('DISCORD_OWNER_ID', cast=int)
+        identifiers: Dict[str, str | int] = {
+            'discord_owner': config('DISCORD_OWNER_ID', cast=int),
         }
 
     except UndefinedValueError:
@@ -72,5 +70,6 @@ def initialize() -> None:
         exit()
 
     else:
+        # global variable (list) for storing sniped messages
         global snipeables
         snipeables = []

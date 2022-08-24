@@ -26,69 +26,76 @@ SOFTWARE.
 '''
 
 
-import flet
-from flet import Page, Text, TextField, UserControl, Column, IconButton, Row
+# Imports.
 import os
 
+import flet
+from flet import Page, Text, TextField, UserControl, Column, IconButton, Row
 
+
+# The App class for setting up the UI.
 class App(UserControl):
     def build(self) -> Column:
         self.bot_token = TextField(
-            hint_text="Enter Your Bot Token"
+            hint_text='Enter your bot token'
         )
         self.owner_id = TextField(
-            hint_text="Enter your USER ID"
+            hint_text='Enter your Discord user ID'
         )
         self.error_viewer = Text(
-            color="red"
+            value='Please fill in all the text fields!',
+            color='red',
+            visible=False
         )
         self.success_viewer = Text(
-            value="Successfully Generated Config Files for IgKnite! You're good to go :)",
-            color="green",
-            opacity=0
+            value='Successfully Generated Config Files for IgKnite! You\'re good to go :)',
+            color='green',
+            visible=False
         )
+
         return Column(
-            width=500,
+            width=400,
             controls=[
-                Row([Text(value="Guicer", style="headlineMedium")], alignment="center"),
-                Row([Text(value="Configure IgKnite!", style="headlineSmall")], alignment="center"),
-                Text(value="Bot Token", size=20),
+                Row([Text(value='Guicer', style='headlineMedium')], alignment='center'),
+                Text(value='Bot Token', size=20),
                 self.bot_token,
-                Text(value="Owner ID", size=20),
+                Text(value='Owner ID', size=20),
                 self.owner_id,
-                IconButton(icon="check", bgcolor="white", icon_color="black", on_click=self.generate_config),
+                IconButton(icon='check', bgcolor='white', icon_color='black', on_click=self.generate_config),
                 self.error_viewer,
                 self.success_viewer,
-            ],
+            ]
         )
 
     def generate_config(self, e) -> None:
-        if len(self.bot_token.value) == 0 or len(self.owner_id.value) == 0:
-            self.error_viewer.value = "Please fill in all the text fields!"
-            self.success_viewer.opacity = 0
-            self.update()
+        if (
+            len(self.bot_token.value) == 0
+            or len(self.owner_id.value) == 0
+        ):
+            self.error_viewer.visible = True
+
         else:
-            self.igknite_path = os.getcwd()
-            if os.path.exists(f'{self.igknite_path}/.env'):
-                with open(f'{self.igknite_path}/.env', "w") as f:
-                    f.write(f'DISCORD_TOKEN={self.bot_token.value}\nDISCORD_OWNER_ID={self.owner_id.value}')
-                    self.success_viewer.opacity = 100
-                    self.update()
-            else:
-                with open(f'{self.igknite_path}/.env', "x") as f:
-                    f.write(f'DISCORD_TOKEN={self.bot_token.value}\nDISCORD_OWNER_ID={self.owner_id.value}')
-                    self.success_viewer.opacity = 100
-                    self.update()
+            here = os.path.join(os.getcwd(), '.env')
+            write_mode = 'w' if os.path.exists(here) else 'x'
+
+            with open(here, write_mode) as f:
+                f.write(f'DISCORD_TOKEN={self.bot_token.value}\nDISCORD_OWNER_ID={self.owner_id.value}')
+                self.success_viewer.visible = True
+                self.update()
+
+        self.update()
 
 
+# The main entry point for Guicer's UI.
 def main(page: Page) -> None:
     page.window_height = 700
     page.window_width = 600
-    page.title = "Guicer"
+    page.title = 'Guicer'
 
-    page.horizontal_alignment = "center"
+    page.horizontal_alignment = 'center'
     app = App()
     page.add(app)
 
 
+# Run app.
 flet.app(target=main)

@@ -29,9 +29,9 @@ SOFTWARE.
 # Imports.
 import time
 
-import disnake
-from disnake import Option, OptionType
-from disnake.ext import commands
+import discord
+from discord import app_commands
+from discord.ext import commands
 
 import core
 
@@ -42,34 +42,32 @@ class General(commands.Cog):
         self.bot = bot
 
     #
-    @commands.slash_command(
+    @app_commands.command(
         name='avatar',
-        description='Displays your avatar / the avatar of a server member.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user)
-        ],
-        dm_permission=False
+        description='Displays your avatar / the avatar of a server member.'
     )
-    async def _avatar(self, inter: disnake.CommandInter, member: disnake.Member = None) -> None:
-        member = inter.author if not member else member
+    @app_commands.describe(
+        member='Mention the server member.'
+    )
+    @app_commands.guild_only()
+    async def _avatar(self, inter: discord.Interaction, member: discord.Member = None) -> None:
+        member = inter.user if not member else member
 
-        embed = core.embeds.ClassicEmbed(inter).set_image(
-            url=member.avatar
-        )
+        embed = core.embeds.ClassicEmbed(inter).set_image(url=member.avatar)
         embed.title = 'Here\'s what I found!'
 
-        await inter.send(embed=embed)
+        await inter.response.send_message(embed=embed)
 
     #
-    @commands.slash_command(
+    @app_commands.command(
         name='ping',
         description='Shows my current response time.',
     )
-    async def _ping(self, inter: disnake.CommandInter) -> None:
+    async def _ping(self, inter: discord.Interaction) -> None:
         system_latency = round(self.bot.latency * 1000)
 
         start_time = time.time()
-        await inter.response.defer()  # TODO: Might need to rethink the structure for this command.
+        await inter.response.defer()
         end_time = time.time()
 
         api_latency = round((end_time - start_time) * 1000)
@@ -83,9 +81,9 @@ class General(commands.Cog):
             value=f'{api_latency}ms'
         )
 
-        await inter.edit_original_message(content=None, embed=embed)
+        await inter.followup.send(content=None, embed=embed)
 
 
 # The setup() function for the cog.
-def setup(bot: core.IgKnite) -> None:
-    bot.add_cog(General(bot))
+async def setup(bot: core.IgKnite) -> None:
+    await bot.add_cog(General(bot))
