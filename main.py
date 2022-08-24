@@ -38,7 +38,8 @@ bot = IgKnite(
     command_prefix=commands.when_mentioned,
     intents=discord.Intents.all(),
     initial_extensions=[
-        'cogs.general'
+        'cogs.general',
+        'cogs.inspection'
     ]
 )
 
