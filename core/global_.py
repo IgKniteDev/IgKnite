@@ -28,7 +28,6 @@ SOFTWARE.
 
 # Imports.
 import time
-
 from decouple import config, UndefinedValueError
 
 
