@@ -27,9 +27,9 @@ SOFTWARE.
 
 
 # Imports.
-import disnake
-from disnake import Option, OptionType
-from disnake.ext import commands
+import discord
+from discord import app_commands
+from discord.ext import commands
 
 import core
 from core import global_
@@ -41,129 +41,162 @@ class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
-        await inter.response.defer()
-
-    #
-    @commands.slash_command(
+    # ban
+    @app_commands.command(
         name='ban',
-        description='Bans a member from the server.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('reason', 'Reason for the ban.', OptionType.string)
-        ],
-        dm_permission=False
+        description='Bans a member from the server.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _ban(self, inter: disnake.CommandInter, member: disnake.Member,
-                   reason: str = "No reason provided.") -> None:
+    @app_commands.describe(
+        member='Mention the server member.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _ban(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member,
+        reason: str = 'No reason provided.'
+    ) -> None:
         await inter.guild.ban(member, reason=reason)
-        await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
+        await inter.response.send_message(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
-    #
-    @commands.slash_command(
+    # softban
+    @app_commands.command(
         name='softban',
-        description='Temporarily bans members to delete their messages.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('reason', 'Reason for the ban.', OptionType.string)
-        ],
-        dm_permission=False
+        description='Temporarily bans members to delete their messages.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def softban(self, inter: disnake.CommandInter, member: disnake.User, *, reason: str = 'No reason provided.'):
+    @app_commands.describe(
+        member='Mention the server member.',
+        reason='Reason for the ban.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _softban(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member,
+        *,
+        reason: str = 'No reason provided.'
+    ):
         await inter.guild.ban(member, delete_message_days=7, reason=reason)
         await inter.guild.unban(member)
-        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
+        await inter.response.send_message(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
 
-    #
-    @commands.slash_command(
+    # kick
+    @app_commands.command(
         name='kick',
-        description='Kicks a member from the server.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('reason', 'Reason for the kick.', OptionType.string)
-        ],
-        dm_permission=False
+        description='Kicks a member from the server.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _kick(self, inter: disnake.CommandInter, member: disnake.Member,
-                    reason: str = "No reason provided.") -> None:
+    @app_commands.describe(
+        member='Mention the server member.',
+        reason='Reason for the kick.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _kick(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member,
+        reason: str = 'No reason provided.'
+    ) -> None:
         await inter.guild.kick(member, reason=reason)
-        await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
+        await inter.response.send_message(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
 
-    #
-    @commands.slash_command(
+    # timeout
+    @app_commands.command(
         name='timeout',
-        description='Timeouts a member.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('duration', 'The duration of the timeout. Default is 30 seconds.', OptionType.integer),
-            Option('reason', 'Reason for the ban.', OptionType.string)
-        ],
-        dm_permission=False
+        description='Timeouts a member.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _deafen(self, inter: disnake.CommandInter, member: disnake.Member, duration: int = 30, *,
-                      reason: str = 'No reason provided.'):
+    @app_commands.describe(
+        member='Mention the server member.',
+        duration='The duration of the timeout.',
+        reason='Reason for the timeout.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _deafen(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member,
+        duration: int = 30,
+        *,
+        reason: str = 'No reason provided.'
+    ) -> None:
         await member.timeout(duration=duration, reason=reason)
-        await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
+        await inter.response.send_message(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
 
-    #
-    @commands.slash_command(
+    # unban
+    @app_commands.command(
         name='unban',
-        description='Unbans a member from the server.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True)
-        ],
-        dm_permission=False
+        description='Unbans a member from the server.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _unban(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
+    @app_commands.describe(
+        member='Mention the server member.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _unban(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member
+    ) -> None:
         await inter.guild.unban(member)
-        await inter.send(f'Member **{member.display_name}** has been unbanned!')
+        await inter.response.send_message(f'Member **{member.display_name}** has been unbanned!')
 
-    #
-    @commands.slash_command(
+    # purge
+    @app_commands.command(
         name='purge',
-        description='Clears messages within the given index.',
-        options=[
-            Option('amount', 'Specify the amount. Default is 1.', OptionType.integer)
-        ],
-        dm_permission=False
+        description='Clears messages within the given index.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _purge(self, inter: disnake.CommandInter, amount: int = 2) -> None:
+    @app_commands.describe(
+        amount='The amount of messages to purge. Default is 1.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _purge(
+        self,
+        inter: discord.Interaction,
+        amount: int = 2  # 1 + 1
+    ) -> None:
         await inter.channel.purge(limit=amount)
 
-    #
-    @commands.slash_command(
+    # purgeone
+    @app_commands.command(
         name='purgeone',
-        description='Purges a message by its identifier.',
-        options=[
-            Option('id', 'Identifier of the message.', OptionType.string, required=True)
-        ],
-        dm_permission=False
+        description='Purges a message by its identifier.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _purgeone(self, inter: disnake.CommandInter, id: str) -> None:
+    @app_commands.describe(
+        id='The ID of the message.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _purgeone(
+        self,
+        inter: discord.Interaction,
+        id: str
+    ) -> None:
         await (
             await inter.channel.fetch_message(int(id))
         ).delete()
-        await inter.send("Message has been purged!", ephemeral=True)
+        await inter.response.send_message('Message has been purged!', ephemeral=True)
 
-    #
-    @commands.slash_command(
+    # ripplepurge
+    @app_commands.command(
         name='ripplepurge',
-        description='Clears messages that are sent by a specific user within the given index.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('amount', 'Specify the amount. Default is 1.', OptionType.integer)
-        ],
-        dm_permission=False
+        description='Clears messages that are sent by a specific user within the given index.'
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _ripplepurge(self, inter: disnake.CommandInter, member: disnake.Member, amount: int = 1) -> None:
+    @app_commands.describe(
+        member='Mention the server member.',
+        amount='The amount of messages to purge through. Default is 10.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _ripplepurge(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member,
+        amount: int = 11  # 10 + 1
+    ) -> None:
         messages = []
 
         async for msg in inter.channel.history():
@@ -174,17 +207,20 @@ class Moderation(commands.Cog):
                 messages.append(msg)
 
         await inter.channel.delete_messages(messages)
-        await inter.send(f'Purged {amount} messages from **{member.name}#{member.discriminator}**', ephemeral=True)
+        await inter.response.send_message(
+            f'Purged {amount} messages from **{member.name}#{member.discriminator}**',
+            ephemeral=True
+        )
 
-    #
-    @commands.slash_command(
+    # snipe
+    @app_commands.command(
         name='snipe',
         description='Snipes messages within 25 seconds of getting deleted.',
-        dm_permission=False
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _snipe(self, inter: disnake.CommandInter) -> None:
-        webhook: disnake.Webhook = None
+    @app_commands.guild_only()
+    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _snipe(self, inter: discord.Interaction) -> None:
+        webhook: discord.Webhook = None
 
         if global_.snipeables:
             for snipeable in global_.snipeables:
@@ -198,15 +234,18 @@ class Moderation(commands.Cog):
                     else:
                         webhook = await inter.channel.create_webhook(name=snipeable.author.display_name)
 
-                    await webhook.send(snipeable.content, username=snipeable.author.name,
-                                       avatar_url=snipeable.author.avatar_url)
+                    await webhook.send(
+                        content=snipeable.content,
+                        username=snipeable.author.name,
+                        avatar_url=snipeable.author.avatar_url
+                    )
 
             await webhook.delete()
 
         else:
-            await inter.send('No messages were found in my list.', ephemeral=True)
+            await inter.response.send_message('No messages were found in my list.', ephemeral=True)
 
 
 # The setup() function for the cog.
-def setup(bot: core.IgKnite) -> None:
-    bot.add_cog(Moderation(bot))
+async def setup(bot: core.IgKnite) -> None:
+    await bot.add_cog(Moderation(bot))
