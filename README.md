@@ -45,7 +45,7 @@ The goal, in this case, is simply to create a bot that uses Discord's bleeding-e
 
 ## Usage
 
-You will be able to get a pre-hosted instance of IgKnite for your Discord server once it's up for production. If you want to however, get a little bit geeky, you can always set up IgKnite from source.
+You will be able to get a pre-hosted instance of IgKnite for your Discord server once it's up for production. If you want to however, get a little bit geeky, you can always set up IgKnite from source. [A small utility](guicer.py) is also being worked on in the meantime to provide the self-hosters with an easy-to-configure setup window!
 
 <br><br>
 
