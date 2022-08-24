@@ -30,21 +30,21 @@ SOFTWARE.
 import asyncio
 import os
 
-import disnake
-from disnake.ext import commands, tasks
+import discord
+from discord.ext import commands, tasks
 
 from core import global_
 
 
 # Set up a custom class for core functionality.
-class IgKnite(commands.AutoShardedInteractionBot):
+class IgKnite(commands.AutoShardedBot):
     '''
-    An overwritten version of `disnake.ext.commands.AutoShardedInteractionBot`.\n
+    An overwritten version of `discord.ext.commands.AutoShardedBot`.\n
     Basically works as the core class for all-things IgKnite!
     '''
 
     def __init__(self) -> None:
-        super().__init__(intents=disnake.Intents.all())
+        super().__init__(intents=discord.Intents.all())
         self.task_update_presence.start()
 
     async def on_connect(self) -> None:
@@ -57,9 +57,9 @@ class IgKnite(commands.AutoShardedInteractionBot):
     @tasks.loop(seconds=200)
     async def task_update_presence(self) -> None:
         await self.change_presence(
-            status=disnake.Status.dnd,
-            activity=disnake.Activity(
-                type=disnake.ActivityType.listening,
+            status=discord.Status.dnd,
+            activity=discord.Activity(
+                type=discord.ActivityType.listening,
                 name=f'slashes inside {len(self.guilds)} server(s)!'
             )
         )
@@ -68,11 +68,11 @@ class IgKnite(commands.AutoShardedInteractionBot):
     async def task_before_updating_presence(self) -> None:
         await self.wait_until_ready()
 
-    async def on_message(self, message: disnake.Message) -> None:
+    async def on_message(self, message: discord.Message) -> None:
         if message.author == self.user:
             return
 
-    async def on_message_delete(self, message: disnake.Message) -> None:
+    async def on_message_delete(self, message: discord.Message) -> None:
         global_.snipeables.append(message)
         await asyncio.sleep(25)
-        global_.snipeables.append(message)
+        global_.snipeables.remove(message)
