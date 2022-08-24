@@ -42,7 +42,7 @@ class Inspection(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    #
+    # guildinfo
     @app_commands.command(
         name='guildinfo',
         description='Shows all important information about the server.'
@@ -77,7 +77,7 @@ class Inspection(commands.Cog):
 
         await inter.response.send_message(embed=embed)
 
-    #
+    # userinfo
     @app_commands.command(
         name='userinfo',
         description='Shows all important information on a user.'
@@ -120,7 +120,7 @@ class Inspection(commands.Cog):
 
         await inter.response.send_message(embed=embed)
 
-    #
+    # roleinfo
     @app_commands.command(
         name='roleinfo',
         description='Shows all important information related to a specific role.'
@@ -156,7 +156,7 @@ class Inspection(commands.Cog):
 
         await inter.response.send_message(embed=embed)
 
-    #
+    # audit
     @app_commands.command(
         name='audit',
         description='Views the latest entries of the audit log in detail.'
