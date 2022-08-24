@@ -40,19 +40,21 @@ class App(UserControl):
             hint_text='Enter your bot token'
         )
         self.owner_id = TextField(
-            hint_text='Enter your user id'
+            hint_text='Enter your Discord user ID'
         )
         self.error_viewer = Text(
-            color='red'
+            value='Please fill in all the text fields!',
+            color='red',
+            visible=False
         )
         self.success_viewer = Text(
             value='Successfully Generated Config Files for IgKnite! You\'re good to go :)',
             color='green',
-            opacity=0
+            visible=False
         )
 
         return Column(
-            width=300,
+            width=400,
             controls=[
                 Row([Text(value='Guicer', style='headlineMedium')], alignment='center'),
                 Text(value='Bot Token', size=20),
@@ -66,9 +68,11 @@ class App(UserControl):
         )
 
     def generate_config(self, e) -> None:
-        if len(self.bot_token.value) == 0 or len(self.owner_id.value) == 0:
-            self.error_viewer.value = 'Please fill in all the text fields!'
-            self.success_viewer.opacity = 0
+        if (
+            len(self.bot_token.value) == 0
+            or len(self.owner_id.value) == 0
+        ):
+            self.error_viewer.visible = True
 
         else:
             here = os.path.join(os.getcwd(), '.env')
@@ -76,7 +80,7 @@ class App(UserControl):
 
             with open(here, write_mode) as f:
                 f.write(f'DISCORD_TOKEN={self.bot_token.value}\nDISCORD_OWNER_ID={self.owner_id.value}')
-                self.success_viewer.opacity = 100
+                self.success_viewer.visible = True
                 self.update()
 
         self.update()
