@@ -1,4 +1,3 @@
 python-decouple
-disnake
-PyNaCl
+discord.py[voice]
 flet
