@@ -27,8 +27,9 @@ SOFTWARE.
 
 
 # Imports.
-import asyncio
 import os
+import asyncio
+from typing import List
 
 import discord
 from discord.ext import commands, tasks
@@ -39,12 +40,23 @@ from core import global_
 # Set up a custom class for core functionality.
 class IgKnite(commands.AutoShardedBot):
     '''
-    An overwritten version of `discord.ext.commands.AutoShardedBot`.\n
+    An overwritten version of `discord.AutoShardedClient`.\n
     Basically works as the core class for all-things IgKnite!
     '''
 
-    def __init__(self) -> None:
-        super().__init__(intents=discord.Intents.all())
+    def __init__(
+        self,
+        *args,
+        initial_extensions: List[str],
+        **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.initial_extensions = initial_extensions
+
+    async def setup_hook(self) -> None:
+        for extension in self.initial_extensions:
+            await self.load_extension(extension)
+
         self.task_update_presence.start()
 
     async def on_connect(self) -> None:

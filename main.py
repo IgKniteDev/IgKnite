@@ -24,18 +24,25 @@ SOFTWARE.
 
 
 # Imports.
-from core import global_
-from core.bot import IgKnite
+import discord
+from discord.ext import commands
+
+from core import IgKnite, global_
 
 
 # Initialize the global variables from core.global_ .
 global_.initialize()
 
 # Set up an instance of IgKnite.
-bot = IgKnite()
+bot = IgKnite(
+    command_prefix=commands.when_mentioned,
+    intents=discord.Intents.all(),
+    initial_extensions=[
+        'cogs.general'
+    ]
+)
 
 
 # Run the bot.
 if __name__ == '__main__':
-    bot.load_extensions('cogs')
     bot.run(global_.tokens['discord'])
