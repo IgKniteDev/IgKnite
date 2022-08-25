@@ -28,8 +28,6 @@ SOFTWARE.
 
 # Imports.
 import time
-from typing import Dict
-
 from decouple import config, UndefinedValueError
 
 
@@ -54,10 +52,13 @@ def initialize() -> None:
 
     # Fetch the secrets.
     try:
-        tokens: Dict[str, str] = {
+        global tokens
+        tokens = {
             'discord': config('DISCORD_TOKEN', cast=str)
         }
-        identifiers: Dict[str, str | int] = {
+
+        global identifiers
+        identifiers = {
             'discord_owner': config('DISCORD_OWNER_ID', cast=int),
         }
 
