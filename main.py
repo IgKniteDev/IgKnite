@@ -41,6 +41,7 @@ global_.initialize()
 # The main() coroutine.
 async def main() -> None:
     logger = logging.getLogger('discord')
+    logger.setLevel(logging.INFO)
     handler = logging.handlers.RotatingFileHandler(
         filename='bot.log',
         encoding='utf-8',
