@@ -28,6 +28,8 @@ SOFTWARE.
 
 # Imports.
 import time
+import logging
+
 from decouple import config, UndefinedValueError
 
 
@@ -63,7 +65,7 @@ def initialize() -> None:
         }
 
     except UndefinedValueError:
-        print('''
+        logging.error('''
             One or more secrets have been left undefined.
             Consider going through the README.md file for proper instructions on setting IgKnite up.
         ''')

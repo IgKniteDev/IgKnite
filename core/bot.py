@@ -27,8 +27,8 @@ SOFTWARE.
 
 
 # Imports.
-import os
 import asyncio
+import logging
 from typing import List
 
 import discord
@@ -60,11 +60,10 @@ class IgKnite(commands.AutoShardedBot):
         self.task_update_presence.start()
 
     async def on_connect(self) -> None:
-        os.system('clear')
-        print(f'{self.user} | Connected to Discord\n')
+        logging.info(f'{self.user} | Connected to Discord\n')
 
     async def on_ready(self) -> None:
-        print(f'Deployed in {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.')
+        logging.info(f'Inside {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.')
 
     @tasks.loop(seconds=200)
     async def task_update_presence(self) -> None:
