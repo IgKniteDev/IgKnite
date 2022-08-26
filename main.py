@@ -62,7 +62,7 @@ async def main() -> None:
             'cogs.moderation'
         ]
     ) as bot:
-        await bot.run(global_.tokens['discord'])
+        await bot.start(global_.tokens['discord'])
 
 
 # Run.
