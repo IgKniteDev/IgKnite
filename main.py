@@ -26,6 +26,7 @@ SOFTWARE.
 # Imports.
 import asyncio
 import logging
+import logging.handlers
 
 import discord
 from discord.ext import commands
