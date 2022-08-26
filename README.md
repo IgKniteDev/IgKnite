@@ -39,13 +39,13 @@ Discord has always been the go-to platform for communities to make a solid base 
 
 ## Goals
 
-The goal, in this case, is simply to create a bot that uses Discord's bleeding-edge API in order to make **interactive commands really interactive**. Speaking of which, interactions like buttons, context menus are a must-have when it comes to making the usage path easier for the end-user. Combined with the inspiration and ideas from renowned bots like [MEE6](https://mee6.xyz) and [Fredboat](https://fredboat.com), we've decided to **raise IgKnite by developing a unified experience when it comes to music and moderation.** 
+The goal, in this case, is simply to create a bot that uses Discord's bleeding-edge API in order to make **interactive commands really interactive**. Speaking of which, interactions like buttons, context menus are a must-have when it comes to making the usage path easier for the end-user. Combined with the inspiration and ideas from renowned bots like [MEE6](https://mee6.xyz) and [Fredboat](https://fredboat.com), we have decided to **raise IgKnite by developing a unified experience when it comes to music and moderation.** 
 
 <br><br>
 
-## Usage
+## Wiki Usage
 
-You will be able to get a pre-hosted instance of IgKnite for your Discord server once it's up for production. A [GitHub Wiki](https://github.com/IgKniteDev/IgKnite/wiki) page is currently being worked on in order to help you self-host IgKnite directly on your local machine!
+Once stable enough for production, you will be able to access a pre-hosted copy of IgKnite with its full feature set, much like any other mainstream Discord bot. However, if you wanna get a little bit geeky, then we are happy to announce that [a GitHub Wiki](https://github.com/IgKniteDev/IgKnite/wiki) page is also being worked on in the meantime.
 
 <br><br>
 
