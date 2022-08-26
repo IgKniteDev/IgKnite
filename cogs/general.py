@@ -41,7 +41,7 @@ class General(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    #
+    # avatar
     @app_commands.command(
         name='avatar',
         description='Displays your avatar / the avatar of a server member.'
@@ -58,7 +58,7 @@ class General(commands.Cog):
 
         await inter.response.send_message(embed=embed)
 
-    #
+    # ping
     @app_commands.command(
         name='ping',
         description='Shows my current response time.',
