@@ -41,10 +41,10 @@ global_.initialize()
 async def main() -> None:
     logger = logging.getLogger('discord')
     handler = logging.handlers.RotatingFileHandler(
-        filename='discord.log',
+        filename='bot.log',
         encoding='utf-8',
         maxBytes=32 * 1024 * 1024,  # 32 MiB
-        backupCount=3,  # Rotate through 5 files
+        backupCount=3,  # Rotate through 3 files
     )
 
     datetime_format = '%Y-%m-%d %H:%M:%S'
