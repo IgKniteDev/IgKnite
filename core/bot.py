@@ -56,6 +56,7 @@ class IgKnite(commands.AutoShardedBot):
         for extension in self.initial_extensions:
             await self.load_extension(extension)
 
+        await self.tree.sync()
         self.task_update_presence.start()
 
     async def on_connect(self) -> None:
