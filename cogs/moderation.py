@@ -244,7 +244,7 @@ class Moderation(commands.Cog):
                     sniped_count += 1
 
             await webhook.delete()
-            await inter.followup.send(f'Sniped **{sniped_count}** messages.')
+            await inter.followup.send(f'Sniped **{sniped_count}** messages.', ephemeral=True)
 
         else:
             await inter.followup.send('No messages were found in my list.', ephemeral=True)
