@@ -149,10 +149,11 @@ class Moderation(commands.Cog):
         description='Clears messages within the given index.'
     )
     @app_commands.describe(
-        amount='The amount of messages to purge. Default is 1.'
+        amount='The amount of messages to purge. Default is 2.'
     )
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @core.decor.long_running_command
     async def _purge(
         self,
         inter: discord.Interaction,
@@ -187,15 +188,16 @@ class Moderation(commands.Cog):
     )
     @app_commands.describe(
         member='Mention the server member.',
-        amount='The amount of messages to purge through. Default is 10.'
+        amount='The amount of messages to purge. Default is 10.'
     )
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @core.decor.long_running_command
     async def _ripplepurge(
         self,
         inter: discord.Interaction,
         member: discord.Member,
-        amount: int = 11  # 10 + 1
+        amount: int = 10
     ) -> None:
         messages = []
 
@@ -207,8 +209,8 @@ class Moderation(commands.Cog):
                 messages.append(msg)
 
         await inter.channel.delete_messages(messages)
-        await inter.response.send_message(
-            f'Purged {amount} messages from **{member.name}#{member.discriminator}**',
+        await inter.followup.send(
+            f'Purged {len(messages)} messages that were sent by **{member}.**',
             ephemeral=True
         )
 
@@ -217,9 +219,9 @@ class Moderation(commands.Cog):
         name='snipe',
         description='Snipes messages within 25 seconds of getting deleted.'
     )
-    @core.decor.long_running_command
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @core.decor.long_running_command
     async def _snipe(self, inter: discord.Interaction) -> None:
         webhook: discord.Webhook = None
         sniped_count: int = 0
