@@ -1,5 +1,5 @@
 '''
-The core package for IgKnite.
+Predefined decorators to use across scripts.
 ---
 
 MIT License
@@ -26,11 +26,16 @@ SOFTWARE.
 '''
 
 
-# Initialize scripts.
-from . import datacls as datacls, decor as decor, embeds as embeds, global_ as global_
-from .bot import *
+# Imports.
+import functools
+import discord
 
 
-# Set version number.
-__version_info__ = ('2022', '8', '27')  # Year.Month.Day
-__version__ = '.'.join(__version_info__)
+# Decorator for longer-running commands.
+def long_running_command(func):
+    @functools.wraps(func)
+    async def callback(self, interaction: discord.Interaction, *args, **kwargs) -> None:
+        await interaction.response.defer(thinking=True)
+        await func(self, interaction, *args, **kwargs)
+
+    return callback

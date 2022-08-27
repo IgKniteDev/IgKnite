@@ -215,12 +215,14 @@ class Moderation(commands.Cog):
     # snipe
     @app_commands.command(
         name='snipe',
-        description='Snipes messages within 25 seconds of getting deleted.',
+        description='Snipes messages within 25 seconds of getting deleted.'
     )
+    @core.decor.long_running_command
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(self, inter: discord.Interaction) -> None:
         webhook: discord.Webhook = None
+        sniped_count: int = 0
 
         if global_.snipeables:
             for snipeable in global_.snipeables:
@@ -237,13 +239,15 @@ class Moderation(commands.Cog):
                     await webhook.send(
                         content=snipeable.content,
                         username=snipeable.author.name,
-                        avatar_url=snipeable.author.avatar_url
+                        avatar_url=snipeable.author.avatar
                     )
+                    sniped_count += 1
 
             await webhook.delete()
+            await inter.followup.send(f'Sniped **{sniped_count}** messages.')
 
         else:
-            await inter.response.send_message('No messages were found in my list.', ephemeral=True)
+            await inter.followup.send('No messages were found in my list.', ephemeral=True)
 
 
 # The setup() function for the cog.
