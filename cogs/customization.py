@@ -95,6 +95,8 @@ class Customization(commands.Cog):
         await role.delete()
         await inter.response.send_message(f'Role **@{role.name}** has been removed!')
 
+    # happy birthday to furti :cake:
+
     # makeinvite
     @app_commands.command(
         name='makeinvite',
@@ -149,7 +151,7 @@ class Customization(commands.Cog):
         nickname: str
     ) -> None:
         await member.edit(nick=nickname)
-        await inter.response.send_message(f'User <@{member.id}> has been renamed to **{nickname}**!')
+        await inter.response.send_message(f'User <@{member.id}> has been nicked to **{nickname}**!')
 
 
 # The setup() function for the cog.
