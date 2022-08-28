@@ -49,7 +49,7 @@ class Customization(commands.Cog):
         name='Name of the role.'
     )
     @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @app_commands.checks.has_any_role(LockRoles.admin)
     async def _makerole(
         self,
         inter: discord.Interaction,
@@ -68,7 +68,7 @@ class Customization(commands.Cog):
         role='Role to be assigned.'
     )
     @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @app_commands.checks.has_any_role(LockRoles.admin)
     async def _assignrole(
         self,
         inter: discord.Interaction,
@@ -77,6 +77,23 @@ class Customization(commands.Cog):
     ) -> None:
         await member.add_roles(role)
         await inter.response.send_message(f'Role <@&{role.id}> has been assigned to **{member.name}**!')
+
+    # removerole
+    @app_commands.command(
+        name='removerole',
+        description='Remove a role from the server.'
+    )
+    @app_commands.describe(
+        role='Mention the role.'
+    )
+    @app_commands.checks.has_any_role(LockRoles.admin)
+    async def _removerole(
+        self,
+        inter: discord.Interaction,
+        role: discord.Role
+    ) -> None:
+        await role.delete()
+        await inter.response.send_message(f'Role **@{role.name}** has been removed!')
 
     # makeinvite
     @app_commands.command(
