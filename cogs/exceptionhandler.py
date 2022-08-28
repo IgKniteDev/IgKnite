@@ -43,6 +43,8 @@ class ExceptionHandler(commands.Cog):
     async def on_error(self, inter: discord.Interaction, error: app_commands.AppCommandError):
         embed = core.embeds.ErrorEmbed(inter)
         embed.title = 'Whoops!'
+
+        error = getattr(error, 'original', error)
         embed.description = str(error)
 
         await inter.response.send_message(embed=embed)
