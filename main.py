@@ -31,7 +31,7 @@ import logging.handlers
 import discord
 from discord.ext import commands
 
-from core import IgKnite, global_
+from core import IgKnite, IgKniteTree, global_
 
 
 # Initialize the global variables from core.global_ .
@@ -57,9 +57,9 @@ async def main() -> None:
     async with IgKnite(
         command_prefix=commands.when_mentioned,
         intents=discord.Intents.all(),
+        tree_cls=IgKniteTree,
         initial_extensions=[
             'cogs.customization',
-            'cogs.exceptionhandler',
             'cogs.general',
             'cogs.inspection',
             'cogs.moderation',
