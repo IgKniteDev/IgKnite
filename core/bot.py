@@ -31,9 +31,28 @@ import asyncio
 from typing import List
 
 import discord
+from discord import app_commands
 from discord.ext import commands, tasks
 
+import core
 from core import global_
+
+
+# Subclassing discord.app_commands.CommandTree for exception handling and stuff.
+class IgKniteTree(app_commands.CommandTree):
+    async def on_error(
+        self,
+        inter: discord.Interaction,
+        error: app_commands.AppCommandError
+    ):
+        embed = core.embeds.ErrorEmbed(inter)
+        error = getattr(error, 'original', error)
+
+        if isinstance(error, app_commands.errors.MissingAnyRole):
+            embed.title = 'Whoops! You don\'t have the roles.'
+            embed.description = str(error)
+
+        await inter.response.send_message(embed=embed)
 
 
 # Set up a custom class for core functionality.
