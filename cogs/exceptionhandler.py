@@ -28,6 +28,7 @@ SOFTWARE.
 
 # Imports.
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 import core
@@ -39,8 +40,12 @@ class ExceptionHandler(commands.Cog):
         self.bot = bot
         self.bot.tree.error(self.on_error)
 
-    async def on_error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
-        print(error)
+    async def on_error(self, inter: discord.Interaction, error: app_commands.AppCommandError):
+        embed = core.embeds.ErrorEmbed(inter)
+        embed.title = 'Whoops!'
+        embed.description = str(error)
+
+        await inter.response.send_message(embed=embed)
 
 
 # The setup() function for the cog.
