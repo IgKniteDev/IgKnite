@@ -60,7 +60,7 @@ class IgKnite(commands.AutoShardedBot):
         self.task_update_presence.start()
 
     async def on_connect(self) -> None:
-        print(f'Connected to Discord as {self.user}.\n')
+        print(f'\nConnected to Discord as {self.user}.')
 
     async def on_ready(self) -> None:
         print(f'Inside {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.')

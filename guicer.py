@@ -67,7 +67,7 @@ class App(UserControl):
             ]
         )
 
-    def generate_config(self, e) -> None:
+    def generate_config(self, _) -> None:
         if (
             len(self.bot_token.value) == 0
             or len(self.owner_id.value) == 0

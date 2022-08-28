@@ -1,4 +1,7 @@
 '''
+The `ExceptionHandler` cog for IgKnite.
+---
+
 MIT License
 
 Copyright (c) 2022 IgKnite
@@ -24,48 +27,27 @@ SOFTWARE.
 
 
 # Imports.
-import asyncio
-import logging
-import logging.handlers
-
 import discord
+from discord import app_commands
 from discord.ext import commands
 
-from core import IgKnite, global_
+import core
 
 
-# Initialize the global variables from core.global_ .
-global_.initialize()
+# The actual cog.
+class ExceptionHandler(commands.Cog):
+    def __init__(self, bot: core.IgKnite):
+        self.bot = bot
+        self.bot.tree.error(self.on_error)
+
+    async def on_error(self, inter: discord.Interaction, error: app_commands.AppCommandError):
+        embed = core.embeds.ErrorEmbed(inter)
+        embed.title = 'Whoops!'
+        embed.description = str(error)
+
+        await inter.response.send_message(embed=embed)
 
 
-# The main() coroutine.
-async def main() -> None:
-    logger = logging.getLogger('discord')
-    logger.setLevel(logging.INFO)
-    handler = logging.handlers.RotatingFileHandler(
-        filename='bot.log',
-        encoding='utf-8',
-        maxBytes=32 * 1024 * 1024,  # 32 MiB
-        backupCount=3,  # Rotate through 3 files
-    )
-
-    datetime_format = '%Y-%m-%d %H:%M:%S'
-    formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', datetime_format, style='{')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    async with IgKnite(
-        command_prefix=commands.when_mentioned,
-        intents=discord.Intents.all(),
-        initial_extensions=[
-            'cogs.exceptionhandler',
-            'cogs.general',
-            'cogs.inspection',
-            'cogs.moderation'
-        ]
-    ) as bot:
-        await bot.start(global_.tokens['discord'])
-
-
-# Run.
-asyncio.run(main())
+# The setup() function for the cog.
+async def setup(bot: core.IgKnite) -> None:
+    await bot.add_cog(ExceptionHandler(bot))
