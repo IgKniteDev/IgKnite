@@ -58,10 +58,11 @@ async def main() -> None:
         command_prefix=commands.when_mentioned,
         intents=discord.Intents.all(),
         initial_extensions=[
+            'cogs.customization',
             'cogs.exceptionhandler',
             'cogs.general',
             'cogs.inspection',
-            'cogs.moderation'
+            'cogs.moderation',
         ]
     ) as bot:
         await bot.start(global_.tokens['discord'])
