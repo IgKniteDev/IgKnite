@@ -31,18 +31,6 @@ import random
 import discord
 
 
-# A really simple function to generate random footers!
-def generate_footer() -> str:
-    samples = [
-        'When pigs fly...',
-        'Stunned stork!',
-        'A perfect debugged life doesn\'t exist.',
-        'Haven\'t I made it obvious?',
-        'Hello World, from the other side!'
-    ]
-    return random.choice(samples)
-
-
 # Overwrite discord.Embed class to form custom embeds.
 class ClassicEmbed(discord.Embed):
     '''
@@ -55,7 +43,15 @@ class ClassicEmbed(discord.Embed):
         )
 
         self.set_footer(
-            text=generate_footer(),
+            text=random.choice(
+                [
+                    'When pigs fly...',
+                    'Stunned stork!',
+                    'A perfect debugged life doesn\'t exist.',
+                    'Haven\'t I made it obvious?',
+                    'Hello World, from the other side!'
+                ]
+            ),
             icon_url=inter.user.avatar
         )
 
@@ -71,6 +67,6 @@ class ErrorEmbed(discord.Embed):
         )
 
         self.set_footer(
-            text=generate_footer(),
+            text='Dot.',
             icon_url=inter.user.avatar
         )
