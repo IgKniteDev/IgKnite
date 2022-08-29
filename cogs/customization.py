@@ -153,6 +153,91 @@ class Customization(commands.Cog):
         await member.edit(nick=nickname)
         await inter.response.send_message(f'User {member.mention} has been nicked to **{nickname}**!')
 
+    # makechannel
+    @app_commands.command(
+        name='makechannel',
+        description='Create a new text channel.'
+    )
+    @app_commands.describe(
+        name='Name of the channel.',
+        category='Which category you want the channel to be in.',
+        description='Description of the channel.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_role(LockRoles.admin)
+    async def _makechannel(
+        self,
+        inter: discord.Interaction,
+        name: str,
+        category: discord.CategoryChannel,
+        description: str | None
+    ) -> None:
+        channel = await inter.guild.create_text_channel(
+            name=name,
+            topic=description,
+            category=category
+        )
+        await inter.response.send_message(f'Channel {channel.mention} has been created!')
+
+    # makevc
+    @app_commands.command(
+        name='makevc',
+        description='Create a new voice channel.'
+    )
+    @app_commands.describe(
+        name='Name of the channel.',
+        category='Which category you want the channel to be in.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_role(LockRoles.admin)
+    async def _makevc(
+        self,
+        inter: discord.Interaction,
+        name: str,
+        category: discord.CategoryChannel
+    ) -> None:
+        vc = await inter.guild.create_voice_channel(
+            name=name,
+            category=category
+        )
+        await inter.response.send_message(f'VC {vc.mention} has been created!')
+
+    # makecategory
+    @app_commands.command(
+        name='makecategory',
+        description='Create a new channel category.'
+    )
+    @app_commands.describe(
+        name='Name of the category.',
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_role(LockRoles.admin)
+    async def _makecategory(
+        self,
+        inter: discord.Interaction,
+        name: str,
+    ) -> None:
+        category = await inter.guild.create_category(name=name)
+        await inter.response.send_message(f'Category {category.mention} has been created!')
+
+    # removechannel
+    @app_commands.command(
+        name='removechannel',
+        description='Remove a channel from the server.'
+    )
+    @app_commands.describe(
+        channel='Channel you want to delete.'
+    )
+    @app_commands.guild_only()
+    @app_commands.checks.has_role(LockRoles.admin)
+    async def _removechannel(
+        self,
+        inter: discord.Interaction,
+        channel: discord.TextChannel | discord.VoiceChannel
+    ) -> None:
+        await channel.delete()
+        await inter.response.send_message('Channel has been deleted!')
+
 
 # The setup() function for the cog.
 async def setup(bot: core.IgKnite) -> None:
