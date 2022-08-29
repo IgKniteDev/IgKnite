@@ -550,7 +550,10 @@ class Music(commands.Cog):
     ) -> VoiceState:
         state = self.voice_states.get(inter.guild.id)
 
-        if not state or not state.exists:
+        if (
+            not state
+            or not state.exists
+        ):
             state = VoiceState(self.bot, inter)
             self.voice_states[inter.guild.id] = state
 
@@ -568,7 +571,7 @@ class Music(commands.Cog):
             *args,
             **kwargs
         ) -> None:
-            inter.voice_state = self.get_voice_state(inter)
+            inter.extras['voice_state'] = self.get_voice_state(inter)
             await func(self, inter, *args, **kwargs)
 
         return callback
@@ -579,16 +582,18 @@ class Music(commands.Cog):
     )
     @app_commands.guild_only()
     @ensure_voice_state
+    @core.decor.long_running_command
     async def _join(
         self,
         inter: discord.Interaction
     ) -> None:
         destination = inter.user.voice.channel
+        state = inter.extras['voice_state']
 
-        if inter.voice_state.voice:
-            await inter.voice_state.voice.move_to(destination)
+        if state.voice:
+            await state.voice.move_to(destination)
         else:
-            inter.voice_state.voice = await destination.connect()
+            state.voice = await destination.connect()
 
 
 # The setup() function for the cog.
