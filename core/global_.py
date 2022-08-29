@@ -56,12 +56,14 @@ def initialize() -> None:
     try:
         global tokens
         tokens = {
-            'discord': config('DISCORD_TOKEN', cast=str)
+            'discord': config('DISCORD_TOKEN', cast=str),
+            'spotify': config('SPOTIFY_CLIENT_SECRET', cast=str)
         }
 
         global identifiers
         identifiers = {
             'discord_owner': config('DISCORD_OWNER_ID', cast=int),
+            'spotify_client': config('SPOTIFY_CLIENT_ID', cast=str)
         }
 
     except UndefinedValueError:
