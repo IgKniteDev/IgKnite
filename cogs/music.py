@@ -563,7 +563,7 @@ class Music(commands.Cog):
         for state in self.voice_states.values():
             self.bot.loop.create_task(state.stop())
 
-    def ensure_voice_state(func):
+    def put_me_in_voice_state(func):
         @functools.wraps(func)
         async def callback(
             self,
@@ -582,7 +582,7 @@ class Music(commands.Cog):
         description='Joins the voice channel that you\'re in.',
     )
     @app_commands.guild_only()
-    @ensure_voice_state
+    @put_me_in_voice_state
     async def _join(
         self,
         inter: discord.Interaction
@@ -596,6 +596,30 @@ class Music(commands.Cog):
             state.voice = await destination.connect()
 
         await inter.followup.send(f'Joined **{destination}.**')
+
+    @app_commands.command(
+        name='summon',
+        description='Summons me to a particular voice channel.'
+    )
+    @app_commands.describe(
+        channel='The voice channel to join.'
+    )
+    @app_commands.guild_only()
+    @put_me_in_voice_state
+    async def _summon(
+        self,
+        inter: discord.Interaction,
+        channel: discord.VoiceChannel | discord.StageChannel | None
+    ) -> None:
+        destination = channel or inter.user.voice.channel
+        state = inter.extras['voice_state']
+
+        if state.voice:
+            await state.voice.move_to(destination)
+        else:
+            state.voice = await destination.connect()
+
+        await inter.followup.send(f'Got booped to **{destination}.**')
 
 
 # The setup() function for the cog.
