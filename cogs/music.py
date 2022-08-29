@@ -572,6 +572,7 @@ class Music(commands.Cog):
             **kwargs
         ) -> None:
             inter.extras['voice_state'] = self.get_voice_state(inter)
+            await inter.response.defer()
             await func(self, inter, *args, **kwargs)
 
         return callback
@@ -582,7 +583,6 @@ class Music(commands.Cog):
     )
     @app_commands.guild_only()
     @ensure_voice_state
-    @core.decor.long_running_command
     async def _join(
         self,
         inter: discord.Interaction
@@ -594,6 +594,8 @@ class Music(commands.Cog):
             await state.voice.move_to(destination)
         else:
             state.voice = await destination.connect()
+
+        await inter.followup.send(f'Joined **{destination}.**')
 
 
 # The setup() function for the cog.

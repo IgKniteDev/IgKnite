@@ -52,7 +52,11 @@ class IgKniteTree(app_commands.CommandTree):
             embed.title = 'Whoops! You don\'t have the roles.'
 
         embed.description = str(error)
-        await inter.response.send_message(embed=embed)
+
+        if not inter.response.is_done:
+            await inter.response.send_message(embed=embed)
+        else:
+            await inter.followup.send(embed=embed)
 
 
 # Set up a custom class for core functionality.
