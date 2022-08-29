@@ -579,36 +579,14 @@ class Music(commands.Cog):
 
     @app_commands.command(
         name='join',
-        description='Joins the voice channel that you\'re in.',
+        description='Joins the voice channel you\'re in. You can also specify which channel to join.',
     )
     @app_commands.guild_only()
     @put_me_in_voice_state
     async def _join(
         self,
-        inter: discord.Interaction
-    ) -> None:
-        destination = inter.user.voice.channel
-        state = inter.extras['voice_state']
-
-        if state.voice:
-            await state.voice.move_to(destination)
-        else:
-            state.voice = await destination.connect()
-
-        await inter.followup.send(f'Joined **{destination}.**')
-
-    @app_commands.command(
-        name='summon',
-        description='Summons me to a particular voice channel.'
-    )
-    @app_commands.describe(
-        channel='The voice channel to join.'
-    )
-    @app_commands.guild_only()
-    @put_me_in_voice_state
-    async def _summon(
-        self,
         inter: discord.Interaction,
+        *,
         channel: discord.VoiceChannel | discord.StageChannel | None
     ) -> None:
         destination = channel or inter.user.voice.channel
@@ -619,7 +597,9 @@ class Music(commands.Cog):
         else:
             state.voice = await destination.connect()
 
-        await inter.followup.send(f'Got booped to **{destination}.**')
+        await inter.followup.send(
+            f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
+        )
 
 
 # The setup() function for the cog.
