@@ -430,7 +430,8 @@ class SongQueue(asyncio.Queue):
         )
 
         embed = core.embeds.ClassicEmbed(inter).set_footer(
-            text=f'Viewing page {page}/{pages}'
+            text=f'Viewing page {page}/{pages}',
+            icon_url=inter.user.avatar
         )
         embed.description = f'**{len(inter.voice_state.songs)} tracks:**\n\n{queue_str}'
 
@@ -624,6 +625,37 @@ class Music(commands.Cog):
         await state.stop()
         del self.voice_states[inter.guild.id]
         await inter.followup.send('Left voice state.')
+
+    # volume
+    @app_commands.command(
+        name='volume',
+        help='Views / sets the volume of the current track.'
+    )
+    @app_commands.describe(
+        volume='The volume to set.'
+    )
+    @app_commands.guild_only()
+    @put_me_in_voice_state
+    async def _volume(
+        self,
+        inter: discord.Interaction,
+        volume: float | None
+    ) -> None:
+        state = inter.extras['voice_state']
+
+        if not state.is_playing:
+            return await inter.followup.send('There\'s nothing being played at the moment.')
+
+        if not volume:
+            embed = core.embeds.ClassicEmbed(inter)
+            embed.title = f'Currently playing on {state.current.source.volume * 100}% volume.'
+            return await inter.followup.send(embed=embed)
+
+        if not 0 < volume <= 200:
+            return await inter.followup.send('Volume must be between 1 and 200 to execute the command.')
+
+        state.current.source.volume = volume / 100
+        await inter.followup.send(f'Volume of the player is now set to **{volume}%**')
 
 
 # The setup() function for the cog.
