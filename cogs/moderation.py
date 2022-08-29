@@ -223,7 +223,7 @@ class Moderation(commands.Cog):
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
     @core.decor.long_running_command
     async def _snipe(
-        self, 
+        self,
         inter: discord.Interaction
     ) -> None:
         webhook: discord.Webhook = None
