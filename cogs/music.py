@@ -608,6 +608,7 @@ class Music(commands.Cog):
         help='Clears the queue and leaves the voice channel.'
     )
     @app_commands.guild_only()
+    @put_me_in_voice_state
     async def _leave(
         self,
         inter: discord.Interaction
