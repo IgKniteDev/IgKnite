@@ -577,6 +577,7 @@ class Music(commands.Cog):
 
         return callback
 
+    # join
     @app_commands.command(
         name='join',
         description='Joins the voice channel you\'re in. You can also specify which channel to join.',
@@ -600,6 +601,28 @@ class Music(commands.Cog):
         await inter.followup.send(
             f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
         )
+
+    # leave
+    @app_commands.command(
+        name='leave',
+        help='Clears the queue and leaves the voice channel.'
+    )
+    @app_commands.guild_only()
+    async def _leave(
+        self,
+        inter: discord.Interaction
+    ) -> None:
+        state = inter.extras['voice_state']
+
+        if not state.voice:
+            return await inter.followup.send('I am not connected to any voice channel.')
+
+        if not inter.user.voice:
+            return await inter.followup.send('You are not in the same voice channel as mine.')
+
+        await state.stop()
+        del self.voice_states[inter.guild.id]
+        await inter.followup.send('Left voice state.')
 
 
 # The setup() function for the cog.
