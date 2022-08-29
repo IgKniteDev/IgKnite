@@ -34,7 +34,12 @@ import discord
 # Decorator for longer-running commands.
 def long_running_command(func):
     @functools.wraps(func)
-    async def callback(self, interaction: discord.Interaction, *args, **kwargs) -> None:
+    async def callback(
+        self,
+        *args,
+        interaction: discord.Interaction,
+        **kwargs
+    ) -> None:
         await interaction.response.defer(thinking=True)
         await func(self, interaction, *args, **kwargs)
 

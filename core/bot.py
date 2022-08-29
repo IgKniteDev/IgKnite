@@ -98,11 +98,17 @@ class IgKnite(commands.AutoShardedBot):
     async def task_before_updating_presence(self) -> None:
         await self.wait_until_ready()
 
-    async def on_message(self, message: discord.Message) -> None:
+    async def on_message(
+        self,
+        message: discord.Message
+    ) -> None:
         if message.author == self.user:
             return
 
-    async def on_message_delete(self, message: discord.Message) -> None:
+    async def on_message_delete(
+        self,
+        message: discord.Message
+    ) -> None:
         global_.snipeables.append(message)
         await asyncio.sleep(25)
         global_.snipeables.remove(message)
