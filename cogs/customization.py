@@ -49,14 +49,14 @@ class Customization(commands.Cog):
         name='Name of the role.'
     )
     @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.admin)
+    @app_commands.checks.has_role(LockRoles.admin)
     async def _makerole(
         self,
         inter: discord.Interaction,
         name: str
     ) -> None:
         await inter.guild.create_role(name=name)
-        await inter.response.send_message(f'Role **@{name}** has been created!')
+        await inter.response.send_message(f'Role **{name}** has been created!')
 
     # assignrole
     @app_commands.command(
@@ -68,7 +68,7 @@ class Customization(commands.Cog):
         role='Role to be assigned.'
     )
     @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.admin)
+    @app_commands.checks.has_role(LockRoles.admin)
     async def _assignrole(
         self,
         inter: discord.Interaction,
@@ -86,7 +86,7 @@ class Customization(commands.Cog):
     @app_commands.describe(
         role='Mention the role.'
     )
-    @app_commands.checks.has_any_role(LockRoles.admin)
+    @app_commands.checks.has_role(LockRoles.admin)
     async def _removerole(
         self,
         inter: discord.Interaction,
@@ -118,6 +118,7 @@ class Customization(commands.Cog):
         reason: str = 'No reason provided'
     ) -> None:
         invite = await inter.channel.create_invite(max_age=max_age, max_uses=max_uses, reason=reason)
+
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Link',
             value=f'https://discord.gg/{invite.code}'
@@ -128,7 +129,6 @@ class Customization(commands.Cog):
             name='Lifetime',
             value='Unlimited' if max_age == 0 else f'{max_age} Seconds'
         )
-
         embed.title = 'Created a new invite!'
 
         await inter.followup.send(embed=embed)
