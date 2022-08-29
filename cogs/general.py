@@ -50,7 +50,11 @@ class General(commands.Cog):
         member='Mention the server member.'
     )
     @app_commands.guild_only()
-    async def _avatar(self, inter: discord.Interaction, member: discord.Member = None) -> None:
+    async def _avatar(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member = None
+    ) -> None:
         member = inter.user if not member else member
 
         embed = core.embeds.ClassicEmbed(inter).set_image(url=member.avatar)
@@ -63,7 +67,10 @@ class General(commands.Cog):
         name='ping',
         description='Shows my current response time.',
     )
-    async def _ping(self, inter: discord.Interaction) -> None:
+    async def _ping(
+        self,
+        inter: discord.Interaction
+    ) -> None:
         system_latency = round(self.bot.latency * 1000)
 
         start_time = time.time()
