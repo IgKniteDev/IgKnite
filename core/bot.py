@@ -50,8 +50,8 @@ class IgKniteTree(app_commands.CommandTree):
 
         if isinstance(error, app_commands.errors.MissingAnyRole):
             embed.title = 'Whoops! You don\'t have the roles.'
-            embed.description = str(error)
 
+        embed.description = str(error)
         await inter.response.send_message(embed=embed)
 
 
