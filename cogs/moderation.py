@@ -222,7 +222,10 @@ class Moderation(commands.Cog):
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
     @core.decor.long_running_command
-    async def _snipe(self, inter: discord.Interaction) -> None:
+    async def _snipe(
+        self,
+        inter: discord.Interaction
+    ) -> None:
         webhook: discord.Webhook = None
         sniped_count: int = 0
 
