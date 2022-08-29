@@ -49,7 +49,10 @@ class Inspection(commands.Cog):
     )
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _guildinfo(self, inter: discord.Interaction) -> None:
+    async def _guildinfo(
+        self,
+        inter: discord.Interaction
+    ) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
             value=datetime.strptime(
@@ -87,7 +90,11 @@ class Inspection(commands.Cog):
     )
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _userinfo(self, inter: discord.Interaction, member: discord.Member = None) -> None:
+    async def _userinfo(
+        self,
+        inter: discord.Interaction,
+        member: discord.Member = None
+    ) -> None:
         member = inter.user if not member else member
 
         embed = core.embeds.ClassicEmbed(inter).add_field(
@@ -130,7 +137,11 @@ class Inspection(commands.Cog):
     )
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _roleinfo(self, inter: discord.Interaction, role: discord.Role) -> None:
+    async def _roleinfo(
+        self,
+        inter: discord.Interaction,
+        role: discord.Role
+    ) -> None:
         embed = core.embeds.ClassicEmbed(inter).add_field(
             name='Birth',
             value=datetime.strptime(
@@ -166,7 +177,11 @@ class Inspection(commands.Cog):
     )
     @app_commands.guild_only()
     @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _audit(self, inter: discord.Interaction, limit: int = 5):
+    async def _audit(
+        self,
+        inter: discord.Interaction,
+        limit: int = 5
+    ):
         if limit not in range(1, 101):
             await inter.response.send_message(f'{limit} is not within the given range.', ephemeral=True)
 
