@@ -96,6 +96,7 @@ class Customization(commands.Cog):
         await inter.response.send_message(f'Role {role.mention} has been removed!')
 
     # happy birthday to furti :cake:
+    # edit: this is hitblast and here's your birthday gift commit :D
 
     # makeinvite
     @app_commands.command(
@@ -151,7 +152,7 @@ class Customization(commands.Cog):
         nickname: str
     ) -> None:
         await member.edit(nick=nickname)
-        await inter.response.send_message(f'User {member.mention} has been nicked to **{nickname}**!')
+        await inter.response.send_message(f'Member {member.mention} has been nicked to **{nickname}**!')
 
     # makechannel
     @app_commands.command(

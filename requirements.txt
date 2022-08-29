@@ -1,4 +1,6 @@
 python-decouple
 discord.py[speed]
 PyNaCl
+youtube-dl
+spotipy
 flet
