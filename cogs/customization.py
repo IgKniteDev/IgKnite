@@ -55,8 +55,8 @@ class Customization(commands.Cog):
         inter: discord.Interaction,
         name: str
     ) -> None:
-        await inter.guild.create_role(name=name)
-        await inter.response.send_message(f'Role **{name}** has been created!')
+        role = await inter.guild.create_role(name=name)
+        await inter.response.send_message(f'Role {role.mention} has been created!')
 
     # assignrole
     @app_commands.command(
@@ -76,7 +76,7 @@ class Customization(commands.Cog):
         role: discord.Role
     ) -> None:
         await member.add_roles(role)
-        await inter.response.send_message(f'Role <@&{role.id}> has been assigned to **{member.name}**!')
+        await inter.response.send_message(f'Role {role.mention} has been assigned to **{member.display_name}**!')
 
     # removerole
     @app_commands.command(
@@ -93,7 +93,7 @@ class Customization(commands.Cog):
         role: discord.Role
     ) -> None:
         await role.delete()
-        await inter.response.send_message(f'Role **@{role.name}** has been removed!')
+        await inter.response.send_message(f'Role {role.mention} has been removed!')
 
     # happy birthday to furti :cake:
 
@@ -115,7 +115,7 @@ class Customization(commands.Cog):
         inter: discord.Interaction,
         max_age: int = 0,
         max_uses: int = 0,
-        reason: str = 'No reason provided'
+        reason: str = 'No reason provided.'
     ) -> None:
         invite = await inter.channel.create_invite(max_age=max_age, max_uses=max_uses, reason=reason)
 
@@ -151,7 +151,7 @@ class Customization(commands.Cog):
         nickname: str
     ) -> None:
         await member.edit(nick=nickname)
-        await inter.response.send_message(f'User <@{member.id}> has been nicked to **{nickname}**!')
+        await inter.response.send_message(f'User {member.mention} has been nicked to **{nickname}**!')
 
 
 # The setup() function for the cog.
