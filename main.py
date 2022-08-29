@@ -63,6 +63,7 @@ async def main() -> None:
             'cogs.general',
             'cogs.inspection',
             'cogs.moderation',
+            'cogs.music'
         ]
     ) as bot:
         await bot.start(global_.tokens['discord'])
