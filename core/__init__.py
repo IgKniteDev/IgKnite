@@ -32,5 +32,5 @@ from .bot import *
 
 
 # Set version number.
-__version_info__ = ('2022', '8', '27')  # Year.Month.Day
+__version_info__ = ('2022', '8', '29')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
