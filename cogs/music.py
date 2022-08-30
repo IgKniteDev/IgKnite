@@ -635,7 +635,10 @@ class Music(commands.Cog):
         volume: float | None
     ) -> None:
         if not inter.extras['voice_state'].is_playing:
-            return await inter.followup.send('There\'s nothing being played at the moment.')
+            return await inter.followup.send(
+                'There\'s nothing being played at the moment.',
+                ephemeral=True
+            )
 
         if not volume:
             embed = core.embeds.ClassicEmbed(inter)
@@ -668,6 +671,29 @@ class Music(commands.Cog):
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
+
+    # pause
+    @app_commands.command(
+        name='pause',
+        description='Pauses the music playback.'
+    )
+    @app_commands.guild_only()
+    async def _pause(
+        self,
+        inter: discord.Interaction
+    ) -> None:
+        if not inter.extras['voice_state'].voice:
+            return await inter.followup.send('I am not connected to any voice channel.')
+
+        if not inter.user.voice:
+            return await inter.followup.send('You are not in the same voice channel as mine.')
+
+        if (
+            inter.extras['voice_state'].is_playing 
+            and inter.extras['voice_state'].voice.is_playing()
+        ):
+            inter.extras['voice_state'].voice.pause()
+            await inter.followup.send('Paused playback.')
 
     # play
     @app_commands.command(
