@@ -248,8 +248,6 @@ class Spotify:
 
 # View for the `now` command.
 class NowCommandView(discord.ui.View):
-    message: discord.Message
-
     def __init__(
         self,
         inter: discord.Interaction,
@@ -267,23 +265,23 @@ class NowCommandView(discord.ui.View):
         button: discord.ui.Button,
         inter: discord.MessageInteraction
     ) -> None:
-        self.inter.voice_state.loop = not self.inter.voice_state.loop
+        self.inter.extras['voice_state'].loop = not self.inter.extras['voice_state'].loop
 
-        if not self.inter.voice_state.loop:
+        if not self.inter.extras['voice_state'].loop:
             button.label = 'Enable Loop'
             button.style = discord.ButtonStyle.green
         else:
             button.label = 'Disable Loop'
             button.style = discord.ButtonStyle.red
 
-        await inter.response.edit_message(view=self)
+        await self.inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
             if 'Loop' in children.label:
                 children.disabled = True
 
-        await self.message.edit(view=self)
+        await self.inter.response.edit_message(view=self)
 
 
 # View for the `play` command.
@@ -300,8 +298,6 @@ class PlayCommandView(discord.ui.View):
 
 # View for the `queue` command.
 class QueueCommandView(discord.ui.View):
-    message: discord.Message
-
     def __init__(
         self,
         inter: discord.Interaction,
@@ -316,7 +312,7 @@ class QueueCommandView(discord.ui.View):
         button: discord.ui.Button,
         inter: discord.MessageInteraction
     ) -> None:
-        self.inter.voice_state.songs.clear()
+        self.inter.extras['voice_state'].songs.clear()
 
         button.label = 'Cleared'
         button.style = discord.ButtonStyle.gray
@@ -324,8 +320,8 @@ class QueueCommandView(discord.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await inter.response.edit_message(
-            embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
+        await self.inter.response.edit_message(
+            embed=self.inter.extras['voice_state'].songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -335,13 +331,13 @@ class QueueCommandView(discord.ui.View):
         button: discord.ui.Button,
         inter: discord.MessageInteraction
     ) -> None:
-        self.inter.voice_state.songs.shuffle()
+        self.inter.extras['voice_state'].songs.shuffle()
 
         button.label = 'Shuffled'
         button.disabled = True
 
-        await inter.response.edit_message(
-            embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
+        await self.inter.response.edit_message(
+            embed=self.inter.extras['voice_state'].songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -349,7 +345,7 @@ class QueueCommandView(discord.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.message.edit(view=self)
+        await self.inter.response.edit_message(view=self)
 
 
 # The Song class which represents the instance of a song.
@@ -419,21 +415,21 @@ class SongQueue(asyncio.Queue):
         page: int = 1
     ) -> discord.Embed:
         items_per_page = 10
-        pages = math.ceil(len(inter.voice_state.songs) / items_per_page)
+        pages = math.ceil(len(inter.extras['voice_state'].songs) / items_per_page)
 
         start = (page - 1) * items_per_page
         end = start + items_per_page
 
         queue_str = ''.join(
             '`{0}.` [**{1.source.title}**]({1.source.url})\n'.format(i + 1, song)
-            for i, song in enumerate(inter.voice_state.songs[start:end], start=start)
+            for i, song in enumerate(inter.extras['voice_state'].songs[start:end], start=start)
         )
 
         embed = core.embeds.ClassicEmbed(inter).set_footer(
             text=f'Viewing page {page}/{pages}',
             icon_url=inter.user.avatar
         )
-        embed.description = f'**{len(inter.voice_state.songs)} tracks:**\n\n{queue_str}'
+        embed.description = f"**{len(inter.extras['voice_state'].songs)} tracks:**\n\n{queue_str}"
 
         return embed
 
@@ -592,12 +588,11 @@ class Music(commands.Cog):
         channel: discord.VoiceChannel | discord.StageChannel | None
     ) -> None:
         destination = channel or inter.user.voice.channel
-        state = inter.extras['voice_state']
 
-        if state.voice:
-            await state.voice.move_to(destination)
+        if inter.extras['voice_state'].voice:
+            await inter.extras['voice_state'].voice.move_to(destination)
         else:
-            state.voice = await destination.connect()
+            inter.extras['voice_state'].voice = await destination.connect()
 
         await inter.followup.send(
             f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
@@ -606,7 +601,7 @@ class Music(commands.Cog):
     # leave
     @app_commands.command(
         name='leave',
-        help='Clears the queue and leaves the voice channel.'
+        description='Clears the queue and leaves the voice channel.'
     )
     @app_commands.guild_only()
     @put_me_in_voice_state
@@ -614,22 +609,20 @@ class Music(commands.Cog):
         self,
         inter: discord.Interaction
     ) -> None:
-        state = inter.extras['voice_state']
-
-        if not state.voice:
+        if not inter.extras['voice_state'].voice:
             return await inter.followup.send('I am not connected to any voice channel.')
 
         if not inter.user.voice:
             return await inter.followup.send('You are not in the same voice channel as mine.')
 
-        await state.stop()
+        await inter.extras['voice_state'].stop()
         del self.voice_states[inter.guild.id]
         await inter.followup.send('Left voice state.')
 
     # volume
     @app_commands.command(
         name='volume',
-        help='Views / sets the volume of the current track.'
+        description='Views / sets the volume of the current track.'
     )
     @app_commands.describe(
         volume='The volume to set.'
@@ -641,21 +634,40 @@ class Music(commands.Cog):
         inter: discord.Interaction,
         volume: float | None
     ) -> None:
-        state = inter.extras['voice_state']
-
-        if not state.is_playing:
+        if not inter.extras['voice_state'].is_playing:
             return await inter.followup.send('There\'s nothing being played at the moment.')
 
         if not volume:
             embed = core.embeds.ClassicEmbed(inter)
-            embed.title = f'Currently playing on {state.current.source.volume * 100}% volume.'
+            embed.title = f"Currently playing on {inter.extras['voice_state'].current.source.volume * 100}% volume."
             return await inter.followup.send(embed=embed)
 
         if not 0 < volume <= 200:
             return await inter.followup.send('Volume must be between 1 and 200 to execute the command.')
 
-        state.current.source.volume = volume / 100
+        inter.extras['voice_state'].current.source.volume = volume / 100
         await inter.followup.send(f'Volume of the player is now set to **{volume}%**')
+
+    # now
+    @app_commands.command(
+        name='now',
+        help='Displays an interactive control view for the current song.'
+    )
+    @app_commands.guild_only()
+    @put_me_in_voice_state
+    async def _now(
+        self,
+        inter: discord.Interaction
+    ) -> None:
+        try:
+            embed, view = inter.extras['voice_state'].current.create_embed(inter)
+            await inter.followup.send(embed=embed, view=view)
+
+        except AttributeError:
+            await inter.followup.send(
+                'There\'s nothing being played at the moment.',
+                ephemeral=True
+            )
 
 
 # The setup() function for the cog.
