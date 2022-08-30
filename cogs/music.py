@@ -268,20 +268,20 @@ class NowCommandView(discord.ui.View):
         self.inter.extras['voice_state'].loop = not self.inter.extras['voice_state'].loop
 
         if not self.inter.extras['voice_state'].loop:
-            button.label = 'Enable Loop'
+            button.label = 'Loop Disabled'
             button.style = discord.ButtonStyle.green
         else:
-            button.label = 'Disable Loop'
+            button.label = 'Loop Enabled'
             button.style = discord.ButtonStyle.red
 
-        await self.inter.followup.send(view=self)
+        await self.inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
             if 'Loop' in children.label:
                 children.disabled = True
 
-        await self.inter.followup.send(view=self)
+        await self.inter.response.edit_message(view=self)
 
 
 # View for the `play` command.
@@ -320,7 +320,7 @@ class QueueCommandView(discord.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.inter.followup.send(
+        await self.inter.response.edit_message(
             embed=self.inter.extras['voice_state'].songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -336,7 +336,7 @@ class QueueCommandView(discord.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
-        await self.inter.followup.send(
+        await self.inter.response.edit_message(
             embed=self.inter.extras['voice_state'].songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -345,7 +345,7 @@ class QueueCommandView(discord.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.inter.followup.send(view=self)
+        await self.inter.response.edit_message(view=self)
 
 
 # The Song class which represents the instance of a song.
