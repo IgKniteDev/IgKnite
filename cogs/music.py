@@ -274,14 +274,14 @@ class NowCommandView(discord.ui.View):
             button.label = 'Disable Loop'
             button.style = discord.ButtonStyle.red
 
-        await self.inter.response.edit_message(view=self)
+        await self.inter.followup.send(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
             if 'Loop' in children.label:
                 children.disabled = True
 
-        await self.inter.response.edit_message(view=self)
+        await self.inter.followup.send(view=self)
 
 
 # View for the `play` command.
@@ -320,7 +320,7 @@ class QueueCommandView(discord.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.inter.response.edit_message(
+        await self.inter.followup.send(
             embed=self.inter.extras['voice_state'].songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -336,7 +336,7 @@ class QueueCommandView(discord.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
-        await self.inter.response.edit_message(
+        await self.inter.followup.send(
             embed=self.inter.extras['voice_state'].songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -345,7 +345,7 @@ class QueueCommandView(discord.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.inter.response.edit_message(view=self)
+        await self.inter.followup.send(view=self)
 
 
 # The Song class which represents the instance of a song.
@@ -651,7 +651,7 @@ class Music(commands.Cog):
     # now
     @app_commands.command(
         name='now',
-        help='Displays an interactive control view for the current song.'
+        description='Displays an interactive control view for the current song.'
     )
     @app_commands.guild_only()
     @put_me_in_voice_state
@@ -668,6 +668,57 @@ class Music(commands.Cog):
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
+
+    # play
+    @app_commands.command(
+        name='play',
+        description='Enqueues playable stuff (basically sings you songs).'
+    )
+    @app_commands.describe(
+        search='The link / keyword to search for. Supports YouTube and Spotify links.',
+    )
+    @app_commands.guild_only()
+    @put_me_in_voice_state
+    async def _play(
+        self,
+        inter: discord.Interaction,
+        *,
+        search: str
+    ) -> None:
+        if not inter.extras['voice_state'].voice:
+            await self._join()
+
+        async def put_song_to_voice_state(
+            inter: discord.Interaction,
+            search: str,
+            send_embed: bool = True
+        ) -> None:
+            try:
+                source = await YTDLSource.create_source(inter, search, loop=self.bot.loop)
+
+            except YTDLError as e:
+                await inter.followup.send(
+                    f'An error occurred while processing this request: {str(e)}',
+                    ephemeral=True
+                )
+
+            else:
+                song = Song(source)
+
+                embed = core.embeds.ClassicEmbed(inter)
+                embed.title = f'Enqueued {song.source.title} from YouTube.'
+
+                await inter.extras['voice_state'].songs.put(song)
+
+                if send_embed:
+                    await inter.followup.send(
+                        embed=embed,
+                        view=PlayCommandView(
+                            url=song.source.url
+                        )
+                    )
+
+        await put_song_to_voice_state(inter, search)
 
 
 # The setup() function for the cog.
