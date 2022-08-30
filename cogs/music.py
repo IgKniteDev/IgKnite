@@ -685,9 +685,6 @@ class Music(commands.Cog):
         *,
         search: str
     ) -> None:
-        if not inter.extras['voice_state'].voice:
-            await self._join()
-
         async def put_song_to_voice_state(
             inter: discord.Interaction,
             search: str,
