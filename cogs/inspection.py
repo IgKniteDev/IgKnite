@@ -98,7 +98,7 @@ class Inspection(commands.Cog):
         member = inter.user if not member else member
 
         embed = core.TypicalEmbed(inter).set_title(
-            value=member
+            value=str(member)
         ).add_field(
             name='Status',
             value=member.status
@@ -144,7 +144,7 @@ class Inspection(commands.Cog):
         role: discord.Role
     ) -> None:
         embed = core.TypicalEmbed(inter).set_title(
-            value=f'Role information: {role.mention}'
+            value=f'Role information: @{role.name}'
         ).add_field(
             name='Birth',
             value=datetime.strptime(
