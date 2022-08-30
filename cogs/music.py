@@ -586,7 +586,7 @@ class Music(commands.Cog):
     async def _join_sub(
         self,
         inter: discord.Interaction,
-        channel: discord.VoiceChannel | discord.StageChannel | None
+        channel: discord.VoiceChannel | discord.StageChannel | None = None
     ) -> None:
         '''
         A sub-method for commands requiring the bot to join a voice / stage channel.
@@ -614,7 +614,7 @@ class Music(commands.Cog):
         self,
         inter: discord.Interaction,
         *,
-        channel: discord.VoiceChannel | discord.StageChannel | None
+        channel: discord.VoiceChannel | discord.StageChannel | None = None
     ) -> None:
         await self._join_sub(inter, channel)
 
@@ -652,7 +652,7 @@ class Music(commands.Cog):
     async def _volume(
         self,
         inter: discord.Interaction,
-        volume: float | None
+        volume: float | None = None
     ) -> None:
         if not inter.extras['voice_state'].is_playing:
             return await inter.followup.send(

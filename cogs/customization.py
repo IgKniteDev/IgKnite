@@ -171,7 +171,7 @@ class Customization(commands.Cog):
         inter: discord.Interaction,
         name: str,
         category: discord.CategoryChannel,
-        description: str | None
+        description: str | None = None
     ) -> None:
         channel = await inter.guild.create_text_channel(
             name=name,
