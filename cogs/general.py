@@ -57,8 +57,11 @@ class General(commands.Cog):
     ) -> None:
         member = inter.user if not member else member
 
-        embed = core.embeds.ClassicEmbed(inter).set_image(url=member.avatar)
-        embed.title = 'Here\'s what I found!'
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Here\'s what I found!'
+        ).set_image(
+            url=member.avatar
+        )
 
         await inter.response.send_message(embed=embed)
 
@@ -79,7 +82,7 @@ class General(commands.Cog):
 
         api_latency = round((end_time - start_time) * 1000)
 
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).add_field(
             name='System Latency',
             value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
             inline=False

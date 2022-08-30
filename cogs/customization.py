@@ -120,7 +120,9 @@ class Customization(commands.Cog):
     ) -> None:
         invite = await inter.channel.create_invite(max_age=max_age, max_uses=max_uses, reason=reason)
 
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Created a new invite!'
+        ).add_field(
             name='Link',
             value=f'https://discord.gg/{invite.code}'
         ).add_field(
@@ -130,7 +132,6 @@ class Customization(commands.Cog):
             name='Lifetime',
             value='Unlimited' if max_age == 0 else f'{max_age} Seconds'
         )
-        embed.title = 'Created a new invite!'
 
         await inter.followup.send(embed=embed)
 
