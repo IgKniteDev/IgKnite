@@ -541,10 +541,18 @@ class Music(commands.Cog):
         self.bot = bot
         self.voice_states = {}
 
+    def cog_unload(self) -> None:
+        for state in self.voice_states.values():
+            self.bot.loop.create_task(state.stop())
+
     def get_voice_state(
         self,
         inter: discord.Interaction
     ) -> VoiceState:
+        '''
+        A method that returns the `VoiceState` instance for a specific guild.
+        '''
+
         state = self.voice_states.get(inter.guild.id)
 
         if (
@@ -556,11 +564,12 @@ class Music(commands.Cog):
 
         return state
 
-    def cog_unload(self) -> None:
-        for state in self.voice_states.values():
-            self.bot.loop.create_task(state.stop())
-
     def put_me_in_voice_state(func):
+        '''
+        A simple decorator that adds a key-value pair to the `discord.Interaction.extras` dictionary.
+        The key `voice_state` is added with an instance of `VoiceState`.
+        '''
+
         @functools.wraps(func)
         async def callback(
             self,
@@ -573,6 +582,26 @@ class Music(commands.Cog):
             await func(self, inter, *args, **kwargs)
 
         return callback
+
+    async def _join_sub(
+        self,
+        inter: discord.Interaction,
+        channel: discord.VoiceChannel | discord.StageChannel | None
+    ) -> None:
+        '''
+        A sub-method for commands requiring the bot to join a voice / stage channel.
+        '''
+
+        destination = channel or inter.user.voice.channel
+
+        if inter.extras['voice_state'].voice:
+            await inter.extras['voice_state'].voice.move_to(destination)
+        else:
+            inter.extras['voice_state'].voice = await destination.connect()
+
+        await inter.followup.send(
+            f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
+        )
 
     # join
     @app_commands.command(
@@ -587,16 +616,7 @@ class Music(commands.Cog):
         *,
         channel: discord.VoiceChannel | discord.StageChannel | None
     ) -> None:
-        destination = channel or inter.user.voice.channel
-
-        if inter.extras['voice_state'].voice:
-            await inter.extras['voice_state'].voice.move_to(destination)
-        else:
-            inter.extras['voice_state'].voice = await destination.connect()
-
-        await inter.followup.send(
-            f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
-        )
+        await self._join_sub(inter, channel)
 
     # leave
     @app_commands.command(
@@ -610,10 +630,10 @@ class Music(commands.Cog):
         inter: discord.Interaction
     ) -> None:
         if not inter.extras['voice_state'].voice:
-            return await inter.followup.send('I am not connected to any voice channel.')
+            return await inter.followup.send('I\'m not inside any voice channel.')
 
         if not inter.user.voice:
-            return await inter.followup.send('You are not in the same voice channel as mine.')
+            return await inter.followup.send('You\'re not in my voice channel.')
 
         await inter.extras['voice_state'].stop()
         del self.voice_states[inter.guild.id]
@@ -683,13 +703,13 @@ class Music(commands.Cog):
         inter: discord.Interaction
     ) -> None:
         if not inter.extras['voice_state'].voice:
-            return await inter.followup.send('I am not connected to any voice channel.')
+            return await inter.followup.send('I\'m not inside any voice channel.')
 
         if not inter.user.voice:
-            return await inter.followup.send('You are not in the same voice channel as mine.')
+            return await inter.followup.send('You\'re not in my voice channel.')
 
         if (
-            inter.extras['voice_state'].is_playing 
+            inter.extras['voice_state'].is_playing
             and inter.extras['voice_state'].voice.is_playing()
         ):
             inter.extras['voice_state'].voice.pause()
@@ -711,6 +731,9 @@ class Music(commands.Cog):
         *,
         search: str
     ) -> None:
+        if not inter.extras['voice_state'].voice:
+            await self._join_sub(inter)
+
         async def put_song_to_voice_state(
             inter: discord.Interaction,
             search: str,
