@@ -55,10 +55,10 @@ class IgKniteTree(app_commands.CommandTree):
 
         embed.description = str(error)
 
-        if not inter.response.is_done:
-            await inter.response.send_message(embed=embed)
-        else:
+        if inter.response.is_done():
             await inter.followup.send(embed=embed)
+        else:
+            await inter.response.send_message(embed=embed)
 
 
 # Set up a custom class for core functionality.

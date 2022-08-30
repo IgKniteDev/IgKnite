@@ -43,7 +43,7 @@ class TypicalEmbed(discord.Embed):
         is_error: bool = False
     ) -> None:
         super().__init__(
-            color=3158326 if not is_error else 16608388
+            color=(3158326 if not is_error else 16608388)
         )
 
         self.set_footer(
