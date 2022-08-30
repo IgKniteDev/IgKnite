@@ -260,7 +260,7 @@ class NowCommandView(discord.ui.View):
         self.add_item(discord.ui.Button(label='Redirect', url=url))
 
     @discord.ui.button(label='Toggle Loop', style=discord.ButtonStyle.gray)
-    async def loop(
+    async def _loop(
         self,
         inter: discord.Interaction,
         button: discord.ui.Button
@@ -276,7 +276,24 @@ class NowCommandView(discord.ui.View):
 
         await inter.response.edit_message(view=self)
 
-    async def _on_timeout(self) -> None:
+    @discord.ui.button(label='Toggle Playback', style=discord.ButtonStyle.gray)
+    async def _playback(
+        self,
+        inter: discord.Interaction,
+        button: discord.ui.Button
+    ) -> None:
+        if self.inter.extras['voice_state'].is_playing():
+            self.inter.extras['voice_state'].pause()
+            button.label = 'Paused'
+            button.style = discord.ButtonStyle.red
+        else:
+            self.inter.extras['voice_state'].resume()
+            button.label = 'Resumed'
+            button.style = discord.ButtonStyle.green
+
+        await inter.response.edit_message(view=self)
+
+    async def on_timeout(self) -> None:
         for children in self.children:
             if 'Loop' in children.label:
                 children.disabled = True
@@ -693,29 +710,6 @@ class Music(commands.Cog):
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
-
-    # pause
-    @app_commands.command(
-        name='pause',
-        description='Pauses the music playback.'
-    )
-    @app_commands.guild_only()
-    async def _pause(
-        self,
-        inter: discord.Interaction
-    ) -> None:
-        if not inter.extras['voice_state'].voice:
-            return await inter.followup.send('I\'m not inside any voice channel.')
-
-        if not inter.user.voice:
-            return await inter.followup.send('You\'re not in my voice channel.')
-
-        if (
-            inter.extras['voice_state'].is_playing
-            and inter.extras['voice_state'].voice.is_playing()
-        ):
-            inter.extras['voice_state'].voice.pause()
-            await inter.followup.send('Paused playback.')
 
     # play
     @app_commands.command(
