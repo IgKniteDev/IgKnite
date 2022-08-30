@@ -93,7 +93,7 @@ class Customization(commands.Cog):
         role: discord.Role
     ) -> None:
         await role.delete()
-        await inter.response.send_message(f'Role {role.mention} has been removed!')
+        await inter.response.send_message(f'Role **@{role.name}** has been removed!')
 
     # happy birthday to furti :cake:
     # edit: this is hitblast and here's your birthday gift commit :D
