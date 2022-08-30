@@ -45,11 +45,13 @@ class IgKniteTree(app_commands.CommandTree):
         inter: discord.Interaction,
         error: app_commands.AppCommandError
     ):
-        embed = core.embeds.ErrorEmbed(inter)
+        embed = core.TypicalEmbed(inter, is_error=True)
         error = getattr(error, 'original', error)
 
         if isinstance(error, app_commands.errors.MissingAnyRole):
             embed.title = 'Whoops! You don\'t have the roles.'
+        else:
+            embed.title = 'Whoops! An alien error occured.'
 
         embed.description = str(error)
 
