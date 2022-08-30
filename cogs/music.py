@@ -365,7 +365,7 @@ class Song:
     ) -> Tuple[discord.Embed, discord.ui.View]:
         duration = 'Live' if not self.source.duration else self.source.duration
 
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).add_field(
             name='Duration',
             value=duration
         ).add_field(
@@ -425,11 +425,12 @@ class SongQueue(asyncio.Queue):
             for i, song in enumerate(inter.extras['voice_state'].songs[start:end], start=start)
         )
 
-        embed = core.embeds.ClassicEmbed(inter).set_footer(
+        embed = core.TypicalEmbed(inter).set_description(
+            value=f"**{len(inter.extras['voice_state'].songs)} tracks:**\n\n{queue_str}"
+        ).set_footer(
             text=f'Viewing page {page}/{pages}',
             icon_url=inter.user.avatar
         )
-        embed.description = f"**{len(inter.extras['voice_state'].songs)} tracks:**\n\n{queue_str}"
 
         return embed
 
@@ -661,8 +662,9 @@ class Music(commands.Cog):
             )
 
         if not volume:
-            embed = core.embeds.ClassicEmbed(inter)
-            embed.title = f"Currently playing on {inter.extras['voice_state'].current.source.volume * 100}% volume."
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f"Currently playing on {inter.extras['voice_state'].current.source.volume * 100}% volume."
+            )
             return await inter.followup.send(embed=embed)
 
         if not 0 < volume <= 200:
@@ -750,12 +752,11 @@ class Music(commands.Cog):
 
             else:
                 song = Song(source)
-
-                embed = core.embeds.ClassicEmbed(inter)
-                embed.title = f'Enqueued {song.source.title} from YouTube.'
+                embed = core.TypicalEmbed(inter).set_title(
+                    value=f'Enqueued {song.source.title} from YouTube.'
+                )
 
                 await inter.extras['voice_state'].songs.put(song)
-
                 if send_embed:
                     await inter.followup.send(
                         embed=embed,

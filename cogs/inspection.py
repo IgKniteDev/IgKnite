@@ -53,7 +53,7 @@ class Inspection(commands.Cog):
         self,
         inter: discord.Interaction
     ) -> None:
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).add_field(
             name='Birth',
             value=datetime.strptime(
                 str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
@@ -97,7 +97,9 @@ class Inspection(commands.Cog):
     ) -> None:
         member = inter.user if not member else member
 
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).set_title(
+            value=member
+        ).add_field(
             name='Status',
             value=member.status
         ).add_field(
@@ -116,14 +118,13 @@ class Inspection(commands.Cog):
             value=len(member.roles)
         ).add_field(
             name='Position',
-            value=f"<@&{member.top_role.id}>"
+            value=member.top_role.mention
         ).add_field(
             name='Identifier',
             value=member.id
         ).set_thumbnail(
             url=member.display_avatar
         )
-        embed.title = member.display_name
 
         await inter.response.send_message(embed=embed)
 
@@ -142,7 +143,9 @@ class Inspection(commands.Cog):
         inter: discord.Interaction,
         role: discord.Role
     ) -> None:
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).set_title(
+            value=f'Role information: {role.mention}'
+        ).add_field(
             name='Birth',
             value=datetime.strptime(
                 str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
@@ -163,7 +166,6 @@ class Inspection(commands.Cog):
             name='Identifier',
             value=f'`{role.id}`'
         )
-        embed.title = f"Role Information: @{role.name}"
 
         await inter.response.send_message(embed=embed)
 
@@ -186,8 +188,9 @@ class Inspection(commands.Cog):
             await inter.response.send_message(f'{limit} is not within the given range.', ephemeral=True)
 
         else:
-            embed = core.embeds.ClassicEmbed(inter)
-            embed.title = f'Audit Log ({limit} entries)'
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f'Audit Log ({limit} entries)'
+            )
 
             async for audit_entry in inter.guild.audit_logs(limit=limit):
                 embed.add_field(
