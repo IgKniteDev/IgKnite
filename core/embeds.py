@@ -64,9 +64,11 @@ class TypicalEmbed(discord.Embed):
         Sets the title for the embed content.
         '''
         self.title = value
+        return self
 
     def set_description(self, value: str) -> None:
         '''
         Sets the description for the embed content.
         '''
         self.description = value
+        return self
