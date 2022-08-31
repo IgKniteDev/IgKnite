@@ -269,10 +269,10 @@ class NowCommandView(discord.ui.View):
 
         if not self.inter.extras['voice_state'].loop:
             button.label = 'Loop Disabled'
-            button.style = discord.ButtonStyle.green
+            button.style = discord.ButtonStyle.red
         else:
             button.label = 'Loop Enabled'
-            button.style = discord.ButtonStyle.red
+            button.style = discord.ButtonStyle.green
 
         await inter.response.edit_message(view=self)
 
@@ -282,7 +282,7 @@ class NowCommandView(discord.ui.View):
         inter: discord.Interaction,
         button: discord.ui.Button
     ) -> None:
-        if self.inter.extras['voice_state'].is_playing():
+        if self.inter.extras['voice_state'].is_playing:
             self.inter.extras['voice_state'].pause()
             button.label = 'Paused'
             button.style = discord.ButtonStyle.red
@@ -605,7 +605,7 @@ class Music(commands.Cog):
         self,
         inter: discord.Interaction,
         channel: discord.VoiceChannel | discord.StageChannel | None = None
-    ) -> None:
+    ) -> Any:
         '''
         A sub-method for commands requiring the bot to join a voice / stage channel.
         '''
@@ -617,9 +617,7 @@ class Music(commands.Cog):
         else:
             inter.extras['voice_state'].voice = await destination.connect()
 
-        await inter.followup.send(
-            f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
-        )
+        return destination
 
     # join
     @app_commands.command(
@@ -634,7 +632,10 @@ class Music(commands.Cog):
         *,
         channel: discord.VoiceChannel | discord.StageChannel | None = None
     ) -> None:
-        await self._join_sub(inter, channel)
+        destination = await self._join_sub(inter, channel)
+        await inter.followup.send(
+            f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
+        )
 
     # leave
     @app_commands.command(
@@ -701,15 +702,14 @@ class Music(commands.Cog):
         self,
         inter: discord.Interaction
     ) -> None:
-        try:
-            embed, view = inter.extras['voice_state'].current.create_embed(inter)
-            await inter.followup.send(embed=embed, view=view)
-
-        except AttributeError:
-            await inter.followup.send(
+        if not inter.extras['voice_state'].is_playing:
+            return await inter.followup.send(
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
+
+        embed, view = inter.extras['voice_state'].current.create_embed(inter)
+        await inter.followup.send(embed=embed, view=view)
 
     # play
     @app_commands.command(
