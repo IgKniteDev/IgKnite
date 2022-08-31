@@ -28,65 +28,22 @@ SOFTWARE.
 
 # Imports.
 import asyncio
-from typing import List
 
-import discord
-from discord import app_commands
-from discord.ext import commands, tasks
+import disnake
+from disnake.ext import commands, tasks
 
-import core
 from core import global_
 
 
-# Subclassing discord.app_commands.CommandTree for exception handling and stuff.
-class IgKniteTree(app_commands.CommandTree):
-    '''
-    A subclassed version of `discord.app_commands.CommandTree`.\n
-    This class allows execution of global exception handlers and application commands.
-    '''
-
-    async def on_error(
-        self,
-        inter: discord.Interaction,
-        error: app_commands.AppCommandError
-    ):
-        embed = core.TypicalEmbed(inter, is_error=True)
-        error = getattr(error, 'original', error)
-
-        if isinstance(error, app_commands.errors.MissingAnyRole):
-            embed.title = 'Whoops! You don\'t have the roles.'
-        else:
-            embed.title = 'Whoops! An alien error occured.'
-
-        embed.description = str(error)
-
-        if inter.response.is_done():
-            await inter.followup.send(embed=embed)
-        else:
-            await inter.response.send_message(embed=embed)
-
-
 # Set up a custom class for core functionality.
-class IgKnite(commands.AutoShardedBot):
+class IgKnite(commands.AutoShardedInteractionBot):
     '''
-    A subclassed version of `discord.AutoShardedBot`.\n
+    A subclassed version of `commands.AutoShardedInteractionBot`.\n
     Basically works as the core class for all-things IgKnite!
     '''
 
-    def __init__(
-        self,
-        *args,
-        initial_extensions: List[str],
-        **kwargs
-    ) -> None:
-        super().__init__(*args, **kwargs)
-        self.initial_extensions = initial_extensions
-
-    async def setup_hook(self) -> None:
-        for extension in self.initial_extensions:
-            await self.load_extension(extension)
-
-        await self.tree.sync()
+    def __init__(self) -> None:
+        super().__init__(intents=disnake.Intents.all())
         self.task_update_presence.start()
 
     async def on_connect(self) -> None:
@@ -98,9 +55,9 @@ class IgKnite(commands.AutoShardedBot):
     @tasks.loop(seconds=200)
     async def task_update_presence(self) -> None:
         await self.change_presence(
-            status=discord.Status.dnd,
-            activity=discord.Activity(
-                type=discord.ActivityType.listening,
+            status=disnake.Status.dnd,
+            activity=disnake.Activity(
+                type=disnake.ActivityType.listening,
                 name=f'slashes inside {len(self.guilds)} server(s)!'
             )
         )
@@ -111,14 +68,14 @@ class IgKnite(commands.AutoShardedBot):
 
     async def on_message(
         self,
-        message: discord.Message
+        message: disnake.Message
     ) -> None:
         if message.author == self.user:
             return
 
     async def on_message_delete(
         self,
-        message: discord.Message
+        message: disnake.Message
     ) -> None:
         global_.snipeables.append(message)
         await asyncio.sleep(25)

@@ -24,50 +24,15 @@ SOFTWARE.
 
 
 # Imports.
-import asyncio
-import logging
-import logging.handlers
-
-import discord
-from discord.ext import commands
-
-from core import IgKnite, IgKniteTree, global_
-
+from core import global_, IgKnite
 
 # Initialize the global variables from core.global_ .
 global_.initialize()
 
-
-# The main() coroutine.
-async def main() -> None:
-    logger = logging.getLogger('discord')
-    logger.setLevel(logging.INFO)
-    handler = logging.handlers.RotatingFileHandler(
-        filename='bot.log',
-        encoding='utf-8',
-        maxBytes=32 * 1024 * 1024,  # 32 MiB
-        backupCount=3,  # Rotate through 3 files
-    )
-
-    datetime_format = '%Y-%m-%d %H:%M:%S'
-    formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', datetime_format, style='{')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    async with IgKnite(
-        command_prefix=commands.when_mentioned,
-        intents=discord.Intents.all(),
-        tree_cls=IgKniteTree,
-        initial_extensions=[
-            'cogs.customization',
-            'cogs.general',
-            'cogs.inspection',
-            'cogs.moderation',
-            'cogs.music'
-        ]
-    ) as bot:
-        await bot.start(global_.tokens['discord'])
-
+# Set up an instance of IgKnite.
+bot = IgKnite()
 
 # Run.
-asyncio.run(main())
+if __name__ == '__main__':
+    bot.load_extensions('cogs')
+    bot.run(global_.tokens['discord'])
