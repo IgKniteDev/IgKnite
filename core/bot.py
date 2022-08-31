@@ -40,6 +40,11 @@ from core import global_
 
 # Subclassing discord.app_commands.CommandTree for exception handling and stuff.
 class IgKniteTree(app_commands.CommandTree):
+    '''
+    A subclassed version of `discord.app_commands.CommandTree`.\n
+    This class allows execution of global exception handlers and application commands.
+    '''
+
     async def on_error(
         self,
         inter: discord.Interaction,
@@ -64,7 +69,7 @@ class IgKniteTree(app_commands.CommandTree):
 # Set up a custom class for core functionality.
 class IgKnite(commands.AutoShardedBot):
     '''
-    An overwritten version of `discord.AutoShardedClient`.\n
+    A subclassed version of `discord.AutoShardedBot`.\n
     Basically works as the core class for all-things IgKnite!
     '''
 
