@@ -28,18 +28,18 @@ SOFTWARE.
 
 # Imports.
 import random
-import discord
+import disnake
 
 
 # Overwrite discord.Embed class to form custom embeds.
-class TypicalEmbed(discord.Embed):
+class TypicalEmbed(disnake.Embed):
     '''
     Represents an embed common to all the normal commands.
     '''
 
     def __init__(
         self,
-        inter: discord.Interaction,
+        inter: disnake.CommandInter,
         is_error: bool = False
     ) -> None:
         super().__init__(
@@ -56,7 +56,7 @@ class TypicalEmbed(discord.Embed):
                     'Hello World, from the other side!'
                 ]
             ),
-            icon_url=inter.user.avatar
+            icon_url=inter.author.avatar
         )
 
     def set_title(self, value: str) -> None:
