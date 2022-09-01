@@ -27,7 +27,7 @@ SOFTWARE.
 
 
 # Initialize scripts.
-from . import datacls as datacls, decor as decor, global_ as global_
+from . import datacls as datacls, global_ as global_
 from .bot import *
 from .embeds import *
 
