@@ -203,5 +203,5 @@ class Inspection(commands.Cog):
 
 
 # The setup() function for the cog.
-async def setup(bot: core.IgKnite) -> None:
-    await bot.add_cog(Inspection(bot))
+def setup(bot: core.IgKnite) -> None:
+    bot.add_cog(Inspection(bot))
