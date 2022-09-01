@@ -28,6 +28,7 @@ SOFTWARE.
 
 # Imports.
 import asyncio
+from typing import List
 
 import disnake
 from disnake.ext import commands, tasks
@@ -42,9 +43,17 @@ class IgKnite(commands.AutoShardedInteractionBot):
     Basically works as the core class for all-things IgKnite!
     '''
 
-    def __init__(self) -> None:
-        super().__init__(intents=disnake.Intents.all())
+    def __init__(
+        self,
+        *args,
+        initial_extensions: List[str],
+        **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
         self.task_update_presence.start()
+
+        for extension in initial_extensions:
+            self.load_extension(extension)
 
     async def on_connect(self) -> None:
         print(f'\nConnected to Discord as {self.user}.')

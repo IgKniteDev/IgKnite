@@ -24,15 +24,20 @@ SOFTWARE.
 
 
 # Imports.
+import disnake
 from core import global_, IgKnite
 
 # Initialize the global variables from core.global_ .
 global_.initialize()
 
 # Set up an instance of IgKnite.
-bot = IgKnite()
+bot = IgKnite(
+    intents=disnake.Intents.all(),
+    initial_extensions=[
+        'cogs.customization'
+    ]
+)
 
 # Run.
 if __name__ == '__main__':
-    bot.load_extensions('cogs')
     bot.run(global_.tokens['discord'])
