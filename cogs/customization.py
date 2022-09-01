@@ -28,7 +28,7 @@ SOFTWARE.
 
 # Imports.
 import disnake
-from disnake import Option, OptionType
+from disnake import Option, OptionType, ChannelType
 from disnake.ext import commands
 
 import core
@@ -213,7 +213,11 @@ class Customization(commands.Cog):
             ),
             Option(
                 'category',
-                'The category to put the channel into.'
+                'The category to put the channel into.',
+                OptionType.channel,
+                channel_types=[
+                    ChannelType.category
+                ]
             ),
             Option(
                 'topic',
@@ -229,11 +233,11 @@ class Customization(commands.Cog):
         inter: disnake.CommandInteraction,
         name: str,
         category: disnake.CategoryChannel | None = None,
-        description: str | None = None
+        topic: str | None = None
     ) -> None:
         channel = await inter.guild.create_text_channel(
             name=name,
-            topic=description,
+            topic=topic,
             category=category
         )
         await inter.send(f'Channel {channel.mention} has been created!')
@@ -250,7 +254,11 @@ class Customization(commands.Cog):
             ),
             Option(
                 'category',
-                'The category to put the channel into.'
+                'The category to put the channel into.',
+                OptionType.channel,
+                channel_types=[
+                    ChannelType.category
+                ]
             )
         ],
         dm_permission=False
@@ -276,7 +284,8 @@ class Customization(commands.Cog):
             Option(
                 'name',
                 'The name for the new category.',
-                OptionType.string
+                OptionType.string,
+                required=True
             )
         ],
         dm_permission=False
