@@ -35,19 +35,23 @@ That one Discord bot with fully open-source slash powers!
 
 Discord has always been the go-to platform for communities to make a solid base for hanging out and building servers to communicate and grow upon. This can somehow correlate to developers, as Discord has long been appreciating the programming of 'bots' since it started. To put it simply, this social platform has its own community of developers who are pretty enthusiastic about making interactive applications that are useful in many different scenarios. However, as developers continue to make their bots more capable than ever, there is always this very lack of 'original' applications that truly rely and are hosted on open-source technologies. 
 
-<br><br>
+<br>
 
 ## Goals
 
 The goal, in this case, is simply to create a bot that uses Discord's bleeding-edge API in order to make **interactive commands really interactive**. Speaking of which, interactions like buttons, context menus are a must-have when it comes to making the usage path easier for the end-user. Combined with the inspiration and ideas from renowned bots like [MEE6](https://mee6.xyz) and [Fredboat](https://fredboat.com), we have decided to **raise IgKnite by developing a unified experience when it comes to music and moderation.** 
 
-<br><br>
+<br>
 
 ## Wiki Usage
 
 Once stable enough for production, you will be able to access a pre-hosted copy of IgKnite with its full feature set, much like any other mainstream Discord bot. However, if you wanna get a little bit geeky, then we are happy to announce that [a GitHub Wiki](https://github.com/IgKniteDev/IgKnite/wiki) page is also being worked on in the meantime.
 
-<br><br>
+<br>
+
+---
+
+<br>
 
 ## Contributors
 
