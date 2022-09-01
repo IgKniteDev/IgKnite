@@ -31,7 +31,7 @@ import random
 import disnake
 
 
-# Overwrite discord.Embed class to form custom embeds.
+# Overwrite disnake.Embed class to form custom embeds.
 class TypicalEmbed(disnake.Embed):
     '''
     Represents an embed common to all the normal commands.
@@ -39,7 +39,7 @@ class TypicalEmbed(disnake.Embed):
 
     def __init__(
         self,
-        inter: disnake.CommandInter,
+        inter: disnake.CommandInteraction,
         is_error: bool = False
     ) -> None:
         super().__init__(

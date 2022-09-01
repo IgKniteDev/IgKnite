@@ -39,9 +39,8 @@ import youtube_dl
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-import discord
-from discord import app_commands
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import core
 from core import global_
@@ -69,7 +68,7 @@ class YTDLError(Exception):
 
 
 # YTDLSource class for handling sources.
-class YTDLSource(discord.PCMVolumeTransformer):
+class YTDLSource(disnake.PCMVolumeTransformer):
     YTDL_OPTIONS = {
         'format': 'bestaudio/best',
         'extractaudio': True,

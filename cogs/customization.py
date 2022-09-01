@@ -101,7 +101,7 @@ class Customization(commands.Cog):
         name='removerole',
         description='Remove a role from the server.',
         options=[
-            OptionType(
+            Option(
                 'role',
                 'The role to remove.',
                 OptionType.role,
@@ -274,7 +274,7 @@ class Customization(commands.Cog):
         description='Create a new channel category.',
         options=[
             Option(
-                'name'
+                'name',
                 'The name for the new category.',
                 OptionType.string
             )
@@ -315,5 +315,5 @@ class Customization(commands.Cog):
 
 
 # The setup() function for the cog.
-async def setup(bot: core.IgKnite) -> None:
-    await bot.add_cog(Customization(bot))
+def setup(bot: core.IgKnite) -> None:
+    bot.add_cog(Customization(bot))
