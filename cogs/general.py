@@ -29,9 +29,9 @@ SOFTWARE.
 # Imports.
 import time
 
-import discord
-from discord import app_commands
-from discord.ext import commands
+import disnake
+from disnake import Option, OptionType
+from disnake.ext import commands
 
 import core
 
@@ -42,18 +42,22 @@ class General(commands.Cog):
         self.bot = bot
 
     # avatar
-    @app_commands.command(
+    @commands.slash_command(
         name='avatar',
-        description='Displays your avatar / the avatar of a server member.'
+        description='Displays your avatar / the avatar of a server member.',
+        options=[
+            Option(
+                'member',
+                'Mention the server member.',
+                OptionType.user
+            )
+        ],
+        dm_permission=False
     )
-    @app_commands.describe(
-        member='Mention the server member.'
-    )
-    @app_commands.guild_only()
     async def _avatar(
         self,
-        inter: discord.Interaction,
-        member: discord.Member = None
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = None
     ) -> None:
         member = inter.user if not member else member
 
@@ -62,17 +66,16 @@ class General(commands.Cog):
         ).set_image(
             url=member.avatar
         )
-
-        await inter.response.send_message(embed=embed)
+        await inter.send(embed=embed)
 
     # ping
-    @app_commands.command(
+    @commands.slash_command(
         name='ping',
-        description='Shows my current response time.',
+        description='Shows my current response time.'
     )
     async def _ping(
         self,
-        inter: discord.Interaction
+        inter: disnake.CommandInteraction
     ) -> None:
         system_latency = round(self.bot.latency * 1000)
 
@@ -91,9 +94,9 @@ class General(commands.Cog):
             value=f'{api_latency}ms'
         )
 
-        await inter.followup.send(content=None, embed=embed)
+        await inter.send(embed=embed)
 
 
 # The setup() function for the cog.
-async def setup(bot: core.IgKnite) -> None:
-    await bot.add_cog(General(bot))
+def setup(bot: core.IgKnite) -> None:
+    bot.add_cog(General(bot))
