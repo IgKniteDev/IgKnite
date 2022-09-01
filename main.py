@@ -34,7 +34,8 @@ global_.initialize()
 bot = IgKnite(
     intents=disnake.Intents.all(),
     initial_extensions=[
-        'cogs.customization'
+        'cogs.customization',
+        'cogs.general'
     ]
 )
 
