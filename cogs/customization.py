@@ -50,7 +50,7 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'name',
-                'The name for the new role.',
+                'Give a name for the new role.',
                 OptionType.string,
                 required=True
             )
@@ -79,7 +79,7 @@ class Customization(commands.Cog):
             ),
             Option(
                 'role',
-                'The role to assign to the user.',
+                'Mention the role to assign to the user.',
                 OptionType.role,
                 required=True
             )
@@ -103,7 +103,7 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'role',
-                'The role to remove.',
+                'Mention the role to remove.',
                 OptionType.role,
                 required=True
             )
@@ -129,17 +129,17 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'max_age',
-                'The lifetime of the invite in seconds. Defaults to unlimited.',
+                'Specify a lifetime for the invite in seconds. Defaults to unlimited.',
                 OptionType.integer
             ),
             Option(
                 'max_uses',
-                'The maximum use limit for the invite. Defaults to 1 user.',
+                'Specify a maximum use limit for the invite. Defaults to 1 user.',
                 OptionType.integer
             ),
             Option(
                 'reason',
-                'The reason behind creating the invite.',
+                'Give a reason for creating the invite.',
                 OptionType.string
             )
         ],
@@ -183,7 +183,7 @@ class Customization(commands.Cog):
             ),
             Option(
                 'nickname',
-                'The nickname to set for the user.',
+                'Give the nickname to set for the mentioned user.',
                 OptionType.string,
                 required=True
             )
@@ -207,13 +207,13 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'name',
-                'The name for the new channel.',
+                'Give a name for the new channel.',
                 OptionType.string,
                 required=True
             ),
             Option(
                 'category',
-                'The category to put the channel into.',
+                'Specify the category to put the channel into.',
                 OptionType.channel,
                 channel_types=[
                     ChannelType.category
@@ -221,7 +221,7 @@ class Customization(commands.Cog):
             ),
             Option(
                 'topic',
-                'The topic for the new channel.',
+                'Give a topic for the new channel.',
                 OptionType.string
             )
         ],
@@ -249,12 +249,12 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'name',
-                'The name of the voice channel.',
+                'Give a name of the voice channel.',
                 required=True
             ),
             Option(
                 'category',
-                'The category to put the channel into.',
+                'Specify the category to put the channel into.',
                 OptionType.channel,
                 channel_types=[
                     ChannelType.category
@@ -283,7 +283,7 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'name',
-                'The name for the new category.',
+                'Give a name for the new category.',
                 OptionType.string,
                 required=True
             )
@@ -306,7 +306,7 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'channel',
-                'The channel you want to delete.',
+                'Specify the channel you want to delete.',
                 OptionType.channel,
                 required=True
             )
