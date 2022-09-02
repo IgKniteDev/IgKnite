@@ -263,7 +263,7 @@ class NowCommandView(disnake.ui.View):
     async def _loop(
         self,
         button: disnake.ui.Button,
-        inter: disnake.CommandInteraction
+        inter: disnake.MessageInteraction
     ) -> None:
         self.inter.voice_state.loop = not self.inter.voice_state.loop
 
@@ -280,7 +280,7 @@ class NowCommandView(disnake.ui.View):
     async def _playback(
         self,
         button: disnake.ui.Button,
-        inter: disnake.CommandInteraction
+        inter: disnake.MessageInteraction
     ) -> None:
         if self.inter.voice_state.is_playing:
             self.inter.voice_state.pause()
@@ -327,7 +327,7 @@ class QueueCommandView(disnake.ui.View):
     async def clear(
         self,
         button: disnake.ui.Button,
-        inter: disnake.CommandInteraction
+        inter: disnake.MessageInteraction
     ) -> None:
         self.inter.voice_state.songs.clear()
 
@@ -337,7 +337,7 @@ class QueueCommandView(disnake.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await inter.response.edit_message(
+        await inter.edit_original_message(
             embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -346,14 +346,14 @@ class QueueCommandView(disnake.ui.View):
     async def shuffle(
         self,
         button: disnake.ui.Button,
-        inter: disnake.CommandInteraction
+        inter: disnake.MessageInteraction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
 
         button.label = 'Shuffled'
         button.disabled = True
 
-        await inter.response.edit_message(
+        await inter.edit_original_message(
             embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -362,7 +362,7 @@ class QueueCommandView(disnake.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.inter.response.edit_message(view=self)
+        await self.inter.edit_original_message(view=self)
 
 
 # The Song class which represents the instance of a song.
