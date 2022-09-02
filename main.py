@@ -36,8 +36,9 @@ bot = IgKnite(
     initial_extensions=[
         'cogs.customization',
         'cogs.general',
+        'cogs.inspection',
         'cogs.moderation',
-        'cogs.inspection'
+        'cogs.music'
     ]
 )
 
