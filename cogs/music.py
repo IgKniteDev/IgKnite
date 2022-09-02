@@ -250,7 +250,7 @@ class Spotify:
 class NowCommandView(disnake.ui.View):
     def __init__(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.Interaction,
         url: str,
         timeout: float = 35
     ) -> None:
@@ -259,11 +259,11 @@ class NowCommandView(disnake.ui.View):
         self.inter = inter
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
 
-    @disnake.ui.Button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
+    @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
     async def _loop(
         self,
         button: disnake.ui.Button,
-        inter: disnake.MessageInteraction
+        inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.loop = not self.inter.voice_state.loop
 
@@ -274,24 +274,7 @@ class NowCommandView(disnake.ui.View):
             button.label = 'Loop Enabled'
             button.style = disnake.ButtonStyle.green
 
-        await inter.edit_original_message(view=self)
-
-    @disnake.ui.Button(label='Toggle Playback', style=disnake.ButtonStyle.gray)
-    async def _playback(
-        self,
-        button: disnake.ui.Button,
-        inter: disnake.MessageInteraction
-    ) -> None:
-        if self.inter.voice_state.is_playing:
-            self.inter.voice_state.pause()
-            button.label = 'Paused'
-            button.style = disnake.ButtonStyle.red
-        else:
-            self.inter.voice_state.resume()
-            button.label = 'Resumed'
-            button.style = disnake.ButtonStyle.green
-
-        await inter.edit_original_message(view=self)
+        await inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
@@ -309,7 +292,6 @@ class PlayCommandView(disnake.ui.View):
         timeout: float = 35
     ) -> None:
         super().__init__(timeout=timeout)
-
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
 
 
@@ -323,7 +305,7 @@ class QueueCommandView(disnake.ui.View):
         super().__init__(timeout=timeout)
         self.inter = inter
 
-    @disnake.ui.Button(label='Clear Queue', style=disnake.ButtonStyle.danger)
+    @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
     async def clear(
         self,
         button: disnake.ui.Button,
@@ -337,12 +319,12 @@ class QueueCommandView(disnake.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await inter.edit_original_message(
+        await inter.send(
             embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
-    @disnake.ui.Button(label='Shuffle', style=disnake.ButtonStyle.gray)
+    @disnake.ui.button(label='Shuffle', style=disnake.ButtonStyle.gray)
     async def shuffle(
         self,
         button: disnake.ui.Button,
@@ -353,7 +335,7 @@ class QueueCommandView(disnake.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
-        await inter.edit_original_message(
+        await inter.send(
             embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -765,5 +747,5 @@ class Music(commands.Cog):
 
 
 # The setup() function for the cog.
-async def setup(bot: core.IgKnite) -> None:
-    await bot.add_cog(Music(bot))
+def setup(bot: core.IgKnite) -> None:
+    bot.add_cog(Music(bot))
