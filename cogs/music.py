@@ -262,8 +262,8 @@ class NowCommandView(disnake.ui.View):
     @disnake.ui.Button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
     async def _loop(
         self,
-        inter: disnake.CommandInteraction,
-        button: disnake.ui.Button
+        button: disnake.ui.Button,
+        inter: disnake.CommandInteraction
     ) -> None:
         self.inter.voice_state.loop = not self.inter.voice_state.loop
 
@@ -274,13 +274,13 @@ class NowCommandView(disnake.ui.View):
             button.label = 'Loop Enabled'
             button.style = disnake.ButtonStyle.green
 
-        await inter.response.edit_message(view=self)
+        await inter.edit_original_message(view=self)
 
     @disnake.ui.Button(label='Toggle Playback', style=disnake.ButtonStyle.gray)
     async def _playback(
         self,
-        inter: disnake.CommandInteraction,
-        button: disnake.ui.Button
+        button: disnake.ui.Button,
+        inter: disnake.CommandInteraction
     ) -> None:
         if self.inter.voice_state.is_playing:
             self.inter.voice_state.pause()
@@ -291,14 +291,14 @@ class NowCommandView(disnake.ui.View):
             button.label = 'Resumed'
             button.style = disnake.ButtonStyle.green
 
-        await inter.response.edit_message(view=self)
+        await inter.edit_original_message(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
             if 'Loop' in children.label:
                 children.disabled = True
 
-        await self.inter.response.edit_message(view=self)
+        await self.inter.edit_original_message(view=self)
 
 
 # View for the `play` command.
@@ -326,8 +326,8 @@ class QueueCommandView(disnake.ui.View):
     @disnake.ui.Button(label='Clear Queue', style=disnake.ButtonStyle.danger)
     async def clear(
         self,
-        inter: disnake.CommandInteraction,
-        button: disnake.ui.Button
+        button: disnake.ui.Button,
+        inter: disnake.CommandInteraction
     ) -> None:
         self.inter.voice_state.songs.clear()
 
@@ -345,8 +345,8 @@ class QueueCommandView(disnake.ui.View):
     @disnake.ui.Button(label='Shuffle', style=disnake.ButtonStyle.gray)
     async def shuffle(
         self,
-        inter: disnake.CommandInteraction,
-        button: disnake.ui.Button
+        button: disnake.ui.Button,
+        inter: disnake.CommandInteraction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
 
