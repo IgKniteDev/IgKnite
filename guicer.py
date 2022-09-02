@@ -42,6 +42,12 @@ class App(UserControl):
         self.owner_id = TextField(
             hint_text='Enter your Discord user ID'
         )
+        self.spotify_client_secret = TextField(
+            hint_text='Enter your Spotify client secret'
+        )
+        self.spotify_client_id = TextField(
+            hint_text='Enter your Spotify client ID'
+        )
         self.error_viewer = Text(
             value='Please fill in all the text fields!',
             color='red',
@@ -61,6 +67,10 @@ class App(UserControl):
                 self.bot_token,
                 Text(value='Owner ID', size=20),
                 self.owner_id,
+                Text(value='Spotify Client Secet', size=20),
+                self.spotify_client_secret,
+                Text(value='Spotify Client ID', size=20),
+                self.spotify_client_id,
                 IconButton(icon='check', bgcolor='white', icon_color='black', on_click=self.generate_config),
                 self.error_viewer,
                 self.success_viewer,
@@ -71,6 +81,8 @@ class App(UserControl):
         if (
             len(self.bot_token.value) == 0
             or len(self.owner_id.value) == 0
+            or len(self.spotify_client_id.value) == 0
+            or len(self.spotify_client_secret.value) == 0
         ):
             self.error_viewer.visible = True
 
@@ -79,7 +91,9 @@ class App(UserControl):
             write_mode = 'w' if os.path.exists(here) else 'x'
 
             with open(here, write_mode) as f:
-                f.write(f'DISCORD_TOKEN={self.bot_token.value}\nDISCORD_OWNER_ID={self.owner_id.value}')
+                f.write(f'''DISCORD_TOKEN={self.bot_token.value}\nDISCORD_OWNER_ID={self.owner_id.value}
+SPOTIFY_CLIENT_SECRET={self.spotify_client_secret.value}
+SPOTIFY_CLIENT_ID={self.spotify_client_id.value}''')
                 self.success_viewer.visible = True
                 self.update()
 
