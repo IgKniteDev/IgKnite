@@ -10,11 +10,11 @@
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
 </a>
 
-<img src="static/play_command_demo.png">
+<br>
+<img src="static/play_command_demo.png" width="500">
+<br>
 
-IgKnite is a feature-packed, music and moderation bot that takes Discord's [new era of apps](https://discord.com/blog/welcome-to-the-new-era-of-discord-apps) into practice and gives a fruitful experience to the users in return.
-
-<br><br>
+---
 
 :warning: | This project is still under development and does not have a proper release yet.
 ---|---
