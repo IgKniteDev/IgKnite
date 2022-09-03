@@ -532,7 +532,7 @@ class VoiceState:
             self.voice = None
 
 
-# Music commands.
+# The actual cog.
 class Music(commands.Cog):
     def __init__(
         self,
