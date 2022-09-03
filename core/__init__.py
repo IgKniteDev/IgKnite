@@ -33,5 +33,5 @@ from .embeds import *
 
 
 # Set version number.
-__version_info__ = ('2022', '8', '31')  # Year.Month.Day
+__version_info__ = ('2022', '9', '3')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
