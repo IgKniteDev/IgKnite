@@ -43,6 +43,6 @@ bot = IgKnite(
     ]
 )
 
-# Run.
+# Run!
 if __name__ == '__main__':
     bot.run(global_.tokens['discord'])
