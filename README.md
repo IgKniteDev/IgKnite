@@ -19,8 +19,6 @@
 :warning: | This project is still under development and does not have a proper release yet.
 ---|---
 
-[![Linting (flake8)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg?branch=main)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
-
 </div>
 
 <br>
