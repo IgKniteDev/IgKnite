@@ -10,9 +10,9 @@
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
 </a>
 
-<br>
-<img src="static/play_command_demo.png" width="500">
-<br>
+<br><br>
+<img src="static/play_command_demo.png" width="600">
+<br><br>
 
 ---
 
