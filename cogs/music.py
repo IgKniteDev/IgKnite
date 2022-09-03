@@ -361,7 +361,7 @@ class Song:
     def create_embed(
         self,
         inter: disnake.CommandInteraction
-    ) -> Tuple[disnake.Embed, disnake.ui.View]:
+    ) -> Tuple[core.TypicalEmbed, disnake.ui.View]:
         duration = 'Live' if not self.source.duration else self.source.duration
 
         embed = core.TypicalEmbed(inter).add_field(
@@ -412,7 +412,7 @@ class SongQueue(asyncio.Queue):
         self,
         inter: disnake.CommandInteraction,
         page: int = 1
-    ) -> disnake.Embed:
+    ) -> core.TypicalEmbed:
         items_per_page = 10
         pages = math.ceil(len(inter.voice_state.songs) / items_per_page)
 
@@ -898,7 +898,54 @@ class Music(commands.Cog):
                         )
                     )
 
-        await put_song_to_voice_state(inter, keyword)
+        if (
+            'https://open.spotify.com/playlist/' in keyword
+            or 'spotify:playlist:' in keyword
+        ):
+            ids = Spotify.get_playlist_track_ids(keyword)
+            tracks = []
+
+            for i in range(len(ids)):
+                track = Spotify.get_track_features(ids[i])
+                tracks.append(track)
+
+            for track in tracks:
+                await put_song_to_voice_state(inter, track, send_embed=False)
+
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f'{len(tracks)} tracks have been queued!'
+            )
+            await inter.send(embed=embed)
+
+        elif (
+            'https://open.spotify.com/album/' in keyword
+            or 'spotify:album:' in keyword
+        ):
+            ids = Spotify.get_album(keyword)
+            tracks = []
+
+            for i in range(len(ids)):
+                track = Spotify.get_track_features(ids[i])
+                tracks.append(track)
+
+            for track in tracks:
+                await put_song_to_voice_state(inter, track, send_embed=False)
+
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f'{len(tracks)} tracks have been queued!'
+            )
+            await inter.send(embed=embed)
+
+        elif (
+            'https://open.spotify.com/track/' in keyword
+            or 'spotify:track:' in keyword
+        ):
+            id = Spotify.get_track_id(keyword)
+            track = Spotify.get_track_features(id)
+            await put_song_to_voice_state(inter, track)
+
+        else:
+            await put_song_to_voice_state(inter, keyword)
 
 
 # The setup() function for the cog.
