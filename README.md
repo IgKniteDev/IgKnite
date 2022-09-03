@@ -17,9 +17,6 @@ IgKnite is a feature-packed, music and moderation bot that takes Discord's [new 
 :warning: | This project is still under development and does not have a proper release yet.
 ---|---
 
-![GitHub License](https://img.shields.io/github/license/IgKniteDev/IgKnite?color=white&label=License)
-![GitHub Watchers](https://img.shields.io/github/watchers/IgKniteDev/IgKnite?color=white&label=Watchers)
-![GitHub Stars](https://img.shields.io/github/stars/IgKniteDev/IgKnite?color=black&style=social)
 [![Linting (flake8)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg?branch=main)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
 
 </div>
