@@ -1,13 +1,18 @@
 <div align="center">
 
 <br>
-<img src="static/logo_circle.png" width="100">
+<img src="static/logo_circle.png" width="128">
 <br>
 
-# IgKnite
-That one Discord bot with fully open-source slash powers!
+# IgKnite for Discord
+<img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
+<a aria-label="Join the community on Discord" href="https://discord.gg/ftVPgrw54A" target="_blank">
+    <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
+</a>
 
-<br>
+IgKnite is a feature-packed, music and moderation bot that takes Discord's [new era of apps](https://discord.com/blog/welcome-to-the-new-era-of-discord-apps) into practice and gives a fruitful experience to the users in return.
+
+<br><br>
 
 :warning: | This project is still under development and does not have a proper release yet.
 ---|---
@@ -19,7 +24,7 @@ That one Discord bot with fully open-source slash powers!
 
 </div>
 
-<br><br>
+<br>
 
 ## Table of Contents
 
@@ -39,11 +44,11 @@ Discord has always been the go-to platform for communities to make a solid base 
 
 ## Goals
 
-The goal, in this case, is simply to create a bot that uses Discord's bleeding-edge API in order to make **interactive commands really interactive**. Speaking of which, interactions like buttons, context menus are a must-have when it comes to making the usage path easier for the end-user. Combined with the inspiration and ideas from renowned bots like [MEE6](https://mee6.xyz) and [Fredboat](https://fredboat.com), we have decided to **raise IgKnite by developing a unified experience when it comes to music and moderation.** 
+The goal, in this case, is simply to create a bot that uses Discord's bleeding-edge API in order to make **interactive commands truly interactive**. Speaking of which, interactions like buttons, context menus are a must-have when it comes to making the usage path easier for the end-user. Combined with the inspiration and ideas from renowned bots like [MEE6](https://mee6.xyz) and [Fredboat](https://fredboat.com), we have decided to **raise IgKnite by developing a unified experience when it comes to music and moderation.** 
 
 <br>
 
-## Wiki Usage
+## Wiki & Usage
 
 Once stable enough for production, you will be able to access a pre-hosted copy of IgKnite with its full feature set, much like any other mainstream Discord bot. However, if you wanna get a little bit geeky, then we are happy to announce that [a GitHub Wiki](https://github.com/IgKniteDev/IgKnite/wiki) page is also being worked on in the meantime.
 
