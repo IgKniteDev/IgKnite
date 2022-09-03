@@ -37,10 +37,16 @@ from core.datacls import LockRoles
 
 # The actual cog.
 class Customization(commands.Cog):
-    def __init__(self, bot: core.IgKnite) -> None:
+    def __init__(
+        self,
+        bot: core.IgKnite
+    ) -> None:
         self.bot = bot
 
-    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
+    async def cog_before_slash_command_invoke(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
         return await inter.response.defer()
 
     # makerole

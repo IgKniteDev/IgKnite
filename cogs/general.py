@@ -38,7 +38,10 @@ import core
 
 # The actual cog.
 class General(commands.Cog):
-    def __init__(self, bot: core.IgKnite) -> None:
+    def __init__(
+        self,
+        bot: core.IgKnite
+    ) -> None:
         self.bot = bot
 
     # avatar

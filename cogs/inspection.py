@@ -39,7 +39,10 @@ from core.datacls import LockRoles
 
 # The actual cog.
 class Inspection(commands.Cog):
-    def __init__(self, bot: core.IgKnite) -> None:
+    def __init__(
+        self,
+        bot: core.IgKnite
+    ) -> None:
         self.bot = bot
 
     # guildinfo
