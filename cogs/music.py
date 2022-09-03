@@ -692,6 +692,77 @@ class Music(commands.Cog):
         embed, view = inter.voice_state.current.create_embed(inter)
         await inter.send(embed=embed, view=view)
 
+    # pause
+    @commands.slash_command(
+        name='pause',
+        description='Pauses the currently playing song.',
+        dm_permission=False
+    )
+    async def _pause(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        if not inter.voice_state.voice:
+            return await inter.send('I am not connected to any voice channel.')
+
+        if not inter.author.voice:
+            return await inter.send('You are not in the same voice channel as mine.')
+
+        if (
+            inter.voice_state.is_playing
+            and inter.voice_state.voice.is_playing()
+        ):
+            inter.voice_state.voice.pause()
+            await inter.send('Paused voice state.')
+
+    # resume
+    @commands.slash_command(
+        name='resume',
+        description='Resumes the currently paused song.',
+        dm_permission=False
+    )
+    async def _resume(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        if not inter.voice_state.voice:
+            return await inter.send('I am not connected to any voice channel.')
+
+        if not inter.author.voice:
+            return await inter.send('You are not in the same voice channel as mine.')
+
+        if (
+            inter.voice_state.is_playing
+            and inter.voice_state.voice.is_paused()
+        ):
+            inter.voice_state.voice.resume()
+            await inter.send('Resumed voice state.')
+
+    # stop
+    @commands.slash_command(
+        name='stop',
+        description='Stops playing song and clears the queue.',
+        dm_permission=False
+    )
+    async def _stop(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        if not inter.voice_state.voice:
+            return await inter.send('I am not connected to any voice channel.')
+
+        if not inter.author.voice:
+            return await inter.send('You are not in the same voice channel as mine.')
+
+        inter.voice_state.songs.clear()
+
+        if inter.voice_state.is_playing:
+            if inter.voice_state.loop:
+                inter.voice_state.loop = not inter.voice_state.loop
+
+            inter.voice_state.voice.stop()
+            await inter.send('Resumed voice state.')
+
     # play
     @commands.slash_command(
         name='play',
