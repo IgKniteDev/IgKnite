@@ -763,6 +763,90 @@ class Music(commands.Cog):
             inter.voice_state.voice.stop()
             await inter.send('Resumed voice state.')
 
+    # skip
+    @commands.slash_command(
+        name='skip',
+        description='Vote to skip a song. The requester can automatically skip.',
+        dm_permission=False
+    )
+    async def _skip(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        if not inter.voice_state.is_playing:
+            return await inter.reply('Not playing anything right now.')
+
+        if inter.voice_state.loop:
+            inter.voice_state.loop = not inter.voice_state.loop
+
+        voter = inter.author
+
+        if voter == inter.voice_state.current.requester:
+            await inter.response.send('Skipped!')
+            inter.voice_state.skip()
+
+        elif voter.id not in inter.voice_state.skip_votes:
+            inter.voice_state.skip_votes.add(voter.id)
+            total_votes = len(inter.voice_state.skip_votes)
+
+            if total_votes >= 3:
+                await inter.response.send('Skipped!')
+                inter.voice_state.skip()
+            else:
+                await inter.send(f'Skip vote added, currently at **{total_votes}/3** votes.')
+
+        else:
+            await inter.send('You have already voted to skip this song.')
+
+    # queue
+    @commands.slash_command(
+        name='queue',
+        description='Shows the player\'s queue.',
+        dm_permission=False
+    )
+    async def _queue(
+        self,
+        inter: disnake.CommandInteraction,
+        page: int = 1
+    ) -> None:
+        if len(inter.voice_state.songs) == 0:
+            return await inter.send('The queue is empty.')
+
+        embed = inter.voice_state.songs.get_queue_embed(inter, page=page)
+        view = QueueCommandView(inter)
+        await inter.send(embed=embed, view=view)
+
+    # rmqueue
+    @commands.slash_command(
+        name='rmqueue',
+        description='Removes a song from the queue at a given index.',
+        options=[
+            Option(
+                'index',
+                'Specify the index of the item to remove.',
+                OptionType.integer,
+                required=True
+            )
+        ],
+        dm_permission=False
+    )
+    async def _rmqueue(
+        self,
+        inter: disnake.CommandInteraction,
+        index: int
+    ):
+        if not inter.voice_state.voice:
+            return await inter.send('I am not connected to any voice channel.')
+
+        if not inter.author.voice:
+            return await inter.send('You are not in the same voice channel as mine.')
+
+        if len(inter.voice_state.songs) == 0:
+            return await inter.send('The queue is empty, so nothing to be removed.')
+
+        inter.voice_state.songs.remove(index - 1)
+        await inter.send('Removed item from queue.')
+
     # play
     @commands.slash_command(
         name='play',
