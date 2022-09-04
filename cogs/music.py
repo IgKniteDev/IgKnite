@@ -683,14 +683,15 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
-        if not inter.voice_state.is_playing:
-            return await inter.send(
+        try:
+            embed, view = inter.voice_state.current.create_embed(inter)
+            await inter.send(embed=embed, view=view)
+
+        except AttributeError:
+            await inter.send(
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
-
-        embed, view = inter.voice_state.current.create_embed(inter)
-        await inter.send(embed=embed, view=view)
 
     # pause
     @commands.slash_command(
