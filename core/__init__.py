@@ -27,10 +27,11 @@ SOFTWARE.
 
 
 # Initialize scripts.
-from . import datacls as datacls, decor as decor, embeds as embeds, global_ as global_
+from . import datacls as datacls, global_ as global_
 from .bot import *
+from .embeds import *
 
 
 # Set version number.
-__version_info__ = ('2022', '8', '29')  # Year.Month.Day
+__version_info__ = ('2022', '9', '3')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
