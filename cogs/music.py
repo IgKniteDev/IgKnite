@@ -762,7 +762,7 @@ class Music(commands.Cog):
                 inter.voice_state.loop = not inter.voice_state.loop
 
             inter.voice_state.voice.stop()
-            await inter.send('Resumed voice state.')
+            await inter.send('Stopped voice state.')
 
     # skip
     @commands.slash_command(
