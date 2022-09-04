@@ -28,18 +28,22 @@ SOFTWARE.
 
 # Imports.
 import random
-import discord
+import disnake
 
 
-# Overwrite discord.Embed class to form custom embeds.
-class ClassicEmbed(discord.Embed):
+# Overwrite disnake.Embed class to form custom embeds.
+class TypicalEmbed(disnake.Embed):
     '''
     Represents an embed common to all the normal commands.
     '''
 
-    def __init__(self, inter: discord.Interaction) -> None:
+    def __init__(
+        self,
+        inter: disnake.CommandInteraction,
+        is_error: bool = False
+    ) -> None:
         super().__init__(
-            color=3158326
+            color=(3158326 if not is_error else 16608388)
         )
 
         self.set_footer(
@@ -52,21 +56,19 @@ class ClassicEmbed(discord.Embed):
                     'Hello World, from the other side!'
                 ]
             ),
-            icon_url=inter.user.avatar
+            icon_url=inter.author.avatar
         )
 
+    def set_title(self, value: str) -> None:
+        '''
+        Sets the title for the embed content.
+        '''
+        self.title = value
+        return self
 
-class ErrorEmbed(discord.Embed):
-    '''
-    Represents an embed common to all error messages.
-    '''
-
-    def __init__(self, inter: discord.Interaction) -> None:
-        super().__init__(
-            color=16608388
-        )
-
-        self.set_footer(
-            text='Dot.',
-            icon_url=inter.user.avatar
-        )
+    def set_description(self, value: str) -> None:
+        '''
+        Sets the description for the embed content.
+        '''
+        self.description = value
+        return self

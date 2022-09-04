@@ -29,9 +29,9 @@ SOFTWARE.
 # Imports.
 from datetime import datetime
 
-import discord
-from discord import app_commands
-from discord.ext import commands
+import disnake
+from disnake import Option, OptionType
+from disnake.ext import commands
 
 import core
 from core.datacls import LockRoles
@@ -39,21 +39,24 @@ from core.datacls import LockRoles
 
 # The actual cog.
 class Inspection(commands.Cog):
-    def __init__(self, bot: core.IgKnite) -> None:
+    def __init__(
+        self,
+        bot: core.IgKnite
+    ) -> None:
         self.bot = bot
 
     # guildinfo
-    @app_commands.command(
+    @commands.slash_command(
         name='guildinfo',
-        description='Shows all important information about the server.'
+        description='Shows all important information about the server.',
+        dm_permission=False
     )
-    @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _guildinfo(
         self,
-        inter: discord.Interaction
+        inter: disnake.CommandInteraction
     ) -> None:
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).add_field(
             name='Birth',
             value=datetime.strptime(
                 str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
@@ -78,26 +81,32 @@ class Inspection(commands.Cog):
         if inter.guild.icon:
             embed.set_thumbnail(url=inter.guild.icon)
 
-        await inter.response.send_message(embed=embed)
+        await inter.send(embed=embed)
 
     # userinfo
-    @app_commands.command(
+    @commands.slash_command(
         name='userinfo',
-        description='Shows all important information on a user.'
+        description='Shows all important information on a user.',
+        options=[
+            Option(
+                'member',
+                'Mention the server member.',
+                OptionType.user
+            )
+        ],
+        dm_permission=False
     )
-    @app_commands.describe(
-        member='Mention the server member.'
-    )
-    @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _userinfo(
         self,
-        inter: discord.Interaction,
-        member: discord.Member = None
+        inter: disnake.CommandInter,
+        member: disnake.Member = None
     ) -> None:
         member = inter.user if not member else member
 
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).set_title(
+            value=str(member)
+        ).add_field(
             name='Status',
             value=member.status
         ).add_field(
@@ -116,33 +125,39 @@ class Inspection(commands.Cog):
             value=len(member.roles)
         ).add_field(
             name='Position',
-            value=f"<@&{member.top_role.id}>"
+            value=member.top_role.mention
         ).add_field(
             name='Identifier',
             value=member.id
         ).set_thumbnail(
             url=member.display_avatar
         )
-        embed.title = member.display_name
 
-        await inter.response.send_message(embed=embed)
+        await inter.send(embed=embed)
 
     # roleinfo
-    @app_commands.command(
+    @commands.slash_command(
         name='roleinfo',
-        description='Shows all important information related to a specific role.'
+        description='Shows all important information related to a specific role.',
+        options=[
+            Option(
+                'role',
+                'Mention the role.',
+                OptionType.role,
+                required=True
+            )
+        ],
+        dm_permission=False
     )
-    @app_commands.describe(
-        role='Mention the role.'
-    )
-    @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _roleinfo(
         self,
-        inter: discord.Interaction,
-        role: discord.Role
+        inter: disnake.CommandInteraction,
+        role: disnake.Role
     ) -> None:
-        embed = core.embeds.ClassicEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).set_title(
+            value=f'Role information: @{role.name}'
+        ).add_field(
             name='Birth',
             value=datetime.strptime(
                 str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
@@ -163,31 +178,35 @@ class Inspection(commands.Cog):
             name='Identifier',
             value=f'`{role.id}`'
         )
-        embed.title = f"Role Information: @{role.name}"
 
-        await inter.response.send_message(embed=embed)
+        await inter.send(embed=embed)
 
     # audit
-    @app_commands.command(
+    @commands.slash_command(
         name='audit',
-        description='Views the latest entries of the audit log in detail.'
+        description='Views the latest entries of the audit log in detail.',
+        options=[
+            Option(
+                'limit',
+                'The limit for showing entries. Must be within 1 and 100.',
+                OptionType.integer
+            )
+        ],
+        dm_permission=False
     )
-    @app_commands.describe(
-        limit='The limit for showing entries. Must be within 1 and 100.'
-    )
-    @app_commands.guild_only()
-    @app_commands.checks.has_any_role(LockRoles.mod, LockRoles.admin)
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _audit(
         self,
-        inter: discord.Interaction,
+        inter: disnake.CommandInteraction,
         limit: int = 5
     ):
         if limit not in range(1, 101):
             await inter.response.send_message(f'{limit} is not within the given range.', ephemeral=True)
 
         else:
-            embed = core.embeds.ClassicEmbed(inter)
-            embed.title = f'Audit Log ({limit} entries)'
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f'Audit Log ({limit} entries)'
+            )
 
             async for audit_entry in inter.guild.audit_logs(limit=limit):
                 embed.add_field(
@@ -196,9 +215,9 @@ class Inspection(commands.Cog):
                     inline=False
                 )
 
-            await inter.response.send_message(embed=embed, ephemeral=True)
+            await inter.send(embed=embed, ephemeral=True)
 
 
 # The setup() function for the cog.
-async def setup(bot: core.IgKnite) -> None:
-    await bot.add_cog(Inspection(bot))
+def setup(bot: core.IgKnite) -> None:
+    bot.add_cog(Inspection(bot))

@@ -1,6 +1,5 @@
 python-decouple
-discord.py[speed]
-PyNaCl
+disnake[speed,voice]
 youtube-dl
 spotipy
 flet
