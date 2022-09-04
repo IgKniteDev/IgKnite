@@ -284,11 +284,11 @@ class Moderation(commands.Cog):
                         pass
 
                     else:
-                        webhook = await inter.channel.create_webhook(name=snipeable.author.display_name)
+                        webhook = await inter.channel.create_webhook(name=snipeable.author)
 
                     await webhook.send(
                         content=snipeable.content,
-                        username=snipeable.author.name,
+                        username=snipeable.author.display_name,
                         avatar_url=snipeable.author.avatar
                     )
                     sniped_count += 1
