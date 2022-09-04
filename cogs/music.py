@@ -774,7 +774,7 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction
     ) -> None:
         if not inter.voice_state.is_playing:
-            return await inter.reply('Not playing anything right now.')
+            return await inter.send('Not playing anything right now.')
 
         if inter.voice_state.loop:
             inter.voice_state.loop = not inter.voice_state.loop
@@ -782,7 +782,7 @@ class Music(commands.Cog):
         voter = inter.author
 
         if voter == inter.voice_state.current.requester:
-            await inter.response.send('Skipped!')
+            await inter.send('Skipped!')
             inter.voice_state.skip()
 
         elif voter.id not in inter.voice_state.skip_votes:
@@ -790,7 +790,7 @@ class Music(commands.Cog):
             total_votes = len(inter.voice_state.skip_votes)
 
             if total_votes >= 3:
-                await inter.response.send('Skipped!')
+                await inter.send('Skipped!')
                 inter.voice_state.skip()
             else:
                 await inter.send(f'Skip vote added, currently at **{total_votes}/3** votes.')
