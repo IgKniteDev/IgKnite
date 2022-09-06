@@ -9,6 +9,9 @@
 <a aria-label="Join the community on Discord" href="https://discord.gg/ftVPgrw54A" target="_blank">
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
 </a>
+<a aria-label="Inject to your Discord server" href="https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands" target="_blank">
+    <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
+</a>
 
 <br><br>
 <img src="static/play_command_demo.png" width="600">
@@ -27,7 +30,7 @@
 
 - [Motive](#motive)
 - [Goals](#goals)
-- [Usage](#usage)
+- [Usage Guide](#how-to-use)
 - [Contributors](#contributors)
 - [License](#license)
 
@@ -45,9 +48,11 @@ The goal, in this case, is simply to create a bot that uses Discord's bleeding-e
 
 <br>
 
-## Wiki & Usage
+## How to use?
 
-Once stable enough for production, you will be able to access a pre-hosted copy of IgKnite with its full feature set, much like any other mainstream Discord bot. However, if you wanna get a little bit geeky, then we are happy to announce that [a GitHub Wiki](https://github.com/IgKniteDev/IgKnite/wiki) page is also being worked on in the meantime.
+If you want to add IgKnite to your own Discord server and start using it, consider [clicking right here](https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands) and you'll be automatically redirected to the authorization page. Once done, IgKnite will be ready for you to use! Later on, you can [read IgKnite's documentation](https://github.com/IgKniteDev/documentation) to see what you can do with this project of ours :D
+
+The documentation will also help you to, apparently, **self-host** IgKnite on your computer as well to receive a faster user experience near your local area.
 
 <br>
 
