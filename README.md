@@ -19,15 +19,20 @@
 
 </div>
 
-<p>IgKnite is a slash-first, Discord bot built on the goal for making a truly unified application experience for Discord possible.
+<br>
+
+## Overview
+
+Introducing IgKnite, a slashes-first Discord bot that has been made on the goal of creating a truly unified experience for Discord. Being a Discord bot, IgKnite's primary purpose is to serve its users with a delightful command handler that is both easier to use and responsive. IgKnite's still an infant, but it's growing gradually!
 
 <br>
 
 ## Features
 
-- Written with <3 in pure Python!
-- Asynchronous code for increased performance.
-- Command-rich use cases.
+- Source code written in pure Python.
+- Asynchronous nature for faster response times.
+- Evergrowing collection of commands (with a few alien ones!).
+- Prioritized interactions over traditional text commands.
 
 <br>
 
