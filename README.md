@@ -17,48 +17,33 @@
 <img src="static/play_command_demo.png" width="600">
 <br><br>
 
----
-
-:warning: | This project is still under development and does not have a proper release yet.
----|---
-
 </div>
 
-<br>
-
-## Table of Contents
-
-- [Motive](#motive)
-- [Goals](#goals)
-- [Usage Guide](#how-to-use)
-- [Contributors](#contributors)
-- [License](#license)
+<p>IgKnite is a slash-first, Discord bot built on the goal for making a truly unified application experience for Discord possible.
 
 <br>
 
-## Motive
+## Features
 
-Discord has always been the go-to platform for communities to make a solid base for hanging out and building servers to communicate and grow upon. This can somehow correlate to developers, as Discord has long been appreciating the programming of 'bots' since it started. To put it simply, this social platform has its own community of developers who are pretty enthusiastic about making interactive applications that are useful in many different scenarios. However, as developers continue to make their bots more capable than ever, there is always this very lack of 'original' applications that truly rely and are hosted on open-source technologies. 
+- Written with <3 in pure Python!
+- Asynchronous code for increased performance.
+- Command-rich use cases.
 
 <br>
 
-## Goals
+## Setup
 
-The goal, in this case, is simply to create a bot that uses Discord's bleeding-edge API in order to make **interactive commands truly interactive**. Speaking of which, interactions like buttons, context menus are a must-have when it comes to making the usage path easier for the end-user. Combined with the inspiration and ideas from renowned bots like [MEE6](https://mee6.xyz) and [Fredboat](https://fredboat.com), we have decided to **raise IgKnite by developing a unified experience when it comes to music and moderation.** 
+If you want to add IgKnite to your own server, [consider clicking here](https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands) and you'll automatically be redirected to Discord's webpage. You can also [find a server]() which has IgKnite in it, then you can click on IgKnite's profile picture to toggle its profile view and add it from there :D
 
 <br>
 
 ## How to use?
 
-If you want to add IgKnite to your own Discord server and start using it, consider [clicking right here](https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands) and you'll be automatically redirected to the authorization page. Once done, IgKnite will be ready for you to use! Later on, you can [read IgKnite's documentation](https://github.com/IgKniteDev/documentation) to see what you can do with this project of ours :D
-
-The documentation will also help you to, apparently, **self-host** IgKnite on your computer as well to receive a faster user experience near your local area.
+Once added to your Discord server, [click here](https://igknitedev.github.io/documentation) and you will be greeted with a curated documentation that has all the things you need to know about IgKnite written inside. This includes everything from using commands to even self-hosting IgKnite on your local computer!
 
 <br>
 
 ---
-
-<br>
 
 ## Contributors
 
@@ -66,7 +51,7 @@ The documentation will also help you to, apparently, **self-host** IgKnite on yo
   <img src="https://contrib.rocks/image?repo=IgKniteDev/IgKnite" />
 </a>
 
-<br><br>
+<br>
 
 ## License
 
