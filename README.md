@@ -46,6 +46,9 @@ If you want to add IgKnite to your own server, [consider clicking here](https://
 
 Once added to your Discord server, [click here](https://igknitedev.github.io/docs) and you will be greeted with a curated documentation that has all the things you need to know about IgKnite written inside. This includes everything from using commands to even self-hosting IgKnite on your local computer!
 
+:warning: | The documentation is still under construction and might not be stable.
+---|---
+
 <br>
 
 ---
