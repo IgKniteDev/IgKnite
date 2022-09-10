@@ -51,15 +51,13 @@ Once added to your Discord server, [click here](https://igknitedev.github.io/doc
 
 <br>
 
----
-
 ## Contributors
 
 <a href="https://github.com/IgKniteDev/IgKnite/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=IgKniteDev/IgKnite" />
 </a>
 
-<br>
+<br><br>
 
 ## License
 
