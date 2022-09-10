@@ -1,1 +1,6 @@
 .env
+.flake8
+.github
+.vscode
+static
+venv
