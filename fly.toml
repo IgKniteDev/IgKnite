@@ -1,3 +1,5 @@
+# fly.toml file generated for igknite on 2022-09-10T22:08:26+06:00
+
 app = "igknite"
 kill_signal = "SIGINT"
 kill_timeout = 5
