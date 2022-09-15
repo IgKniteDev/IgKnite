@@ -53,6 +53,9 @@ class ExceptionHandler(commands.Cog):
         ):
             embed.set_title('Whoops! You\'re missing a role.')
 
+        else:
+            embed.set_title('Whoops! An alien error occured.')
+
         embed.set_description(str(error))
         await inter.send(embed=embed, ephemeral=True)
 
