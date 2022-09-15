@@ -319,7 +319,7 @@ class QueueCommandView(disnake.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await inter.send(
+        await inter.response.edit_message(
             embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
@@ -335,7 +335,7 @@ class QueueCommandView(disnake.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
-        await inter.send(
+        await inter.response.edit_message(
             embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
