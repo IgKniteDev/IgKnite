@@ -34,7 +34,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class LockRoles:
     '''
-    A dataclass used for role-locking. 
+    A dataclass used for role-locking.
     '''
 
     mod: str = 'BotMod'
