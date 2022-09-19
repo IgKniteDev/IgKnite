@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  flake8-lint:
+  flake8_lint:
     name: Lint
     runs-on: ubuntu-latest
     
@@ -25,6 +25,6 @@ jobs:
       - name: Run flake8
         uses: suo/flake8-github-action@releases/v1
         with:
-          checkName: 'flake8_py3'
+          checkName: 'flake8_lint'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
