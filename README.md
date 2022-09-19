@@ -7,7 +7,6 @@
 # IgKnite for Discord
 ### An open-source Discord bot focusing on interactivity and fluency.
 
-<br>
 <img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
 <a aria-label="Join the community on Discord" href="https://discord.gg/ftVPgrw54A" target="_blank">
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
