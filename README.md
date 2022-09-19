@@ -5,7 +5,7 @@
 <br>
 
 # IgKnite for Discord
-### A Discord bot that focuses on interactivity and fluency when it comes to music and moderation.
+### An open-source Discord bot focusing on interactivity and fluency.
 
 <br>
 <img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
