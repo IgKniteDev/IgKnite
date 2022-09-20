@@ -102,7 +102,7 @@ class Inspection(commands.Cog):
         inter: disnake.CommandInter,
         member: disnake.Member = None
     ) -> None:
-        member = inter.user if not member else member
+        member = inter.author if not member else member
 
         embed = core.TypicalEmbed(inter).set_title(
             value=str(member)
@@ -132,7 +132,49 @@ class Inspection(commands.Cog):
         ).set_thumbnail(
             url=member.display_avatar
         )
+        await inter.send(embed=embed)
 
+    # userinfo (user)
+    @commands.user_command(
+        name='Show User Information',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _userinfo_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        member = inter.author if not member else member
+
+        embed = core.TypicalEmbed(inter).set_title(
+            value=str(member)
+        ).add_field(
+            name='Status',
+            value=member.status
+        ).add_field(
+            name='Birth',
+            value=datetime.strptime(
+                str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
+            ).strftime('%b %d, %Y')
+        ).add_field(
+            name='On Mobile',
+            value=member.is_on_mobile()
+        ).add_field(
+            name='Race',
+            value="Bot" if member.bot else "Human"
+        ).add_field(
+            name='Roles',
+            value=len(member.roles)
+        ).add_field(
+            name='Position',
+            value=member.top_role.mention
+        ).add_field(
+            name='Identifier',
+            value=member.id
+        ).set_thumbnail(
+            url=member.display_avatar
+        )
         await inter.send(embed=embed)
 
     # roleinfo
