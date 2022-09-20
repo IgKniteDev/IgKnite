@@ -44,7 +44,7 @@ class General(commands.Cog):
     ) -> None:
         self.bot = bot
 
-    # avatar
+    # avatar (slash)
     @commands.slash_command(
         name='avatar',
         description='Displays your avatar / the avatar of a server member.',
@@ -70,6 +70,17 @@ class General(commands.Cog):
             url=member.avatar
         )
         await inter.send(embed=embed)
+
+    # avatar (user)
+    @commands.user_command(
+        name='avatar'
+    )
+    async def _avatar_user(
+        self,
+        inter: disnake.CommandInteraction,
+        user: disnake.User
+    ):
+        await inter.send(user.avatar)
 
     # ping
     @commands.slash_command(
