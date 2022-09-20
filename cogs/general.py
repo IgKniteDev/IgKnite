@@ -44,7 +44,7 @@ class General(commands.Cog):
     ) -> None:
         self.bot = bot
 
-    # avatar (slash)
+    # avatar
     @commands.slash_command(
         name='avatar',
         description='Displays your avatar / the avatar of a server member.',
@@ -62,7 +62,7 @@ class General(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member = None
     ) -> None:
-        member = inter.user if not member else member
+        member = inter.author if not member else member
 
         embed = core.TypicalEmbed(inter).set_title(
             value='Here\'s what I found!'
@@ -73,14 +73,19 @@ class General(commands.Cog):
 
     # avatar (user)
     @commands.user_command(
-        name='avatar'
+        name='Show Avatar'
     )
     async def _avatar_user(
         self,
         inter: disnake.CommandInteraction,
-        user: disnake.User
-    ):
-        await inter.send(user.avatar)
+        member: disnake.Member
+    ) -> None:
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Here\'s what I found!'
+        ).set_image(
+            url=member.avatar
+        )
+        await inter.send(embed=embed)
 
     # ping
     @commands.slash_command(
