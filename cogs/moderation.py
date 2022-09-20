@@ -110,6 +110,24 @@ class Moderation(commands.Cog):
         await inter.guild.unban(member)
         await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
 
+    # softban (user)
+    @commands.user_command(
+        name='Wipe (Softban)',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _softban_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        await inter.guild.ban(
+            member,
+            delete_message_days=7
+        )
+        await inter.guild.unban(member)
+        await inter.send(f'Wiped all messages sent by **{member.display_name}** within the last 7 days (softban).')
+
     # kick
     @commands.slash_command(
         name='kick',
@@ -256,7 +274,32 @@ class Moderation(commands.Cog):
 
         await inter.channel.delete_messages(messages)
         await inter.send(
-            f'Purged {len(messages)} messages that were sent by **{member}.**',
+            f'Purged {len(messages)} messages that were sent by **{member.display_name}.**',
+            ephemeral=True
+        )
+
+    # ripplepurge (user)
+    @commands.user_command(
+        name='Ripple Purge',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _ripplepurge_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        messages = []
+        async for msg in inter.channel.history():
+            if len(messages) == 10:
+                break
+
+            if msg.author == member:
+                messages.append(msg)
+
+        await inter.channel.delete_messages(messages)
+        await inter.send(
+            f'Purged 10 messages that were sent by **{member.display_name}.**',
             ephemeral=True
         )
 
