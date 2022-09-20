@@ -41,7 +41,7 @@ class Customization(commands.Cog):
         self,
         bot: core.IgKnite
     ) -> None:
-        self.bot = bot 
+        self.bot = bot
 
     async def cog_before_slash_command_invoke(
         self,
