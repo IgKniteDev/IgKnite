@@ -19,11 +19,13 @@
 <img src="static/play_command_demo.png" width="600">
 <br><br>
 
+⌨️ -> 🛠 -> 🚀
+
 </div>
 
 <br>
 
-## 🛠 Features
+## Features
 
 - Written with <3 in **pure Python.**
 - Application-first command handler with slash, user and message commands.
@@ -34,18 +36,18 @@
 
 <br>
 
-## 🔌 How to use?
+## How to use?
 
 In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! 
 
 <br>
 
-## 🖥 Contributing
+## Contributing
 
 IgKnite is and will be open-source forever. If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D
 
 <br>
 
-## 🔖 License
+## License
 
 This project has been licensed under the [MIT License](LICENSE).
