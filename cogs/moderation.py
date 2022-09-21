@@ -76,7 +76,25 @@ class Moderation(commands.Cog):
         await inter.guild.ban(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
-    # softban
+    # Backend for softban-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _softban_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member,
+        *,
+        days: int = 7,
+        reason: str = 'No reason provided.'
+    ) -> None:
+        await inter.guild.ban(
+            member,
+            delete_message_days=days,
+            reason=reason
+        )
+        await inter.guild.unban(member)
+        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
+
+    # softban (slash)
     @commands.slash_command(
         name='softban',
         description='Temporarily bans members to delete their messages.',
@@ -102,13 +120,7 @@ class Moderation(commands.Cog):
         member: disnake.Member,
         reason: str = 'No reason provided.'
     ):
-        await inter.guild.ban(
-            member,
-            delete_message_days=7,
-            reason=reason
-        )
-        await inter.guild.unban(member)
-        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
+        await self._softban_backend(inter, member, reason=reason)
 
     # softban (user)
     @commands.user_command(
@@ -121,12 +133,7 @@ class Moderation(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member
     ) -> None:
-        await inter.guild.ban(
-            member,
-            delete_message_days=7
-        )
-        await inter.guild.unban(member)
-        await inter.send(f'Wiped all messages sent by **{member.display_name}** within the last 7 days (softban).')
+        await self._softban(inter, member)
 
     # kick
     @commands.slash_command(
@@ -237,7 +244,29 @@ class Moderation(commands.Cog):
         await inter.channel.purge(limit=amount)
         await inter.send(f'Purged **{amount}** messages.', ephemeral=True)
 
-    # ripplepurge
+    # Backend for ripplepurge-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _ripplepurge_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member,
+        amount: int = 10
+    ) -> None:
+        messages = []
+        async for msg in inter.channel.history():
+            if len(messages) == amount:
+                break
+
+            if msg.author == member:
+                messages.append(msg)
+
+        await inter.channel.delete_messages(messages)
+        await inter.send(
+            f'Purged 10 messages that were sent by **{member.display_name}.**',
+            ephemeral=True
+        )
+
+    # ripplepurge (slash)
     @commands.slash_command(
         name='ripplepurge',
         description='Clears messages that are sent by a specific user within the given index.',
@@ -263,20 +292,7 @@ class Moderation(commands.Cog):
         member: disnake.Member,
         amount: int = 10
     ) -> None:
-        messages = []
-
-        async for msg in inter.channel.history():
-            if len(messages) == amount:
-                break
-
-            if msg.author == member:
-                messages.append(msg)
-
-        await inter.channel.delete_messages(messages)
-        await inter.send(
-            f'Purged {len(messages)} messages that were sent by **{member.display_name}.**',
-            ephemeral=True
-        )
+        await self._ripplepurge_backend(inter, member, amount)
 
     # ripplepurge (user)
     @commands.user_command(
@@ -289,19 +305,7 @@ class Moderation(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member
     ) -> None:
-        messages = []
-        async for msg in inter.channel.history():
-            if len(messages) == 10:
-                break
-
-            if msg.author == member:
-                messages.append(msg)
-
-        await inter.channel.delete_messages(messages)
-        await inter.send(
-            f'Purged 10 messages that were sent by **{member.display_name}.**',
-            ephemeral=True
-        )
+        await self._ripplepurge_backend(inter, member)
 
     # snipe
     @commands.slash_command(
