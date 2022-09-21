@@ -5,6 +5,8 @@
 <br>
 
 # IgKnite for Discord
+### The Swiss Army Knife for Moderation / Music on Discord
+
 <img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
 <a aria-label="Join the community on Discord" href="https://discord.gg/ftVPgrw54A" target="_blank">
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
@@ -17,44 +19,34 @@
 <img src="static/play_command_demo.png" width="600">
 <br><br>
 
+⌨️ -> 🛠 -> 🚀
+
 </div>
-
-<br>
-
-## Overview
-
-Introducing IgKnite, a slashes-first Discord bot that has been made on the goal of creating a truly unified experience for Discord. Being a Discord bot, IgKnite's primary purpose is to serve its users with a delightful command handler that is both easier to use and responsive. IgKnite's still an infant, but it's growing gradually!
 
 <br>
 
 ## Features
 
-- Source code written in pure Python.
-- Asynchronous nature for faster response times.
-- Evergrowing collection of commands (with a few alien ones!).
-- Prioritized interactions over traditional text commands.
-
-<br>
-
-## Setup
-
-If you want to add IgKnite to your own server, [consider clicking here](https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands) and you'll automatically be redirected to Discord's webpage. You can also [find a server]() which has IgKnite in it, then you can click on IgKnite's profile picture to toggle its profile view and add it from there :D
+- Written with <3 in **pure Python.**
+- Application-first command handler with slash, user and message commands.
+- Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
+- A playground all by itself for creative commands.
+- Fully open-source (including assets).
+- No buzz, all buff!
 
 <br>
 
 ## How to use?
 
-Once added to your Discord server, [click here](https://igknitedev.github.io/docs) and you will be greeted with a curated documentation that has all the things you need to know about IgKnite written inside. This includes everything from using commands to even self-hosting IgKnite on your local computer!
+In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! 
 
 <br>
 
-## Contributors
+## Contributing
 
-<a href="https://github.com/IgKniteDev/IgKnite/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=IgKniteDev/IgKnite" />
-</a>
+IgKnite is and will be open-source forever. If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D
 
-<br><br>
+<br>
 
 ## License
 

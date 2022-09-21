@@ -104,7 +104,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
     ) -> None:
         super().__init__(source, volume)
 
-        self.requester = inter.user
+        self.requester = inter.author
         self.channel = inter.channel
         self.data = data
 
@@ -428,7 +428,7 @@ class SongQueue(asyncio.Queue):
             value=f"**{len(inter.voice_state.songs)} tracks:**\n\n{queue_str}"
         ).set_footer(
             text=f'Viewing page {page}/{pages}',
-            icon_url=inter.user.avatar
+            icon_url=inter.author.avatar
         )
 
         return embed
@@ -580,7 +580,7 @@ class Music(commands.Cog):
         A sub-method for commands requiring the bot to join a voice / stage channel.
         '''
 
-        destination = channel or inter.user.voice.channel
+        destination = channel or inter.author.voice.channel
 
         if inter.voice_state.voice:
             await inter.voice_state.voice.move_to(destination)
@@ -630,7 +630,7 @@ class Music(commands.Cog):
         if not inter.voice_state.voice:
             return await inter.followup.send('I\'m not inside any voice channel.')
 
-        if not inter.user.voice:
+        if not inter.author.voice:
             return await inter.followup.send('You\'re not in my voice channel.')
 
         await inter.voice_state.stop()

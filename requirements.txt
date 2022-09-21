@@ -2,4 +2,3 @@ python-decouple
 disnake[speed,voice]
 youtube-dl
 spotipy
-flet

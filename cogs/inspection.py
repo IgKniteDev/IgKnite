@@ -83,26 +83,14 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
-    # userinfo
-    @commands.slash_command(
-        name='userinfo',
-        description='Shows all important information on a user.',
-        options=[
-            Option(
-                'member',
-                'Mention the server member.',
-                OptionType.user
-            )
-        ],
-        dm_permission=False
-    )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _userinfo(
+    # Backend for userinfo-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _userinfo_backend(
         self,
-        inter: disnake.CommandInter,
+        inter: disnake.CommandInteraction,
         member: disnake.Member = None
     ) -> None:
-        member = inter.user if not member else member
+        member = inter.author if not member else member
 
         embed = core.TypicalEmbed(inter).set_title(
             value=str(member)
@@ -132,8 +120,41 @@ class Inspection(commands.Cog):
         ).set_thumbnail(
             url=member.display_avatar
         )
-
         await inter.send(embed=embed)
+
+    # userinfo (slash)
+    @commands.slash_command(
+        name='userinfo',
+        description='Shows all important information on a user.',
+        options=[
+            Option(
+                'member',
+                'Mention the server member.',
+                OptionType.user
+            )
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _userinfo(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = None
+    ) -> None:
+        await self._userinfo_backend(inter, member)
+
+    # userinfo (user)
+    @commands.user_command(
+        name='Show User Information',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _userinfo_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        await self._userinfo_backend(inter, member)
 
     # roleinfo
     @commands.slash_command(

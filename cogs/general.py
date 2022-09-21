@@ -44,7 +44,22 @@ class General(commands.Cog):
     ) -> None:
         self.bot = bot
 
-    # avatar
+    # Backend for userinfo-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _avatar_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = None
+    ) -> None:
+        member = inter.author if not member else member
+
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Here\'s what I found!'
+        ).set_image(
+            url=member.avatar
+        )
+        await inter.send(embed=embed)
+
     @commands.slash_command(
         name='avatar',
         description='Displays your avatar / the avatar of a server member.',
@@ -62,14 +77,18 @@ class General(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member = None
     ) -> None:
-        member = inter.user if not member else member
+        await self._avatar_backend(inter, member)
 
-        embed = core.TypicalEmbed(inter).set_title(
-            value='Here\'s what I found!'
-        ).set_image(
-            url=member.avatar
-        )
-        await inter.send(embed=embed)
+    # avatar (user)
+    @commands.user_command(
+        name='Show Avatar'
+    )
+    async def _avatar_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        await self._avatar_backend(inter, member)
 
     # ping
     @commands.slash_command(
