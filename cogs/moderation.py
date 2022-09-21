@@ -307,6 +307,19 @@ class Moderation(commands.Cog):
     ) -> None:
         await self._ripplepurge_backend(inter, member)
 
+    # ripplepurge (message)
+    @commands.message_command(
+        name='Ripple Purge',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _ripplepurge_message(
+        self,
+        inter: disnake.CommandInteraction,
+        message: disnake.Message
+    ) -> None:
+        await self._ripplepurge_backend(inter, message.author)
+
     # snipe
     @commands.slash_command(
         name='snipe',
