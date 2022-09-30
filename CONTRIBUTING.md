@@ -57,6 +57,8 @@ class SomeCog(commands.Cog):
         )
 ```
 
+<br>
+
 On the other hand, you can also write code and deploy to all three types of commands at once! In the example given below, we've tried to make a ban command that uses the very same logic for deploying itself in three forms:
 
 ```python
