@@ -6,7 +6,7 @@
 
 # IgKnite for Discord
 
-<br><br>
+<br>
 
 ### The Swiss Army Knife for Moderation / Music on Discord
 
