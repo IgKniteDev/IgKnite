@@ -8,9 +8,7 @@ We also have a [Code of Conduct](./CODE_OF_CONDUCT.md) in place so make sure to 
 
 ## Adding a New Command
 
-As most of you Discord bot users have noticed already, the primary way of interacting with IgKnite is through commands. And by commands, there are actually three types of commands which the project mainly focuses on: **slash commands, message commands and user commands.**
-
-In order to add your ideas by implementing new commands, you'll have to follow through three steps accordingly:
+As most of you Discord bot users have noticed already, the primary way of interacting with IgKnite is through commands. In order to add your ideas by implementing new commands, you'll have to follow through three steps accordingly:
 
 <br>
 
@@ -22,7 +20,15 @@ On both [discord.py](https://github.com/Rapptz/discord.py) and [disnake](https:/
 
 ### 2. Adding the actual command
 
-Okay, now once you have decided which cog to add your command to, we can start writing some code now! Below is an example of a very basic slash command which greets a server member. You'll be using such syntax in most of your commands.
+Okay, now once you have decided which cog to add your command to, we can start writing some code now! 
+
+Discord has three types of commands:
+
+- **Slash commands** can be used by pressing `/` and then typing the command.
+- **User commands** can be used by right-clicking on a user's avatar and then selecting 'Apps'.
+- **Message commands** are similar to user commands but need you to click on a message instead of someone's avatar.
+
+Below is an example of a very basic slash command which greets a server member. You'll be using such syntax in most of your commands.
 
 ```python
 class SomeCog(commands.Cog):
@@ -49,17 +55,9 @@ class SomeCog(commands.Cog):
         await member.send(
             f'Hey there! Welcome to {inter.guild.name}.'  
         )
-
-    
 ```
 
-On the other hand, if you'd like to add all three types of commands with the very same logic, you can do something similar to this example given below:
-
-Things to note here:
-
-- Slash commands can be used by pressing `/` and then typing the command.
-- User commands can be used by right-clicking on a user's avatar and then selecting 'Apps'.
-- Message commands are similar to user commands but need you to click on a message instead of someone's avatar.
+On the other hand, you can also write code and deploy to all three types of commands at once! In the example given below, we've tried to make a ban command that uses the very same logic for deploying itself in three forms:
 
 ```python
     # Backend for ban-labelled commands.
@@ -131,3 +129,11 @@ Things to note here:
         await self._ban_backend(inter, message.author)
     ...
 ```
+
+### 3. Test and Deploy
+
+IgKnite's source code follows the style guide provided by the [flake8](https://flake8.pycqa.org) linter. In order to minimize the tinkering, we have placed [GitHub Actions](https://github.com/features/actions) workflows to automatically lint and check your code for styling issues. 
+
+We highly recommend using this workflow by enabling GitHub Actions inside your fork of IgKnite. You can do this via the repository settings and hopefully it'll greatly increase the overhead on you while coding!
+
+Once you are done making your changes, push them to your fork and create a valid pull request. [Here's](https://github.com/IgKniteDev/IgKnite/pull/36) an example pull request which you can have a look at to learn about the pattern.
