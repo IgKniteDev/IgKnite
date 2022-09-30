@@ -132,6 +132,8 @@ On the other hand, you can also write code and deploy to all three types of comm
     ...
 ```
 
+<br>
+
 ### 3. Test and Deploy
 
 IgKnite's source code follows the style guide provided by the [flake8](https://flake8.pycqa.org) linter. In order to minimize the tinkering, we have placed [GitHub Actions](https://github.com/features/actions) workflows to automatically lint and check your code for styling issues. 
