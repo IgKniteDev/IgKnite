@@ -7,6 +7,8 @@
 # IgKnite for Discord
 
 <br>
+<img src="static/play_command_demo.png" width="600">
+<br>
 
 ### The Swiss Army Knife for Moderation / Music on Discord
 
@@ -18,15 +20,8 @@
     <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
 </a>
 
-<br><br>
-<img src="static/play_command_demo.png" width="600">
-<br><br>
-
-⌨️ -> 🛠 -> 🚀
-
-</div>
-
 <br>
+</div>
 
 ## Features
 
