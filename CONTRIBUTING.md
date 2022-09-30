@@ -6,6 +6,8 @@ When contributing to this repository, make sure to first discuss the change you 
 
 We also have a [Code of Conduct](./CODE_OF_CONDUCT.md) in place so make sure to follow the given set of guidelines and thresholds while you interact with the project.
 
+<br><br>
+
 ## Adding a New Command
 
 As most of you Discord bot users have noticed already, the primary way of interacting with IgKnite is through commands. In order to add your ideas by implementing new commands, you'll have to follow through three steps accordingly:
