@@ -8,19 +8,25 @@ We also have a [Code of Conduct](./CODE_OF_CONDUCT.md) in place so make sure to 
 
 <br><br>
 
-## Adding a New Command
+## Development Setup
+
+If you'd like to have a complete walk-through on setting up the development environment for IgKnite, consider having a look at [this section (in progress)](https://igknition.ml/) of the official documentation. Once done, you can proceed with the next steps mentioned below.
+
+<br><br>
+
+## Add New Commands
 
 As most of you Discord bot users have noticed already, the primary way of interacting with IgKnite is through commands. In order to add your ideas by implementing new commands, you'll have to follow through three steps accordingly:
 
 <br>
 
-### 1. Choosing your "Cog"
+### 1. Choose your "Cog"
 
 On both [discord.py](https://github.com/Rapptz/discord.py) and [disnake](https://github.com/DisnakeDev/disnake), categories of commands are referred to as "cogs". There are six different cogs which come built-in with IgKnite located in the **cogs** subdirectory. Navigate to your chosen one and have a look at the source code before making any changes.
 
 <br>
 
-### 2. Adding the actual command
+### 2. Create the command
 
 Okay, now once you have decided which cog to add your command to, we can start writing some code now! 
 
@@ -136,7 +142,7 @@ On the other hand, you can also write code and deploy to all three types of comm
 
 <br>
 
-### 3. Test and Deploy
+### 3. Test and deploy
 
 IgKnite's source code follows the style guide provided by the [flake8](https://flake8.pycqa.org) linter. In order to minimize the tinkering, we have placed [GitHub Actions](https://github.com/features/actions) workflows to automatically lint and check your code for styling issues. 
 
