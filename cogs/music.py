@@ -27,7 +27,6 @@ SOFTWARE.
 
 
 # Imports.
-import math
 import random
 import asyncio
 from async_timeout import timeout
@@ -295,6 +294,36 @@ class PlayCommandView(disnake.ui.View):
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
 
 
+# Selection menu for the `queue` command.
+class QueueCommandSelect(disnake.ui.Select):
+    def __init__(
+        self,
+        songs,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        self.songs = songs
+        self.inter = inter
+
+        options = [
+            disnake.SelectOption(
+                value=i,
+                label=song.source.title
+            ) for i, song in enumerate(songs)
+        ]
+
+        super().__init__(
+            placeholder="Choose your song.",
+            options=options,
+        )
+
+    async def callback(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
+        await inter.response.edit_message(embed=embed)
+
+
 # View for the `queue` command.
 class QueueCommandView(disnake.ui.View):
     def __init__(
@@ -304,6 +333,8 @@ class QueueCommandView(disnake.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
+        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
+        self.add_item(self.select)
 
     @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
     async def clear(
@@ -320,7 +351,6 @@ class QueueCommandView(disnake.ui.View):
             children.disabled = True
 
         await inter.response.edit_message(
-            embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -335,8 +365,8 @@ class QueueCommandView(disnake.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
+        self.select.songs(self.inter.voice_state.songs)
         await inter.response.edit_message(
-            embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -407,31 +437,6 @@ class SongQueue(asyncio.Queue):
         index: int
     ) -> None:
         del self._queue[index]
-
-    def get_queue_embed(
-        self,
-        inter: disnake.CommandInteraction,
-        page: int = 1
-    ) -> core.TypicalEmbed:
-        items_per_page = 10
-        pages = math.ceil(len(inter.voice_state.songs) / items_per_page)
-
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
-
-        queue_str = ''.join(
-            '`{0}.` [**{1.source.title}**]({1.source.url})\n'.format(i + 1, song)
-            for i, song in enumerate(inter.voice_state.songs[start:end], start=start)
-        )
-
-        embed = core.TypicalEmbed(inter).set_description(
-            value=f"**{len(inter.voice_state.songs)} tracks:**\n\n{queue_str}"
-        ).set_footer(
-            text=f'Viewing page {page}/{pages}',
-            icon_url=inter.author.avatar
-        )
-
-        return embed
 
 
 # The VoiceState class, which represents the playback status of songs.
@@ -807,15 +812,13 @@ class Music(commands.Cog):
     )
     async def _queue(
         self,
-        inter: disnake.CommandInteraction,
-        page: int = 1
+        inter: disnake.CommandInteraction
     ) -> None:
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
-        embed = inter.voice_state.songs.get_queue_embed(inter, page=page)
         view = QueueCommandView(inter)
-        await inter.send(embed=embed, view=view)
+        await inter.send(view=view)
 
     # rmqueue
     @commands.slash_command(
