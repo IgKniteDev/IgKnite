@@ -298,7 +298,7 @@ class PlayCommandView(disnake.ui.View):
 # The SongSelect class, which represents the dropdown view for enqueued songs
 class SongSelect(disnake.ui.Select):
     def __init__(self, songs, inter):
-        
+
         # Define the options that will be presented inside the dropdown
         self.songs = songs
         self.interCommand = inter
@@ -351,7 +351,6 @@ class QueueCommandView(disnake.ui.View):
             children.disabled = True
 
         await inter.response.edit_message(
-            # embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -367,9 +366,7 @@ class QueueCommandView(disnake.ui.View):
         button.disabled = True
 
         self.songSelect.songs(self.inter.voice_state.songs)
-        # self.add_item(SongSelect(self.inter.voice_state.songs, self.inter))
         await inter.response.edit_message(
-            # embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -846,7 +843,6 @@ class Music(commands.Cog):
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
-        # embed = inter.voice_state.songs.get_queue_embed(inter, page=page)
         view = QueueCommandView(inter)
         await inter.send(view=view)
 
