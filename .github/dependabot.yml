@@ -14,5 +14,6 @@ updates:
       - "dependencies"
     reviewers:
       - "hitblast"
-    prefix: "pip"
+    commit-message:
+      prefix: "pip"
       include: "scope"
