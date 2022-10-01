@@ -488,7 +488,7 @@ class VoiceState:
 
     @property
     def is_playing(self) -> Any:
-        return self.voice.is_playing()
+        return self.voice and self.voice.is_playing()
 
     async def audio_player_task(self) -> None:
         while True:
@@ -688,13 +688,10 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
-        try:
-            if inter.voice_state.is_playing:
-                embed, view = inter.voice_state.current.create_embed(inter)
-                await inter.send(embed=embed, view=view)
-            else:
-                raise AttributeError()
-        except AttributeError:
+        if inter.voice_state.is_playing:
+            embed, view = inter.voice_state.current.create_embed(inter)
+            await inter.send(embed=embed, view=view)
+        else:
             await inter.send(
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
