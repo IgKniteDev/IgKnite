@@ -29,6 +29,7 @@ SOFTWARE.
 # Imports.
 import random
 import asyncio
+from types import NoneType
 from async_timeout import timeout
 import functools
 import itertools
@@ -488,7 +489,7 @@ class VoiceState:
 
     @property
     def is_playing(self) -> Any:
-        return self.voice and self.current
+        return self.voice.is_playing()
 
     async def audio_player_task(self) -> None:
         while True:
@@ -689,9 +690,11 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction
     ) -> None:
         try:
-            embed, view = inter.voice_state.current.create_embed(inter)
-            await inter.send(embed=embed, view=view)
-
+            if inter.voice_state.is_playing:
+                embed, view = inter.voice_state.current.create_embed(inter)
+                await inter.send(embed=embed, view=view)
+            else:
+                raise AttributeError()
         except AttributeError:
             await inter.send(
                 'There\'s nothing being played at the moment.',
