@@ -27,7 +27,6 @@ SOFTWARE.
 
 
 # Imports.
-import math
 import random
 import asyncio
 from async_timeout import timeout
@@ -438,31 +437,6 @@ class SongQueue(asyncio.Queue):
     ) -> None:
         del self._queue[index]
 
-    def get_queue_embed(
-        self,
-        inter: disnake.CommandInteraction,
-        page: int = 1
-    ) -> core.TypicalEmbed:
-        items_per_page = 10
-        pages = math.ceil(len(inter.voice_state.songs) / items_per_page)
-
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
-
-        queue_str = ''.join(
-            '`{0}.` [**{1.source.title}**]({1.source.url})\n'.format(i + 1, song)
-            for i, song in enumerate(inter.voice_state.songs[start:end], start=start)
-        )
-
-        embed = core.TypicalEmbed(inter).set_description(
-            value=f"**{len(inter.voice_state.songs)} tracks:**\n\n{queue_str}"
-        ).set_footer(
-            text=f'Viewing page {page}/{pages}',
-            icon_url=inter.author.avatar
-        )
-
-        return embed
-
 
 # The VoiceState class, which represents the playback status of songs.
 class VoiceState:
@@ -837,8 +811,7 @@ class Music(commands.Cog):
     )
     async def _queue(
         self,
-        inter: disnake.CommandInteraction,
-        page: int = 1
+        inter: disnake.CommandInteraction
     ) -> None:
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
