@@ -29,7 +29,6 @@ SOFTWARE.
 # Imports.
 import random
 import asyncio
-from types import NoneType
 from async_timeout import timeout
 import functools
 import itertools
