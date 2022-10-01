@@ -295,6 +295,35 @@ class PlayCommandView(disnake.ui.View):
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
 
 
+# The SongSelect class, which represents the dropdown view for enqueued songs
+class SongSelect(disnake.ui.Select):
+    def __init__(self, songs, inter):
+
+        # Define the options that will be presented inside the dropdown
+        self.songs = songs
+        self.interCommand = inter
+        options = [disnake.SelectOption(
+                value=i,   label=song.source.title
+            ) for i, song in enumerate(songs)]
+
+        # The placeholder is what will be shown when no option is chosen.
+        # The min and max values indicate we can only pick one of the three options.
+        # The options parameter defines the dropdown options, see above.
+        super().__init__(
+            placeholder="Choose your song",
+            min_values=1,
+            max_values=1,
+            options=options,
+        )
+
+    async def callback(self, inter: disnake.Interaction):
+        # Use the interaction object to send a response.
+        # Mimicking the behaviour of now command for the
+        # selected options.
+        embed, view = self.songs[int(self.values[0])].create_embed(self.interCommand)
+        await inter.send(embed=embed, view=view)
+
+
 # View for the `queue` command.
 class QueueCommandView(disnake.ui.View):
     def __init__(
@@ -304,6 +333,8 @@ class QueueCommandView(disnake.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
+        self.songSelect = SongSelect(self.inter.voice_state.songs, self.inter)
+        self.add_item(self.songSelect)
 
     @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
     async def clear(
@@ -320,7 +351,6 @@ class QueueCommandView(disnake.ui.View):
             children.disabled = True
 
         await inter.response.edit_message(
-            embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -335,8 +365,8 @@ class QueueCommandView(disnake.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
+        self.songSelect.songs(self.inter.voice_state.songs)
         await inter.response.edit_message(
-            embed=self.inter.voice_state.songs.get_queue_embed(self.inter, page=1),
             view=self
         )
 
@@ -813,9 +843,8 @@ class Music(commands.Cog):
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
-        embed = inter.voice_state.songs.get_queue_embed(inter, page=page)
         view = QueueCommandView(inter)
-        await inter.send(embed=embed, view=view)
+        await inter.send(view=view)
 
     # rmqueue
     @commands.slash_command(
