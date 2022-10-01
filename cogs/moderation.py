@@ -133,7 +133,7 @@ class Moderation(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member
     ) -> None:
-        await self._softban(inter, member)
+        await self._softban_backend(inter, member)
 
     # kick
     @commands.slash_command(
