@@ -285,8 +285,6 @@ class NowCommandView(disnake.ui.View):
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.skip()
-        button.label = 'Skipped'
-        button.style = disnake.ButtonStyle.gray
 
         await inter.response.edit_message(
             content='Song skipped!',  # only keeping the content and removing everything else (e.g. embed, view)
