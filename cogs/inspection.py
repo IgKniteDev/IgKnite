@@ -35,6 +35,7 @@ from datetime import datetime
 import disnake
 from disnake import Option, OptionType, Invite
 from disnake.ext import commands
+from disnake.utils import MISSING
 
 import core
 from core.datacls import LockRoles
@@ -369,9 +370,11 @@ class Inspection(commands.Cog):
                 value='Invites'
             ).set_description(
                 value='List of all invites within the server:'
-            ).set_footer(
-                text=f'{page}/{top_page}'
             )
+            if invites:
+                embed.set_footer(text=f'{page}/{top_page}')
+            else:
+                embed.set_description("There are no invites to this server yet")
 
             for i in range(
                 (page_num * invites_per_page) - invites_per_page,
@@ -398,12 +401,9 @@ class Inspection(commands.Cog):
         await inter.send(
             embed=embed,
             view=InviteCommandView(
-                inter,
-                load_page,
-                top_page,
-                page,
-                await inter.guild.invites()
-            )
+                inter, load_page, top_page,
+                page, await inter.guild.invites()
+            ) if invites else MISSING
         )
 
     # audit
