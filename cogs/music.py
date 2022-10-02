@@ -585,14 +585,20 @@ class Music(commands.Cog):
         A sub-method for commands requiring the bot to join a voice / stage channel.
         '''
 
-        destination = channel or inter.author.voice.channel
+        destination = channel or (inter.author.voice and inter.author.voice.channel)
+        try:
+            if inter.voice_state.voice:
+                await inter.voice_state.voice.move_to(destination)
+            else:
+                inter.voice_state.voice = await destination.connect()
 
-        if inter.voice_state.voice:
-            await inter.voice_state.voice.move_to(destination)
-        else:
-            inter.voice_state.voice = await destination.connect()
+            return destination
 
-        return destination
+        except AttributeError:
+            await inter.send(
+                'Please switch to voice or stage channel to use this command',
+                ephemeral=True
+            )
 
     # join
     @commands.slash_command(
