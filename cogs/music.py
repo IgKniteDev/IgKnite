@@ -576,7 +576,7 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
-    async def _join_sub(
+    async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
         channel: disnake.VoiceChannel | disnake.StageChannel | None = None
@@ -617,7 +617,7 @@ class Music(commands.Cog):
         *,
         channel: disnake.VoiceChannel | disnake.StageChannel | None = None
     ) -> None:
-        destination = await self._join_sub(inter, channel)
+        destination = await self._join_logic(inter, channel)
         await inter.send(
             f'Joined **{destination}.**' if destination is not channel else f'Got booped to **{destination}.**'
         )
@@ -864,7 +864,7 @@ class Music(commands.Cog):
         keyword: str
     ) -> None:
         if not inter.voice_state.voice:
-            await self._join_sub(inter)
+            await self._join_logic(inter)
 
         async def put_song_to_voice_state(
             inter: disnake.CommandInteraction,

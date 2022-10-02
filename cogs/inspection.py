@@ -120,7 +120,7 @@ class InviteCommandView(disnake.ui.View):
         page: int = 1,
         invites: List[Invite] = [],
         timeout: float = 35
-    ):
+    ) -> None:
         super().__init__(timeout=timeout)
 
         self.page_loader = page_loader
@@ -152,7 +152,7 @@ class InviteCommandView(disnake.ui.View):
         self,
         _: disnake.ui.Button,
         inter: disnake.MessageInteraction
-    ):
+    ) -> None:
         self.page -= 1
         self.paginator_logic()
 
@@ -170,7 +170,7 @@ class InviteCommandView(disnake.ui.View):
         self,
         _: disnake.ui.Button,
         inter: disnake.MessageInteraction
-    ):
+    ) -> None:
         self.page += 1
         self.paginator_logic()
 
