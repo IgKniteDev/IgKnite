@@ -713,10 +713,7 @@ class Music(commands.Cog):
         if not inter.author.voice:
             return await inter.send('You are not in the same voice channel as mine.')
 
-        if (
-            inter.voice_state.is_playing
-            and inter.voice_state.voice.is_playing()
-        ):
+        if inter.voice_state.is_playing:
             inter.voice_state.voice.pause()
             await inter.send('Paused voice state.')
 
@@ -736,10 +733,7 @@ class Music(commands.Cog):
         if not inter.author.voice:
             return await inter.send('You are not in the same voice channel as mine.')
 
-        if (
-            inter.voice_state.is_playing
-            and inter.voice_state.voice.is_paused()
-        ):
+        if inter.voice_state.voice.is_paused():
             inter.voice_state.voice.resume()
             await inter.send('Resumed voice state.')
 
