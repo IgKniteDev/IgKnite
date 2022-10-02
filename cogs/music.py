@@ -29,10 +29,10 @@ SOFTWARE.
 # Imports.
 import random
 import asyncio
-from async_timeout import timeout
 import functools
 import itertools
 from typing import Any, Tuple
+from async_timeout import timeout
 
 import youtube_dl
 import spotipy
