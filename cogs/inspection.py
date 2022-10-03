@@ -427,21 +427,17 @@ class Inspection(commands.Cog):
         inter: disnake.CommandInteraction,
         limit: int = 5
     ):
-        if limit not in range(1, 101):
-            await inter.response.send_message(f'{limit} is not within the given range.', ephemeral=True)
-
-        else:
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f'Audit Log ({limit} entries)'
+        embed = core.TypicalEmbed(inter).set_title(
+            value=f'Audit Log ({limit} entries)'
+        )
+        async for audit_entry in inter.guild.audit_logs(limit=limit):
+            embed.add_field(
+                name=f'- {audit_entry.action}',
+                value=f'User: {audit_entry.user} | Target: {audit_entry.target}',
+                inline=False
             )
-            async for audit_entry in inter.guild.audit_logs(limit=limit):
-                embed.add_field(
-                    name=f'- {audit_entry.action}',
-                    value=f'User: {audit_entry.user} | Target: {audit_entry.target}',
-                    inline=False
-                )
 
-            await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed, ephemeral=True)
 
 
 # The setup() function for the cog.
