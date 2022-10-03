@@ -17,6 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Deploy to fly.io
+      - name: Setup flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
         run: flyctl deploy --remote-only --no-cache --strategy immediate
