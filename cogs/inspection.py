@@ -414,7 +414,9 @@ class Inspection(commands.Cog):
             Option(
                 'limit',
                 'The limit for showing entries. Must be within 1 and 100.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1,
+                max_value=100
             )
         ],
         dm_permission=False

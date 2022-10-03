@@ -178,7 +178,8 @@ class Moderation(commands.Cog):
             Option(
                 'duration',
                 'Give a duration for the timeout in seconds. Defaults to 30 seconds.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1
             ),
             Option(
                 'reason',
@@ -229,8 +230,9 @@ class Moderation(commands.Cog):
         options=[
             Option(
                 'amount',
-                'The amount of messages to purge. Defaults to 2.',
-                OptionType.integer
+                'The amount of messages to purge. Defaults to 1.',
+                OptionType.integer,
+                min_value=1
             )
         ],
         dm_permission=False
@@ -239,9 +241,9 @@ class Moderation(commands.Cog):
     async def _purge(
         self,
         inter: disnake.CommandInteraction,
-        amount: int = 2  # 1 + 1, get it?
+        amount: int = 1
     ) -> None:
-        await inter.channel.purge(limit=amount)
+        await inter.channel.purge(limit=amount + 1)
         await inter.send(f'Purged **{amount}** messages.', ephemeral=True)
 
     # Backend for ripplepurge-labelled commands.
@@ -280,7 +282,8 @@ class Moderation(commands.Cog):
             Option(
                 'amount',
                 'The amount of messages to purge. Defaults to 10.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1
             )
         ],
         dm_permission=False

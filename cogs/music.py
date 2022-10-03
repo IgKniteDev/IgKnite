@@ -671,7 +671,9 @@ class Music(commands.Cog):
             Option(
                 'volume',
                 'Specify a new volume to set. Has to be within 1 and 100 (it can go a li\'l further btw).',
-                OptionType.integer
+                OptionType.integer,
+                min_value=0,
+                max_value=200
             )
         ],
         dm_permission=False
@@ -687,14 +689,11 @@ class Music(commands.Cog):
                 ephemeral=True
             )
 
-        if not volume:
+        if volume is None:
             embed = core.TypicalEmbed(inter).set_title(
                 value=f"Currently playing on {inter.voice_state.current.source.volume * 100}% volume."
             )
             return await inter.send(embed=embed)
-
-        if not 0 < volume <= 200:
-            return await inter.send('Volume must be between 1 and 200 to execute the command.')
 
         inter.voice_state.current.source.volume = volume / 100
         await inter.send(f'Volume of the player is now set to **{volume}%**')
