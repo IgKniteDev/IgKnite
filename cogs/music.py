@@ -257,9 +257,7 @@ class NowCommandView(disnake.ui.View):
 
         self.inter = inter
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
-        volume_button = disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}')
-        volume_button.disabled = True
-        self.add_item(volume_button)
+        self.add_item(disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True))
 
     @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
     async def _loop(
@@ -281,13 +279,13 @@ class NowCommandView(disnake.ui.View):
     @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.red)
     async def _skip(
         self,
-        button: disnake.ui.Button,
+        _: disnake.ui.Button,
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.skip()
 
         await inter.response.edit_message(
-            content='Song skipped!',  # only keeping the content and removing everything else (e.g. embed, view)
+            content='Song skipped!',
             view=None,
             embed=None
         )
