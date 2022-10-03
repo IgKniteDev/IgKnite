@@ -4,7 +4,7 @@
 <img src="static/logo_circle.png" width="128">
 <br>
 
-# IgKnite for Discord
+# IgKnite
 
 <br>
 
