@@ -136,12 +136,14 @@ class Customization(commands.Cog):
             Option(
                 'max_age',
                 'Specify a lifetime for the invite in seconds. Defaults to unlimited.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=0
             ),
             Option(
                 'max_uses',
                 'Specify a maximum use limit for the invite. Defaults to 1 user.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1
             ),
             Option(
                 'reason',
