@@ -672,7 +672,7 @@ class Music(commands.Cog):
                 'volume',
                 'Specify a new volume to set. Has to be within 1 and 100 (it can go a li\'l further btw).',
                 OptionType.integer,
-                min_value=0,
+                min_value=1,
                 max_value=200
             )
         ],
