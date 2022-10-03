@@ -85,8 +85,6 @@ class InviteCommandSelect(disnake.ui.Select):
 
         embed = core.TypicalEmbed(inter).set_title(
             value=f'Invite | `{invite.code}`'
-        ).set_description(
-            value='Detailed overview of invite information'
         ).add_field(
             name='Inviter',
             value=invite.inviter
@@ -144,7 +142,7 @@ class InviteCommandView(disnake.ui.View):
             self.children[1].disabled = False
 
     @disnake.ui.button(
-        emoji="◀",
+        label='Back',
         style=disnake.ButtonStyle.gray,
         disabled=True,
     )
@@ -163,8 +161,8 @@ class InviteCommandView(disnake.ui.View):
         )
 
     @disnake.ui.button(
-        emoji="▶️",
-        style=disnake.ButtonStyle.blurple
+        label='Next',
+        style=disnake.ButtonStyle.gray
     )
     async def go_up(
         self,
@@ -388,7 +386,7 @@ class Inspection(commands.Cog):
                         max_age = f'<t:{int(mktime(date_time.timetuple()))}:R>'
 
                     embed.add_field(
-                        name=f'#{i + 1} [``{invites[i].code}``]',
+                        name=f'{i + 1} - `{invites[i].code}`',
                         value=f'🧍{invites[i].inviter.name}'
                               f' **|** 🚪 {invites[i].uses}'
                               f' **|** 🕑 {max_age} \n\n',
