@@ -37,11 +37,15 @@ from core.datacls import LockRoles
 
 # The actual cog.
 class Customization(commands.Cog):
-    def __init__(self, bot: core.IgKnite) -> None:
+    def __init__(
+        self,
+        bot: core.IgKnite
+    ) -> None:
         self.bot = bot
 
     async def cog_before_slash_command_invoke(
-        self, inter: disnake.CommandInteraction
+        self,
+        inter: disnake.CommandInteraction
     ) -> None:
         return await inter.response.defer()
 
@@ -54,13 +58,17 @@ class Customization(commands.Cog):
                 'name',
                 'Give a name for the new role.',
                 OptionType.string,
-                required=True,
+                required=True
             )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
-    async def _makerole(self, inter: disnake.CommandInteraction, name: str) -> None:
+    async def _makerole(
+        self,
+        inter: disnake.CommandInteraction,
+        name: str
+    ) -> None:
         role = await inter.guild.create_role(name=name)
         await inter.send(f'Role {role.mention} has been created!')
 
@@ -70,28 +78,29 @@ class Customization(commands.Cog):
         description='Assign a role to a server member.',
         options=[
             Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
+                'member',
+                'Mention the server member.',
+                OptionType.user,
+                required=True
             ),
             Option(
                 'role',
                 'Mention the role to assign to the user.',
                 OptionType.role,
-                required=True,
-            ),
+                required=True
+            )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _assignrole(
         self,
         inter: disnake.CommandInteraction,
         member: disnake.Member,
-        role: disnake.Role,
+        role: disnake.Role
     ) -> None:
         await member.add_roles(role)
-        await inter.send(
-            f'Role {role.mention} has been assigned to **{member.display_name}**!'
-        )
+        await inter.send(f'Role {role.mention} has been assigned to **{member.display_name}**!')
 
     # removerole
     @commands.slash_command(
@@ -99,14 +108,19 @@ class Customization(commands.Cog):
         description='Remove a role from the server.',
         options=[
             Option(
-                'role', 'Mention the role to remove.', OptionType.role, required=True
+                'role',
+                'Mention the role to remove.',
+                OptionType.role,
+                required=True
             )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _removerole(
-        self, inter: disnake.CommandInteraction, role: disnake.Role
+        self,
+        inter: disnake.CommandInteraction,
+        role: disnake.Role
     ) -> None:
         await role.delete()
         await inter.send(f'Role **@{role.name}** has been removed!')
@@ -123,19 +137,21 @@ class Customization(commands.Cog):
                 'max_age',
                 'Specify a lifetime for the invite in seconds. Defaults to unlimited.',
                 OptionType.integer,
-                min_value=0,
+                min_value=0
             ),
             Option(
                 'max_uses',
                 'Specify a maximum use limit for the invite. Defaults to 1 user.',
                 OptionType.integer,
-                min_value=1,
+                min_value=1
             ),
             Option(
-                'reason', 'Give a reason for creating the invite.', OptionType.string
-            ),
+                'reason',
+                'Give a reason for creating the invite.',
+                OptionType.string
+            )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _makeinvite(
@@ -143,21 +159,21 @@ class Customization(commands.Cog):
         inter: disnake.CommandInteraction,
         max_age: int = 0,
         max_uses: int = 1,
-        reason: str = 'No reason provided.',
+        reason: str = 'No reason provided.'
     ) -> None:
-        invite = await inter.channel.create_invite(
-            max_age=max_age, max_uses=max_uses, reason=reason
-        )
+        invite = await inter.channel.create_invite(max_age=max_age, max_uses=max_uses, reason=reason)
 
-        embed = (
-            core.TypicalEmbed(inter)
-            .set_title(value='Created a new invite!')
-            .add_field(name='Link', value=f'https://discord.gg/{invite.code}')
-            .add_field(name='Code', value=f'`{invite.code}`')
-            .add_field(
-                name='Lifetime',
-                value='Unlimited' if max_age == 0 else f'{max_age} Seconds',
-            )
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Created a new invite!'
+        ).add_field(
+            name='Link',
+            value=f'https://discord.gg/{invite.code}'
+        ).add_field(
+            name='Code',
+            value=f'`{invite.code}`'
+        ).add_field(
+            name='Lifetime',
+            value='Unlimited' if max_age == 0 else f'{max_age} Seconds'
         )
 
         await inter.send(embed=embed)
@@ -168,20 +184,26 @@ class Customization(commands.Cog):
         description='Change nickname of a member.',
         options=[
             Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
+                'member',
+                'Mention the server member.',
+                OptionType.user,
+                required=True
             ),
             Option(
                 'nickname',
                 'Give the nickname to set for the mentioned user.',
                 OptionType.string,
-                required=True,
-            ),
+                required=True
+            )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _nick(
-        self, inter: disnake.CommandInteraction, member: disnake.Member, nickname: str
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member,
+        nickname: str
     ) -> None:
         await member.edit(nick=nickname)
         await inter.send(f'Member {member.mention} has been nicked to **{nickname}**!')
@@ -195,17 +217,23 @@ class Customization(commands.Cog):
                 'name',
                 'Give a name for the new channel.',
                 OptionType.string,
-                required=True,
+                required=True
             ),
             Option(
                 'category',
                 'Specify the category to put the channel into.',
                 OptionType.channel,
-                channel_types=[ChannelType.category],
+                channel_types=[
+                    ChannelType.category
+                ]
             ),
-            Option('topic', 'Give a topic for the new channel.', OptionType.string),
+            Option(
+                'topic',
+                'Give a topic for the new channel.',
+                OptionType.string
+            )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _makechannel(
@@ -213,10 +241,12 @@ class Customization(commands.Cog):
         inter: disnake.CommandInteraction,
         name: str,
         category: disnake.CategoryChannel | None = None,
-        topic: str | None = None,
+        topic: str | None = None
     ) -> None:
         channel = await inter.guild.create_text_channel(
-            name=name, topic=topic, category=category
+            name=name,
+            topic=topic,
+            category=category
         )
         await inter.send(f'Channel {channel.mention} has been created!')
 
@@ -225,24 +255,33 @@ class Customization(commands.Cog):
         name='makevc',
         description='Create a new voice channel.',
         options=[
-            Option('name', 'Give a name of the voice channel.', required=True),
+            Option(
+                'name',
+                'Give a name of the voice channel.',
+                required=True
+            ),
             Option(
                 'category',
                 'Specify the category to put the channel into.',
                 OptionType.channel,
-                channel_types=[ChannelType.category],
-            ),
+                channel_types=[
+                    ChannelType.category
+                ]
+            )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _makevc(
         self,
         inter: disnake.CommandInteraction,
         name: str,
-        category: disnake.CategoryChannel | None = None,
+        category: disnake.CategoryChannel | None = None
     ) -> None:
-        vc = await inter.guild.create_voice_channel(name=name, category=category)
+        vc = await inter.guild.create_voice_channel(
+            name=name,
+            category=category
+        )
         await inter.send(f'VC {vc.mention} has been created!')
 
     # makecategory
@@ -254,10 +293,10 @@ class Customization(commands.Cog):
                 'name',
                 'Give a name for the new category.',
                 OptionType.string,
-                required=True,
+                required=True
             )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _makecategory(
@@ -277,50 +316,19 @@ class Customization(commands.Cog):
                 'channel',
                 'Specify the channel you want to delete.',
                 OptionType.channel,
-                required=True,
+                required=True
             )
         ],
-        dm_permission=False,
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel,
+        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
-
-        # reset
-
-    @commands.slash_command(
-        name='reset',
-        description='reset channel',
-        options=[
-            Option(
-                'channel',
-                'specify the channel you want to reset.',
-                OptionType.channel,
-                required=True,
-            )
-        ],
-        dm_permission=False,
-    )
-    @commands.has_role(LockRoles.admin)
-    async def _reset(
-        self,
-        inter: disnake.CommandInteraction,
-    ) -> None:
-        channel = inter.channel.name
-        category = inter.channel.category
-        topic = inter.channel.topic
-
-        await inter.send(f"Channel: {channel} Category: {category} topic: {topic}")
-        new_channel = await inter.guild.create_text_channel(
-            name=channel, topic=topic, category=category
-        )
-        await inter.send(f'new channel: {new_channel} was created')
-        await inter.channel.delete()
 
 
 # The setup() function for the cog.
