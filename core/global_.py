@@ -1,4 +1,4 @@
-"""
+'''
 Global variables and instances for the core package.
 ---
 
@@ -23,7 +23,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-"""
+'''
 
 
 # Imports.
@@ -35,7 +35,7 @@ from decouple import config, UndefinedValueError
 
 # The initialize() function.
 def initialize() -> None:
-    """
+    '''
     Initialize the global variables required to run all commands properly inside IgKnite.\n
     - Note: This function only needs to be called 'once' inside the root script (main.py).
 
@@ -50,29 +50,27 @@ def initialize() -> None:
     variable_name = value
 
     ```
-    """
+    '''
 
     # Fetch the secrets.
     try:
         global tokens
         tokens = {
-            "discord": config("DISCORD_TOKEN", cast=str),
-            "spotify": config("SPOTIFY_CLIENT_SECRET", cast=str),
+            'discord': config('DISCORD_TOKEN', cast=str),
+            'spotify': config('SPOTIFY_CLIENT_SECRET', cast=str)
         }
 
         global identifiers
         identifiers = {
-            "discord_owner": config("DISCORD_OWNER_ID", cast=int),
-            "spotify_client": config("SPOTIFY_CLIENT_ID", cast=str),
+            'discord_owner': config('DISCORD_OWNER_ID', cast=int),
+            'spotify_client': config('SPOTIFY_CLIENT_ID', cast=str)
         }
 
     except UndefinedValueError:
-        logging.error(
-            """
+        logging.error('''
             One or more secrets have been left undefined.
             Consider going through the README.md file for proper instructions on setting IgKnite up.
-        """
-        )
+        ''')
         time.sleep(5)
         exit()
 
