@@ -22,9 +22,15 @@
 
 </div>
 
-## Features
+## 🥷 Introduction
 
-- Written with <3 in **pure Python.**
+IgKnite, like many other Discord  applications, is a bot. Being a bot on Discord mostly means using the endpoints provided by it via its API (Application Programming Interface) to do some action.
+
+<br>
+
+## 🥷 Features
+
+- Written with ❤️️ in **pure Python.**
 - Application-first command handler with slash, user and message commands.
 - Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
 - A playground all by itself for creative commands.
@@ -33,18 +39,21 @@
 
 <br>
 
-## How to use?
+## 🥷 How to use 
+
+- You need to start with slash, choose from the command list and add user or type the command message.**VOILA!!** ✨✨
+![image](https://user-images.githubusercontent.com/52404192/194091660-6ebe5cb9-b8d1-4db0-a0f1-c2b6ab549d84.png)
 
 - In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! 
 
 <br>
 
-## Contributing
+## 🥷 Contributing
 
 - If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D
 
 <br>
 
-## License
+## 🥷 License
 
 - This project has been licensed under the [MIT License](LICENSE).
