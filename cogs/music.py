@@ -45,6 +45,7 @@ from disnake.ext import commands
 import core
 from core import global_
 
+import re
 
 # Bug reports message.
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -883,6 +884,19 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction,
         keyword: str
     ) -> None:
+
+        if (keyword.startswith('<') and keyword.endswith('>')):
+            user_id = (int)(re.findall(r'\d+', keyword)[0])
+            username = self.bot.get_user(user_id)
+
+            if username is None:
+                inter.send('No User Found!')
+
+            async for msg in inter.channel.history(limit=100):
+                if msg.author == username:
+                    keyword = msg.content
+                    break
+
         if not inter.voice_state.voice:
             await self._join_logic(inter)
 
