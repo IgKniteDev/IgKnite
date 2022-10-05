@@ -1,10 +1,8 @@
 <div align="center">
 
 <br>
-<img src="static/logo_circle.png" width="128">
+<img src="static/banner.png">
 <br>
-
-# IgKnite
 
 ### The Swiss Army Knife for Moderation / Music on Discord
 
