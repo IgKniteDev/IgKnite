@@ -305,6 +305,7 @@ class Customization(commands.Cog):
         ],
         dm_permission=False,
     )
+    @commands.has_role(LockRoles.admin)
     async def _reset(
         self,
         inter: disnake.CommandInteraction,
