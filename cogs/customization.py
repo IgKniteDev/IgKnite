@@ -330,6 +330,37 @@ class Customization(commands.Cog):
         await channel.delete()
         await inter.send('Channel has been deleted!')
 
+    # reset
+
+    @commands.slash_command(
+        name='reset',
+        description='reset channel',
+        options=[
+            Option(
+                'channel',
+                'specify the channel you want to reset.',
+                OptionType.channel,
+                required=True,
+            )
+        ],
+        dm_permission=False,
+    )
+    @commands.has_role(LockRoles.admin)
+    async def _reset(
+        self,
+        inter: disnake.CommandInteraction,
+    ) -> None:
+        channel = inter.channel.name
+        category = inter.channel.category
+        topic = inter.channel.topic
+
+        await inter.send(f"Channel: {channel} Category: {category} topic: {topic}")
+        new_channel = await inter.guild.create_text_channel(
+            name=channel, topic=topic, category=category
+        )
+        await inter.send(f'new channel: {new_channel} was created')
+        await inter.channel.delete()
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
