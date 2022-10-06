@@ -47,6 +47,16 @@ class ExceptionHandler(commands.Cog):
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
+
+        # BadLiteralArgument
+        # ChannelNotFound
+        # LargeIntConversionFailure
+        # MemberNotFound
+        # MissingPermissions
+        # MissingRequiredArgument
+        # RoleNotFound
+        # UserNotFound
+
         if (
             isinstance(error, commands.errors.MissingRole)
             or isinstance(error, commands.errors.MissingAnyRole)
