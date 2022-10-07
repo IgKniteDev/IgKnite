@@ -10,4 +10,4 @@ We also have a [Code of Conduct](./CODE_OF_CONDUCT.md) in place so make sure to 
 
 ## Development Setup
 
-Setting up a project from scratch can be a real pain, and that's why we have made [this chapter]() inside our documentation for you to follow along and create your own features. Make sure to follow along and let your ideas come to life!
+Setting up a project from scratch can be a real pain, and that's why we have made [this chapter](https://igknition.ml/docs/development.html) inside our documentation for you to follow along and create your own features. Make sure to follow along and let your ideas come to life!
