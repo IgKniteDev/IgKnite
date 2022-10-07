@@ -3,8 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
-
 # C extensions
 *.so
 
@@ -56,9 +54,6 @@ coverage.xml
 # Translations
 *.mo
 *.pot
-
-# Black Formatting
-pyproject.toml
 
 # Django stuff:
 *.log
