@@ -45,6 +45,12 @@
 
 <br>
 
+A big shoutout to all our contributors! You could be here too!
+
+<a href="https://github.com/IgKniteDev/IgKnite/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=IgKniteDev/IgKnite" />
+</a>
+
 ## License
 
 - This project has been licensed under the [MIT License](LICENSE).
