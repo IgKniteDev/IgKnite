@@ -2,8 +2,7 @@
 The `Customization` cog for IgKnite.
 ---
 
-License can be found here
-
+License can be found here:
 https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
@@ -313,35 +312,29 @@ class Customization(commands.Cog):
         await inter.send('Channel has been deleted!')
 
     # reset
-
     @commands.slash_command(
         name='reset',
-        description='reset channel',
-        options=[
-            Option(
-                'channel',
-                'specify the channel you want to reset.',
-                OptionType.channel,
-                required=True,
-            )
-        ],
-        dm_permission=False,
+        description='Resets a channel. Defaults to the current channel.',
+        dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
     async def _reset(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInteraction
     ) -> None:
-        channel = inter.channel.name
+        name = inter.channel.name
         category = inter.channel.category
         topic = inter.channel.topic
+        overwrites = inter.channel.overwrites
 
-        await inter.send(f"Channel: {channel} Category: {category} topic: {topic}")
-        new_channel = await inter.guild.create_text_channel(
-            name=channel, topic=topic, category=category
+        resetted = await inter.guild.create_text_channel(
+            name=name,
+            topic=topic,
+            category=category,
+            overwrites=overwrites
         )
-        await inter.send(f'new channel: {new_channel} was created')
         await inter.channel.delete()
+        await resetted.send(f'Channel was reset by {inter.author.mention}.')
 
 
 # The setup() function for the cog.

@@ -2,8 +2,7 @@
 The `Moderation` cog for IgKnite.
 ---
 
-License can be found here
-
+License can be found here:
 https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 

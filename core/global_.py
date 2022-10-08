@@ -2,8 +2,7 @@
 Global variables and instances for the core package.
 ---
 
-License can be found here
-
+License can be found here:
 https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
