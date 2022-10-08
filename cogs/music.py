@@ -308,22 +308,6 @@ class QueueCommandSelect(disnake.ui.Select):
             ) for i, song in enumerate(songs)
         ]
 
-        self.options = options
-
-        super().__init__(
-            placeholder="Choose your song.",
-            options=options,
-        )
-
-    async def update(self):
-
-        options = [
-            disnake.SelectOption(
-                value=i,
-                label=song.source.title
-            ) for i, song in enumerate(self.songs)
-        ]
-
         super().__init__(
             placeholder="Choose your song.",
             options=options,
@@ -334,19 +318,17 @@ class QueueCommandSelect(disnake.ui.Select):
         inter: disnake.CommandInteraction
     ) -> None:
         embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
-        print(self.songs[int(self.values[0])])
-        songs = self.songs
         value = int(self.values[0])
-        view = self.view
         remove_button = disnake.ui.Button(label="Remove from queue")
 
-        async def remove(self) -> None:
-            songs.remove(value)
-            view.remove_item(remove_button)
-            await self.response.edit_message(embed=None, view=view)
+        async def remove(inter) -> None:
+            self.songs.remove(value)
+            self.view.remove_item(remove_button)
+
+            await inter.response.edit_message(embed=None, view=self.view)
 
         remove_button.callback = remove
-        view.add_item(remove_button)
+        self.view.add_item(remove_button)
 
         await inter.response.edit_message(embed=embed, view=self.view)
 
