@@ -232,7 +232,7 @@ class NowCommandView(disnake.ui.View):
         self,
         inter: disnake.Interaction,
         url: str,
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
 
@@ -284,7 +284,7 @@ class PlayCommandView(disnake.ui.View):
     def __init__(
         self,
         url: str,
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
@@ -325,7 +325,7 @@ class QueueCommandView(disnake.ui.View):
     def __init__(
         self,
         inter: disnake.CommandInteraction,
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter

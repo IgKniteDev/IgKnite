@@ -98,7 +98,7 @@ class InviteCommandView(disnake.ui.View):
         top_page: int = 1,
         page: int = 1,
         invites: List[Invite] = [],
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
 
