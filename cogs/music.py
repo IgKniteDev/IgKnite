@@ -273,7 +273,7 @@ class NowCommandView(disnake.ui.View):
 
     async def on_timeout(self) -> None:
         for children in self.children:
-            if 'Loop' in children.label:
+            if 'Redirect' != children.label:
                 children.disabled = True
 
         await self.inter.edit_original_message(view=self)
