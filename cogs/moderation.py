@@ -2,27 +2,8 @@
 The `Moderation` cog for IgKnite.
 ---
 
-MIT License
-
-Copyright (c) 2022 IgKnite
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+License can be found here:
+https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 
@@ -178,7 +159,8 @@ class Moderation(commands.Cog):
             Option(
                 'duration',
                 'Give a duration for the timeout in seconds. Defaults to 30 seconds.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1
             ),
             Option(
                 'reason',
@@ -229,8 +211,9 @@ class Moderation(commands.Cog):
         options=[
             Option(
                 'amount',
-                'The amount of messages to purge. Defaults to 2.',
-                OptionType.integer
+                'The amount of messages to purge. Defaults to 1.',
+                OptionType.integer,
+                min_value=1
             )
         ],
         dm_permission=False
@@ -239,9 +222,9 @@ class Moderation(commands.Cog):
     async def _purge(
         self,
         inter: disnake.CommandInteraction,
-        amount: int = 2  # 1 + 1, get it?
+        amount: int = 1
     ) -> None:
-        await inter.channel.purge(limit=amount)
+        await inter.channel.purge(limit=amount + 1)
         await inter.send(f'Purged **{amount}** messages.', ephemeral=True)
 
     # Backend for ripplepurge-labelled commands.
@@ -280,7 +263,8 @@ class Moderation(commands.Cog):
             Option(
                 'amount',
                 'The amount of messages to purge. Defaults to 10.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1
             )
         ],
         dm_permission=False

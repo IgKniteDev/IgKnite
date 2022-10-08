@@ -4,9 +4,7 @@
 <img src="static/logo_circle.png" width="128">
 <br>
 
-# IgKnite for Discord
-
-<br>
+# IgKnite
 
 ### The Swiss Army Knife for Moderation / Music on Discord
 

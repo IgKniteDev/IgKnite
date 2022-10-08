@@ -2,27 +2,8 @@
 The `Inspection` cog for IgKnite.
 ---
 
-MIT License
-
-Copyright (c) 2022 IgKnite
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+License can be found here:
+https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 
@@ -85,8 +66,6 @@ class InviteCommandSelect(disnake.ui.Select):
 
         embed = core.TypicalEmbed(inter).set_title(
             value=f'Invite | `{invite.code}`'
-        ).set_description(
-            value='Detailed overview of invite information'
         ).add_field(
             name='Inviter',
             value=invite.inviter
@@ -119,7 +98,7 @@ class InviteCommandView(disnake.ui.View):
         top_page: int = 1,
         page: int = 1,
         invites: List[Invite] = [],
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
 
@@ -144,7 +123,7 @@ class InviteCommandView(disnake.ui.View):
             self.children[1].disabled = False
 
     @disnake.ui.button(
-        emoji="◀",
+        label='Back',
         style=disnake.ButtonStyle.gray,
         disabled=True,
     )
@@ -163,8 +142,8 @@ class InviteCommandView(disnake.ui.View):
         )
 
     @disnake.ui.button(
-        emoji="▶️",
-        style=disnake.ButtonStyle.blurple
+        label='Next',
+        style=disnake.ButtonStyle.gray
     )
     async def go_up(
         self,
@@ -388,7 +367,7 @@ class Inspection(commands.Cog):
                         max_age = f'<t:{int(mktime(date_time.timetuple()))}:R>'
 
                     embed.add_field(
-                        name=f'#{i + 1} [``{invites[i].code}``]',
+                        name=f'{i + 1} - `{invites[i].code}`',
                         value=f'🧍{invites[i].inviter.name}'
                               f' **|** 🚪 {invites[i].uses}'
                               f' **|** 🕑 {max_age} \n\n',
@@ -414,7 +393,9 @@ class Inspection(commands.Cog):
             Option(
                 'limit',
                 'The limit for showing entries. Must be within 1 and 100.',
-                OptionType.integer
+                OptionType.integer,
+                min_value=1,
+                max_value=100
             )
         ],
         dm_permission=False
@@ -425,21 +406,17 @@ class Inspection(commands.Cog):
         inter: disnake.CommandInteraction,
         limit: int = 5
     ):
-        if limit not in range(1, 101):
-            await inter.response.send_message(f'{limit} is not within the given range.', ephemeral=True)
-
-        else:
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f'Audit Log ({limit} entries)'
+        embed = core.TypicalEmbed(inter).set_title(
+            value=f'Audit Log ({limit} entries)'
+        )
+        async for audit_entry in inter.guild.audit_logs(limit=limit):
+            embed.add_field(
+                name=f'- {audit_entry.action}',
+                value=f'User: {audit_entry.user} | Target: {audit_entry.target}',
+                inline=False
             )
-            async for audit_entry in inter.guild.audit_logs(limit=limit):
-                embed.add_field(
-                    name=f'- {audit_entry.action}',
-                    value=f'User: {audit_entry.user} | Target: {audit_entry.target}',
-                    inline=False
-                )
 
-            await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed, ephemeral=True)
 
 
 # The setup() function for the cog.
