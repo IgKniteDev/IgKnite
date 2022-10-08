@@ -314,7 +314,7 @@ class Customization(commands.Cog):
     # reset
     @commands.slash_command(
         name='reset',
-        description='Resets a channel. Defaults to the current channel.',
+        description='Resets the current channel.',
         dm_permission=False
     )
     @commands.has_role(LockRoles.admin)
