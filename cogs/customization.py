@@ -2,27 +2,8 @@
 The `Customization` cog for IgKnite.
 ---
 
-MIT License
-
-Copyright (c) 2022 IgKnite
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+License can be found here:
+https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 
@@ -329,6 +310,31 @@ class Customization(commands.Cog):
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
+
+    # reset
+    @commands.slash_command(
+        name='reset',
+        description='Resets the current channel.',
+        dm_permission=False
+    )
+    @commands.has_role(LockRoles.admin)
+    async def _reset(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        name = inter.channel.name
+        category = inter.channel.category
+        topic = inter.channel.topic
+        overwrites = inter.channel.overwrites
+
+        resetted = await inter.guild.create_text_channel(
+            name=name,
+            topic=topic,
+            category=category,
+            overwrites=overwrites
+        )
+        await inter.channel.delete()
+        await resetted.send(f'Channel was reset by {inter.author.mention}.')
 
 
 # The setup() function for the cog.
