@@ -316,7 +316,8 @@ class QueueCommandSelect(disnake.ui.Select):
     def __init__(
         self,
         songs,
-        inter: disnake.CommandInteraction
+        inter: disnake.CommandInteraction,
+        view,
     ) -> None:
         self.songs = songs
         self.inter = inter
@@ -326,6 +327,22 @@ class QueueCommandSelect(disnake.ui.Select):
                 value=i,
                 label=song.source.title
             ) for i, song in enumerate(songs)
+        ]
+
+        self.options = options
+
+        super().__init__(
+            placeholder="Choose your song.",
+            options=options,
+        )
+
+    async def update(self):
+
+        options = [
+            disnake.SelectOption(
+                value=i,
+                label=song.source.title
+            ) for i, song in enumerate(self.songs)
         ]
 
         super().__init__(
@@ -338,7 +355,21 @@ class QueueCommandSelect(disnake.ui.Select):
         inter: disnake.CommandInteraction
     ) -> None:
         embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
-        await inter.response.edit_message(embed=embed)
+        print(self.songs[int(self.values[0])])
+        songs = self.songs
+        value = int(self.values[0])
+        view = self.view
+        remove_button = disnake.ui.Button(label="Remove from queue")
+
+        async def remove(self) -> None:
+            songs.remove(value)
+            view.remove_item(remove_button)
+            await self.response.edit_message(embed=None, view=view)
+
+        remove_button.callback = remove
+        view.add_item(remove_button)
+
+        await inter.response.edit_message(embed=embed, view=self.view)
 
 
 # View for the `queue` command.
@@ -350,7 +381,7 @@ class QueueCommandView(disnake.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
-        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
+        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter, self)
         self.add_item(self.select)
 
     @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
@@ -382,7 +413,7 @@ class QueueCommandView(disnake.ui.View):
         button.label = 'Shuffled'
         button.disabled = True
 
-        self.select.songs(self.inter.voice_state.songs)
+        self.select.songs(self.inter.voice_state.songs, self.inter)
         await inter.response.edit_message(
             view=self
         )
@@ -830,6 +861,24 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
+        # Testing
+        async def play_song(keyword):
+            try:
+                source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
+            except YTDLError as e:
+                await inter.send(
+                    f'An error occurred while processing this request: {str(e)}',
+                    ephemeral=True
+                )
+            else:
+                song = Song(source)
+                await inter.voice_state.songs.put(song)
+
+        await play_song("kanye flashing lights")
+        await play_song("kanye bound 2")
+        await play_song("kanye family business")
+        #
+
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
