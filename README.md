@@ -26,11 +26,10 @@
 
 Most Discord bots out there require a prefix (textual commands) and a sound mind for their commands to actually be used. This can be overwhelming at times, especially when you get embarassed in front of your friends by *not* typing a perfect command. This is the very reason we've created IgKnite, a Discord moderation and music bot, fully relying on interaction methods such as slashes, buttons, views, selects, colors and loads of creative commands!
 
-IgKnite aims to grow with the community, focusing on the needs of the user base and adding anything that makes the user experience one step closer to the most fluid possible. It also aims to reduce the overhead of using commands so that you can do a lot more with just one interaction. <br>👨‍💻
+IgKnite aims to grow with the community, focusing on the needs of the user base and adding anything that makes the user experience one step closer to the most fluid possible. It also aims to reduce the overhead of using commands so that you can do a lot more with just one interaction. <br>
 
 ## 🪶 Features
 
-- Written with ❤️ in **pure Python.**
 - Application-first command handler with slash, user and message commands.
 - Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
 - A playground all by itself for creative commands.
@@ -39,12 +38,12 @@ IgKnite aims to grow with the community, focusing on the needs of the user base 
 
 ## 📖 How to use?
 
-- In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! <br>
+In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! <br>
 
 ## 👨‍💻 Contributing
 
-- If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
+If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
 
-## 🪪 License
+## Written with ❤️ in pure Python!
 
 - This project has been licensed under the [MIT License](LICENSE).
