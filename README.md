@@ -48,7 +48,9 @@ Despite its youth, IgKnite intends to grow alongside the community, focusing on 
 
 ## 🪶 How to use?
 
-In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! <br>
+In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through!
+
+<br>
 
 ## 📓 Contributing
 
