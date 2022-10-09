@@ -9,12 +9,14 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import time
+from datetime import datetime
 
 import disnake
 from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
+from core import global_
 
 
 # The actual cog.
@@ -88,13 +90,20 @@ class General(commands.Cog):
 
         api_latency = round((end_time - start_time) * 1000)
 
+        uptime = round(datetime.timestamp(datetime.now())) - global_.running_since
+        h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
+
         embed = core.TypicalEmbed(inter).add_field(
             name='System Latency',
             value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
             inline=False
         ).add_field(
             name='API Latency',
-            value=f'{api_latency}ms'
+            value=f'{api_latency}ms',
+            inline=False
+        ).add_field(
+            name='Uptime',
+            value=f'{h}h {m}m {s}s'
         )
 
         await inter.send(embed=embed)
