@@ -30,7 +30,9 @@ IgKnite, a Discord moderation and music bot built entirely on interactions such 
 
 Despite its youth, IgKnite intends to grow alongside the community, focusing on the needs of the user base and adding anything that brings the user experience one step closer to being as fluid as possible. It also aims to reduce the overhead of using commands, allowing you to accomplish much more with a single interaction. 
 
-<br>
+<br><br>
+<img src="static/now_command_demo.png" width="600">
+<br><br>
 
 ## 🗡 Features
 
