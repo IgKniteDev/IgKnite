@@ -28,7 +28,9 @@ Most Discord bots require a prefix (textual commands) and a clear head to use th
 
 IgKnite, a Discord moderation and music bot built entirely on interactions such as slashes, buttons, views, selects, colors, and a slew of unique instructions, was created specifically for this purpose!
 
-Despite its youth, IgKnite intends to grow alongside the community, focusing on the needs of the user base and adding anything that brings the user experience one step closer to being as fluid as possible. It also aims to reduce the overhead of using commands, allowing you to accomplish much more with a single interaction. <br>
+Despite its youth, IgKnite intends to grow alongside the community, focusing on the needs of the user base and adding anything that brings the user experience one step closer to being as fluid as possible. It also aims to reduce the overhead of using commands, allowing you to accomplish much more with a single interaction. 
+
+<br>
 
 ## 🗡 Features
 
@@ -36,7 +38,9 @@ Despite its youth, IgKnite intends to grow alongside the community, focusing on 
 - Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
 - A playground all by itself for creative commands.
 - Fully open-source (including assets).
-- No buzz, all buff! <br>
+- No buzz, all buff! 
+
+<br>
 
 ## 🪶 How to use?
 
@@ -44,7 +48,9 @@ In order to learn about everything; from adding IgKnite to your Discord server t
 
 ## 📓 Contributing
 
-If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
+If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D 
+
+<br>
 
 ## Written with ❤️ in pure Python!
 
