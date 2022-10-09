@@ -237,8 +237,8 @@ class NowCommandView(disnake.ui.View):
         super().__init__(timeout=timeout)
 
         self.inter = inter
-        self.add_item(disnake.ui.Button(label='Redirect', url=url))
         self.add_item(disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True))
+        self.add_item(disnake.ui.Button(label='Redirect', url=url))
 
     @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
     async def _loop(
@@ -257,19 +257,17 @@ class NowCommandView(disnake.ui.View):
 
         await inter.response.edit_message(view=self)
 
-    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.red)
+    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.gray)
     async def _skip(
         self,
-        _: disnake.ui.Button,
+        button: disnake.ui.Button,
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.skip()
+        button.disabled = True
+        button.label = 'Skipped'
 
-        await inter.response.edit_message(
-            content='Song skipped!',
-            view=None,
-            embed=None
-        )
+        await inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
@@ -592,7 +590,7 @@ class Music(commands.Cog):
 
         except AttributeError:
             await inter.send(
-                'Please switch to voice or stage channel to use this command',
+                'Please switch to a voice or stage channel to use this command.',
                 ephemeral=True
             )
 
