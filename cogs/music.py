@@ -590,7 +590,7 @@ class Music(commands.Cog):
 
         except AttributeError:
             await inter.send(
-                'Please switch to voice or stage channel to use this command',
+                'Please switch to a voice or stage channel to use this command.',
                 ephemeral=True
             )
 
