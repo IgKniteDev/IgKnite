@@ -88,6 +88,10 @@ class General(commands.Cog):
 
         api_latency = round((end_time - start_time) * 1000)
 
+        cpu_usage = round(self.bot.process.cpu_percent())
+
+        ram_usage = round(self.bot.process.memory_full_info().uss / 1024 / 1024)
+
         embed = core.TypicalEmbed(inter).add_field(
             name='System Latency',
             value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
@@ -95,6 +99,12 @@ class General(commands.Cog):
         ).add_field(
             name='API Latency',
             value=f'{api_latency}ms'
+        ).add_field(
+            name='uptime',
+            value=f'{round(self.bot.uptime / 3600)}h {round(self.bot.uptime / 60)}m {round(self.bot.uptime % 60)}s'
+        ).add_field(
+            name='performance',
+            value=f'{cpu_usage}% CPU usage, {ram_usage}MB RAM usage'
         )
 
         await inter.send(embed=embed)
