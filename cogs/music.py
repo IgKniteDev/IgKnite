@@ -325,7 +325,7 @@ class QueueCommandSelect(disnake.ui.Select):
             self.songs.remove(value)
             self.view.remove_item(remove_button)
 
-            await inter.response.edit_message(embed=None, view=self.view)
+            await inter.response.edit_message(embed=None, view=None, content="Removed song from queue")
 
         remove_button.callback = remove
         self.view.add_item(remove_button)
@@ -822,21 +822,22 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction
     ) -> None:
         # Testing
-        async def play_song(keyword):
-            try:
-                source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
-            except YTDLError as e:
-                await inter.send(
-                    f'An error occurred while processing this request: {str(e)}',
-                    ephemeral=True
-                )
-            else:
-                song = Song(source)
-                await inter.voice_state.songs.put(song)
+        if len(inter.voice_state.songs) == 0:
+            async def play_song(keyword):
+                try:
+                    source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
+                except YTDLError as e:
+                    await inter.send(
+                        f'An error occurred while processing this request: {str(e)}',
+                        ephemeral=True
+                    )
+                else:
+                    song = Song(source)
+                    await inter.voice_state.songs.put(song)
 
-        await play_song("kanye flashing lights")
-        await play_song("kanye bound 2")
-        await play_song("kanye family business")
+            await play_song("kanye flashing lights")
+            await play_song("kanye bound 2")
+            await play_song("kanye family business")
         #
 
         if len(inter.voice_state.songs) == 0:
