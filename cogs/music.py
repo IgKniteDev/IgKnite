@@ -851,6 +851,9 @@ class Music(commands.Cog):
         keyword: str,
         send_embed: bool = True
     ) -> None:
+        if not inter.voice_state.voice:
+            await self._join_logic(inter)
+
         try:
             source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
 
@@ -894,9 +897,6 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction,
         keyword: str
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-
         if (
             'https://open.spotify.com/playlist/' in keyword
             or 'spotify:playlist:' in keyword
