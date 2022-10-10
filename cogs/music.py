@@ -230,7 +230,7 @@ class Spotify:
 class NowCommandView(disnake.ui.View):
     def __init__(
         self,
-        inter: disnake.Interaction,
+        inter: disnake.CommandInteraction,
         url: str,
         timeout: float = 60
     ) -> None:
@@ -312,7 +312,7 @@ class QueueCommandSelect(disnake.ui.Select):
 
     async def callback(
         self,
-        inter: disnake.CommandInteraction
+        inter: disnake.Interaction
     ) -> None:
         embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
         await inter.response.edit_message(embed=embed)
@@ -326,40 +326,45 @@ class QueueCommandView(disnake.ui.View):
         timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
+
         self.inter = inter
+        self.cleared_out = False
+
         self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
         self.add_item(self.select)
 
     @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
     async def clear(
         self,
-        button: disnake.ui.Button,
-        inter: disnake.MessageInteraction
+        _: disnake.ui.Button,
+        inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.clear()
-
-        button.label = 'Cleared'
-        button.style = disnake.ButtonStyle.gray
-
-        for children in self.children:
-            children.disabled = True
+        self.cleared_out = True
 
         await inter.response.edit_message(
-            view=self
+            content='Queue cleared!',
+            embed=None,
+            view=None
         )
 
     @disnake.ui.button(label='Shuffle', style=disnake.ButtonStyle.gray)
     async def shuffle(
         self,
         button: disnake.ui.Button,
-        inter: disnake.MessageInteraction
+        inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
-
-        button.label = 'Shuffled'
-        button.disabled = True
-
         self.select.songs(self.inter.voice_state.songs)
+
+        button.style = random.choice(
+            [
+                disnake.ButtonStyle.blurple,
+                disnake.ButtonStyle.gray,
+                disnake.ButtonStyle.red,
+                disnake.ButtonStyle.green
+            ]
+        )
         await inter.response.edit_message(
             view=self
         )
@@ -368,7 +373,8 @@ class QueueCommandView(disnake.ui.View):
         for children in self.children:
             children.disabled = True
 
-        await self.inter.edit_original_message(view=self)
+        if not self.cleared_out:
+            await self.inter.edit_original_message(view=self)
 
 
 # The Song class which represents the instance of a song.
@@ -851,6 +857,9 @@ class Music(commands.Cog):
         keyword: str,
         send_embed: bool = True
     ) -> None:
+        if not inter.voice_state.voice:
+            await self._join_logic(inter)
+
         try:
             source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
 
@@ -894,9 +903,6 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction,
         keyword: str
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-
         if (
             'https://open.spotify.com/playlist/' in keyword
             or 'spotify:playlist:' in keyword
