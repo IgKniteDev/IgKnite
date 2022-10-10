@@ -843,7 +843,39 @@ class Music(commands.Cog):
         inter.voice_state.songs.remove(index - 1)
         await inter.send('Removed item from queue.')
 
-    # play
+    # Backend for play-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _play_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        keyword: str,
+        send_embed: bool = True
+    ) -> None:
+        try:
+            source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
+
+        except YTDLError as e:
+            await inter.send(
+                f'An error occurred while processing this request: {str(e)}',
+                ephemeral=True
+            )
+
+        else:
+            song = Song(source)
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f'Enqueued {song.source.title} from YouTube.'
+            )
+
+            await inter.voice_state.songs.put(song)
+            if send_embed:
+                await inter.send(
+                    embed=embed,
+                    view=PlayCommandView(
+                        url=song.source.url
+                    )
+                )
+
+    # play (slash)
     @commands.slash_command(
         name='play',
         description='Enqueues playable stuff (basically sings you songs).',
@@ -865,35 +897,6 @@ class Music(commands.Cog):
         if not inter.voice_state.voice:
             await self._join_logic(inter)
 
-        async def put_song_to_voice_state(
-            inter: disnake.CommandInteraction,
-            keyword: str,
-            send_embed: bool = True
-        ) -> None:
-            try:
-                source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
-
-            except YTDLError as e:
-                await inter.send(
-                    f'An error occurred while processing this request: {str(e)}',
-                    ephemeral=True
-                )
-
-            else:
-                song = Song(source)
-                embed = core.TypicalEmbed(inter).set_title(
-                    value=f'Enqueued {song.source.title} from YouTube.'
-                )
-
-                await inter.voice_state.songs.put(song)
-                if send_embed:
-                    await inter.send(
-                        embed=embed,
-                        view=PlayCommandView(
-                            url=song.source.url
-                        )
-                    )
-
         if (
             'https://open.spotify.com/playlist/' in keyword
             or 'spotify:playlist:' in keyword
@@ -906,7 +909,7 @@ class Music(commands.Cog):
                 tracks.append(track)
 
             for track in tracks:
-                await put_song_to_voice_state(inter, track, send_embed=False)
+                await self._play_backend(inter, track, send_embed=False)
 
             embed = core.TypicalEmbed(inter).set_title(
                 value=f'{len(tracks)} tracks have been queued!'
@@ -925,7 +928,7 @@ class Music(commands.Cog):
                 tracks.append(track)
 
             for track in tracks:
-                await put_song_to_voice_state(inter, track, send_embed=False)
+                await self._play_backend(inter, track, send_embed=False)
 
             embed = core.TypicalEmbed(inter).set_title(
                 value=f'{len(tracks)} tracks have been queued!'
@@ -938,10 +941,22 @@ class Music(commands.Cog):
         ):
             id = Spotify.get_track_id(keyword)
             track = Spotify.get_track_features(id)
-            await put_song_to_voice_state(inter, track)
+            await self._play_backend(inter, track)
 
         else:
-            await put_song_to_voice_state(inter, keyword)
+            await self._play_backend(inter, keyword)
+
+    # play (message)
+    @commands.message_command(
+        name='Search & Play',
+        dm_permission=False
+    )
+    async def _play_message(
+        self,
+        inter: disnake.CommandInteraction,
+        message: disnake.Message
+    ) -> None:
+        await self._play_backend(inter, message.content)
 
 
 # The setup() function for the cog.
