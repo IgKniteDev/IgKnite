@@ -28,5 +28,5 @@ jobs:
         id: deployment
         with:
           token: "${{ github.token }}"
-          target_url: https://igknite.fly.dev/
+          target_url: https://igknition.ml/
           environment: production
