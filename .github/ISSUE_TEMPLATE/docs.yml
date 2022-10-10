@@ -7,14 +7,14 @@ body:
     id: description
     attributes:
       label: Description
-      description: A brief description of the question or issue, also include what you tried and what didn't work
+      description: A brief description of the question or issue, also include what you tried and what didn't work.
     validations:
       required: true
   - type: textarea
     id: screenshots
     attributes:
       label: Screenshots
-      description: Please add screenshots if applicable
+      description: Please add screenshots if applicable.
     validations:
       required: false
   - type: textarea
