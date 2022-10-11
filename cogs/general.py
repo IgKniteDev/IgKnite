@@ -17,6 +17,61 @@ from disnake.ext import commands
 
 import core
 from core import global_
+from core.embeds import TypicalEmbed
+
+
+# Backend for the `ping` command.
+async def _ping_backend(
+    inter: disnake.CommandInteraction,
+    bot: core.IgKnite,
+) -> TypicalEmbed:
+    system_latency = round(bot.latency * 1000)
+
+    start_time = time.time()
+    await inter.response.defer()
+    end_time = time.time()
+
+    api_latency = round((end_time - start_time) * 1000)
+
+    uptime = round(datetime.timestamp(datetime.now())) - global_.running_since
+    h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
+
+    embed = core.TypicalEmbed(inter).add_field(
+        name='System Latency',
+        value=f'{system_latency}ms [{bot.shard_count} shard(s)]',
+        inline=False
+    ).add_field(
+        name='API Latency',
+        value=f'{api_latency}ms',
+        inline=False
+    ).add_field(
+        name='Uptime',
+        value=f'{h}h {m}m {s}s'
+    )
+
+    return embed
+
+
+# View for the `ping` command.
+class PingCommandView(disnake.ui.View):
+    def __init__(
+        self,
+        inter: disnake.CommandInteraction,
+        bot: core.IgKnite,
+        timeout: float = 60
+    ) -> None:
+        super().__init__(timeout=timeout)
+        self.inter = inter
+        self.bot = bot
+
+    @disnake.ui.button(emoji='🔄', style=disnake.ButtonStyle.green)
+    async def _refresh(
+        self,
+        button: disnake.ui.Button,
+        inter: disnake.Interaction
+    ) -> None:
+        embed = await _ping_backend(bot=self.bot, inter=inter)
+        await inter.edit_original_message(embed=embed, view=self)
 
 
 # The actual cog.
@@ -82,31 +137,9 @@ class General(commands.Cog):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
-        system_latency = round(self.bot.latency * 1000)
-
-        start_time = time.time()
-        await inter.response.defer()
-        end_time = time.time()
-
-        api_latency = round((end_time - start_time) * 1000)
-
-        uptime = round(datetime.timestamp(datetime.now())) - global_.running_since
-        h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
-
-        embed = core.TypicalEmbed(inter).add_field(
-            name='System Latency',
-            value=f'{system_latency}ms [{self.bot.shard_count} shard(s)]',
-            inline=False
-        ).add_field(
-            name='API Latency',
-            value=f'{api_latency}ms',
-            inline=False
-        ).add_field(
-            name='Uptime',
-            value=f'{h}h {m}m {s}s'
-        )
-
-        await inter.send(embed=embed)
+        view = PingCommandView(bot=self.bot, inter=inter)
+        embed = await _ping_backend(bot=self.bot, inter=inter)
+        await inter.send(embed=embed, view=view)
 
 
 # The setup() function for the cog.
