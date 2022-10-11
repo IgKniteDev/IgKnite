@@ -34,7 +34,10 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
     uptime = round(datetime.timestamp(datetime.now())) - global_.running_since
     h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
 
-    embed = core.TypicalEmbed(inter).add_field(
+    embed = core.TypicalEmbed(
+        inter=inter,
+        disabled_footer=True
+    ).add_field(
         name='System Latency',
         value=f'{system_latency}ms [{inter.bot.shard_count} shard(s)]',
         inline=False
@@ -92,6 +95,7 @@ class General(commands.Cog):
         ).set_image(
             url=member.avatar
         )
+
         await inter.send(embed=embed)
 
     @commands.slash_command(
