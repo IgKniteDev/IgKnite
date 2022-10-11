@@ -816,7 +816,7 @@ class Music(commands.Cog):
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
-        view = QueueCommandView(inter)
+        view = QueueCommandView(inter=inter)
         await inter.send(view=view)
 
     # rmqueue

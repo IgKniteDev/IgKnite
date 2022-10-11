@@ -380,8 +380,11 @@ class Inspection(commands.Cog):
         await inter.send(
             embed=embed,
             view=InviteCommandView(
-                inter, load_page, top_page,
-                page, await inter.guild.invites()
+                inter=inter,
+                page_loader=load_page,
+                top_page=top_page,
+                page=page,
+                invites=await inter.guild.invites()
             ) if invites else MISSING
         )
 
