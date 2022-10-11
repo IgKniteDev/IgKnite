@@ -355,13 +355,12 @@ class QueueCommandView(disnake.ui.View):
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
-        self.select.songs(self.inter.voice_state.songs)
+        self.select.songs = self.inter.voice_state.songs
 
         button.style = random.choice(
             [
                 disnake.ButtonStyle.blurple,
                 disnake.ButtonStyle.gray,
-                disnake.ButtonStyle.red,
                 disnake.ButtonStyle.green
             ]
         )
@@ -576,6 +575,13 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
+    async def cog_before_message_command_invoke(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        inter.voice_state = self.get_voice_state(inter)
+        return await inter.response.defer()
+
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
@@ -651,14 +657,15 @@ class Music(commands.Cog):
     # volume
     @commands.slash_command(
         name='volume',
-        description='Views / sets the volume of the current track.',
+        description='Sets the volume of the current track.',
         options=[
             Option(
                 'volume',
                 'Specify a new volume to set. Has to be within 1 and 100 (it can go a li\'l further btw).',
                 OptionType.integer,
                 min_value=1,
-                max_value=200
+                max_value=200,
+                required=True
             )
         ],
         dm_permission=False
@@ -673,12 +680,6 @@ class Music(commands.Cog):
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
-
-        if volume is None:
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f"Currently playing on {inter.voice_state.current.source.volume * 100}% volume."
-            )
-            return await inter.send(embed=embed)
 
         inter.voice_state.current.source.volume = volume / 100
         await inter.send(f'Volume of the player is now set to **{volume}%**')
