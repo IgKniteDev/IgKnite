@@ -295,11 +295,11 @@ class QueueCommandSelect(disnake.ui.Select):
     def __init__(
         self,
         songs,
-        inter: disnake.CommandInteraction,
-        view,
+        inter: disnake.CommandInteraction
     ) -> None:
         self.songs = songs
         self.inter = inter
+        self.added_buttons = False
 
         options = [
             disnake.SelectOption(
@@ -319,16 +319,31 @@ class QueueCommandSelect(disnake.ui.Select):
     ) -> None:
         embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
         value = int(self.values[0])
-        remove_button = disnake.ui.Button(label="Remove from queue")
 
-        async def remove(inter) -> None:
-            self.songs.remove(value)
-            self.view.remove_item(remove_button)
+        if not self.added_buttons:
+            remove_button = disnake.ui.Button(label="Remove from queue", style=disnake.ButtonStyle.danger)
 
-            await inter.response.edit_message(embed=None, view=None, content="Removed song from queue")
+            async def remove(inter) -> None:
+                self.songs.remove(value)
+                self.view.remove_item(remove_button)
 
-        remove_button.callback = remove
-        self.view.add_item(remove_button)
+                await inter.response.edit_message(embed=None, view=None, content="Removed song from queue")
+
+            remove_button.callback = remove
+            self.view.add_item(remove_button)
+
+            play_button = disnake.ui.Button(label="Play", style=disnake.ButtonStyle.success)
+
+            async def play(inter) -> None:
+                await self.inter.voice_state.play_song(value)
+                self.view.remove_item(play_button)
+
+                await inter.response.edit_message(embed=None, view=None, content="Playing song")
+
+            play_button.callback = play
+            self.view.add_item(play_button)
+
+            self.added_buttons = True
 
         await inter.response.edit_message(embed=embed, view=self.view)
 
@@ -342,7 +357,7 @@ class QueueCommandView(disnake.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
-        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter, self)
+        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
         self.add_item(self.select)
 
     @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
@@ -522,6 +537,15 @@ class VoiceState:
                 self.voice.play(self.now, after=self.play_next_song)
 
             await self.next.wait()
+
+    async def play_song(self, song_index) -> None:
+        for idx, song in enumerate(self.songs):
+            if (idx != song_index):
+                self.skip()
+            else:
+                break
+
+        self.next.set()
 
     def play_next_song(
         self,
@@ -822,6 +846,7 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction
     ) -> None:
         # Testing
+        """
         if len(inter.voice_state.songs) == 0:
             async def play_song(keyword):
                 try:
@@ -838,6 +863,7 @@ class Music(commands.Cog):
             await play_song("kanye flashing lights")
             await play_song("kanye bound 2")
             await play_song("kanye family business")
+        """
         #
 
         if len(inter.voice_state.songs) == 0:
