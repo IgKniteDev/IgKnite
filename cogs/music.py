@@ -399,9 +399,6 @@ class QueueCommandView(disnake.ui.View):
         )
 
     async def on_timeout(self) -> None:
-        for children in self.children:
-            children.disabled = True
-
         await self.inter.delete_original_message()
 
 
