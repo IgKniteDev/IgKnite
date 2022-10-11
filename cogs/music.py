@@ -317,17 +317,20 @@ class QueueCommandSelect(disnake.ui.Select):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
-        embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
-        value = int(self.values[0])
+        song_index = int(self.values[0])
+        song = self.songs[song_index]
+        embed, _ = song.create_embed(self.inter)
 
         if not self.added_buttons:
             remove_button = disnake.ui.Button(label="Remove from queue", style=disnake.ButtonStyle.danger)
 
             async def remove(inter) -> None:
-                self.songs.remove(value)
+                self.songs.remove(song_index)
                 self.view.remove_item(remove_button)
 
-                await inter.response.edit_message(embed=None, view=None, content="Removed song from queue")
+                await inter.response.edit_message(
+                    embed=None, view=None, content=f"Removed from queue: {song.source.title}"
+                )
 
             remove_button.callback = remove
             self.view.add_item(remove_button)
@@ -335,10 +338,10 @@ class QueueCommandSelect(disnake.ui.Select):
             play_button = disnake.ui.Button(label="Play", style=disnake.ButtonStyle.success)
 
             async def play(inter) -> None:
-                await self.inter.voice_state.play_song(value)
+                await self.inter.voice_state.play_song(song_index)
                 self.view.remove_item(play_button)
 
-                await inter.response.edit_message(embed=None, view=None, content="Playing song")
+                await inter.response.edit_message(embed=None, view=None, content=f"Playing song: {song.source.title}")
 
             play_button.callback = play
             self.view.add_item(play_button)
@@ -539,13 +542,24 @@ class VoiceState:
             await self.next.wait()
 
     async def play_song(self, song_index) -> None:
-        for idx, song in enumerate(self.songs):
+        removed_songs = []
+        songs = self.songs
+        print(list(songs))
+        songs = list(songs)
+        for idx, song in enumerate(songs):
             if (idx != song_index):
-                self.skip()
+                removed_songs.append(await self.songs.get())
             else:
                 break
 
-        self.next.set()
+        print(removed_songs)       
+        for removed in removed_songs:
+            print(removed)
+            await self.songs.put(removed)
+
+        print(self.songs)
+        self.skip()
+        # self.play_next_song()
 
     def play_next_song(
         self,
