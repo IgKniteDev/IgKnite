@@ -719,7 +719,7 @@ class Music(commands.Cog):
     async def _volume(
         self,
         inter: disnake.CommandInteraction,
-        volume: float | None = None
+        volume: float
     ) -> None:
         if not inter.voice_state.is_playing:
             return await inter.send(
@@ -859,27 +859,6 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
-        # Testing
-        """
-        if len(inter.voice_state.songs) == 0:
-            async def play_song(keyword):
-                try:
-                    source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
-                except YTDLError as e:
-                    await inter.send(
-                        f'An error occurred while processing this request: {str(e)}',
-                        ephemeral=True
-                    )
-                else:
-                    song = Song(source)
-                    await inter.voice_state.songs.put(song)
-
-            await play_song("kanye flashing lights")
-            await play_song("kanye bound 2")
-            await play_song("kanye family business")
-        """
-        #
-
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
