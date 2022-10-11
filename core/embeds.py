@@ -21,24 +21,27 @@ class TypicalEmbed(disnake.Embed):
     def __init__(
         self,
         inter: disnake.CommandInteraction,
+        *,
+        disabled_footer: bool = False,
         is_error: bool = False
     ) -> None:
         super().__init__(
             color=(3158326 if not is_error else 16608388)
         )
 
-        self.set_footer(
-            text=random.choice(
-                [
-                    'When pigs fly...',
-                    'Stunned stork!',
-                    'A perfect debugged life doesn\'t exist.',
-                    'Haven\'t I made it obvious?',
-                    'Hello World, from the other side!'
-                ]
-            ),
-            icon_url=inter.author.avatar
-        )
+        if not disabled_footer:
+            self.set_footer(
+                text=random.choice(
+                    [
+                        'When pigs fly...',
+                        'Stunned stork!',
+                        'A perfect debugged life doesn\'t exist.',
+                        'Haven\'t I made it obvious?',
+                        'Hello World, from the other side!'
+                    ]
+                ),
+                icon_url=inter.author.avatar
+            )
 
     def set_title(self, value: str) -> None:
         '''
