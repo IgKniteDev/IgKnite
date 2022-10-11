@@ -297,6 +297,7 @@ class QueueCommandSelect(disnake.ui.Select):
     ) -> None:
         self.songs = songs
         self.inter = inter
+        self.added_buttons = False
 
         options = [
             disnake.SelectOption(
@@ -314,8 +315,38 @@ class QueueCommandSelect(disnake.ui.Select):
         self,
         inter: disnake.Interaction
     ) -> None:
-        embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
-        await inter.response.edit_message(embed=embed)
+        song_index = int(self.values[0])
+        song = self.songs[song_index]
+        embed, _ = song.create_embed(self.inter)
+
+        if not self.added_buttons:
+            remove_button = disnake.ui.Button(label="Remove from queue", style=disnake.ButtonStyle.danger)
+
+            async def remove(inter) -> None:
+                self.songs.remove(song_index)
+                self.view.remove_item(remove_button)
+
+                await inter.response.edit_message(
+                    embed=None, view=None, content=f"Removed from queue: {song.source.title}"
+                )
+
+            remove_button.callback = remove
+            self.view.add_item(remove_button)
+
+            play_button = disnake.ui.Button(label="Play", style=disnake.ButtonStyle.success)
+
+            async def play(inter) -> None:
+                await self.inter.voice_state.play_song(song_index)
+                self.view.remove_item(play_button)
+
+                await inter.response.edit_message(embed=None, view=None, content=f"Playing song: {song.source.title}")
+
+            play_button.callback = play
+            self.view.add_item(play_button)
+
+            self.added_buttons = True
+
+        await inter.response.edit_message(embed=embed, view=self.view)
 
 
 # View for the `queue` command.
@@ -512,6 +543,21 @@ class VoiceState:
                 self.voice.play(self.now, after=self.play_next_song)
 
             await self.next.wait()
+
+    async def play_song(self, song_index) -> None:
+        removed_songs = []
+        songs = self.songs
+        songs = list(songs)
+        for idx, song in enumerate(songs):
+            if (idx != song_index):
+                removed_songs.append(await self.songs.get())
+            else:
+                break
+
+        for removed in removed_songs:
+            await self.songs.put(removed)
+
+        self.skip()
 
     def play_next_song(
         self,
@@ -813,6 +859,27 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction
     ) -> None:
+        # Testing
+        """
+        if len(inter.voice_state.songs) == 0:
+            async def play_song(keyword):
+                try:
+                    source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
+                except YTDLError as e:
+                    await inter.send(
+                        f'An error occurred while processing this request: {str(e)}',
+                        ephemeral=True
+                    )
+                else:
+                    song = Song(source)
+                    await inter.voice_state.songs.put(song)
+
+            await play_song("kanye flashing lights")
+            await play_song("kanye bound 2")
+            await play_song("kanye family business")
+        """
+        #
+
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
