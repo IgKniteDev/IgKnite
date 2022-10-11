@@ -388,11 +388,16 @@ class QueueCommandView(disnake.ui.View):
         inter: disnake.MessageInteraction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
+        self.select.songs = self.inter.voice_state.songs
 
-        button.label = 'Shuffled'
-        button.disabled = True
+        button.style = random.choice(
+            [
+                disnake.ButtonStyle.blurple,
+                disnake.ButtonStyle.gray,
+                disnake.ButtonStyle.green
+            ]
+        )
 
-        self.select.songs(self.inter.voice_state.songs, self.inter)
         await inter.response.edit_message(
             view=self
         )
@@ -544,7 +549,6 @@ class VoiceState:
     async def play_song(self, song_index) -> None:
         removed_songs = []
         songs = self.songs
-        print(list(songs))
         songs = list(songs)
         for idx, song in enumerate(songs):
             if (idx != song_index):
@@ -552,14 +556,10 @@ class VoiceState:
             else:
                 break
 
-        print(removed_songs)       
         for removed in removed_songs:
-            print(removed)
             await self.songs.put(removed)
 
-        print(self.songs)
         self.skip()
-        # self.play_next_song()
 
     def play_next_song(
         self,
