@@ -57,8 +57,10 @@ def initialize() -> None:
         exit()
 
     else:
+        # global variable to store start time
         global running_since
         running_since = round(datetime.timestamp(datetime.now()))
-        # global variable (list) for storing sniped messages
+
+        # global variable to store sniped messages
         global snipeables
         snipeables = []
