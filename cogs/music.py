@@ -297,7 +297,6 @@ class QueueCommandSelect(disnake.ui.Select):
     ) -> None:
         self.songs = songs
         self.inter = inter
-        self.added_buttons = False
 
         options = [
             disnake.SelectOption(
@@ -307,44 +306,47 @@ class QueueCommandSelect(disnake.ui.Select):
         ]
 
         super().__init__(
-            placeholder="Choose your song.",
+            placeholder='Choose your song.',
             options=options,
         )
 
     async def callback(
         self,
-        inter: disnake.Interaction
+        inter: disnake.MessageInteraction
     ) -> None:
         song_index = int(self.values[0])
         song = self.songs[song_index]
         embed, _ = song.create_embed(self.inter)
 
-        if not self.added_buttons:
-            remove_button = disnake.ui.Button(label="Remove from queue", style=disnake.ButtonStyle.danger)
+        play_button = disnake.ui.Button(label='Play', style=disnake.ButtonStyle.success)
 
-            async def remove(inter) -> None:
-                self.songs.remove(song_index)
-                self.view.remove_item(remove_button)
+        async def play(inter: disnake.Interaction) -> None:
+            await self.inter.voice_state.play_song(song_index)
+            self.view.remove_item(play_button)
 
-                await inter.response.edit_message(
-                    embed=None, view=None, content=f"Removed from queue: {song.source.title}"
-                )
+            await inter.response.edit_message(
+                content='Force-playing selected song.',
+                embed=None,
+                view=None
+            )
 
-            remove_button.callback = remove
-            self.view.add_item(remove_button)
+        play_button.callback = play
+        self.view.add_item(play_button)
 
-            play_button = disnake.ui.Button(label="Play", style=disnake.ButtonStyle.success)
+        remove_button = disnake.ui.Button(label='Remove Song', style=disnake.ButtonStyle.danger)
 
-            async def play(inter) -> None:
-                await self.inter.voice_state.play_song(song_index)
-                self.view.remove_item(play_button)
+        async def remove(inter: disnake.Interaction) -> None:
+            self.songs.remove(song_index)
+            self.view.remove_item(remove_button)
 
-                await inter.response.edit_message(embed=None, view=None, content=f"Playing song: {song.source.title}")
+            await inter.response.edit_message(
+                content='Removed song from queue.',
+                embed=None,
+                view=None
+            )
 
-            play_button.callback = play
-            self.view.add_item(play_button)
-
-            self.added_buttons = True
+        remove_button.callback = remove
+        self.view.add_item(remove_button)
 
         await inter.response.edit_message(embed=embed, view=self.view)
 
@@ -357,9 +359,7 @@ class QueueCommandView(disnake.ui.View):
         timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
-
         self.inter = inter
-        self.cleared_out = False
 
         self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
         self.add_item(self.select)
@@ -371,7 +371,6 @@ class QueueCommandView(disnake.ui.View):
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.clear()
-        self.cleared_out = True
 
         await inter.response.edit_message(
             content='Queue cleared!',
@@ -403,8 +402,7 @@ class QueueCommandView(disnake.ui.View):
         for children in self.children:
             children.disabled = True
 
-        if not self.cleared_out:
-            await self.inter.edit_original_message(view=self)
+        await self.inter.delete_original_message()
 
 
 # The Song class which represents the instance of a song.
