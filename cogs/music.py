@@ -355,13 +355,12 @@ class QueueCommandView(disnake.ui.View):
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
-        self.select.songs(self.inter.voice_state.songs)
+        self.select.songs = self.inter.voice_state.songs
 
         button.style = random.choice(
             [
                 disnake.ButtonStyle.blurple,
                 disnake.ButtonStyle.gray,
-                disnake.ButtonStyle.red,
                 disnake.ButtonStyle.green
             ]
         )
@@ -570,6 +569,13 @@ class Music(commands.Cog):
         return state
 
     async def cog_before_slash_command_invoke(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        inter.voice_state = self.get_voice_state(inter)
+        return await inter.response.defer()
+
+    async def cog_before_message_command_invoke(
         self,
         inter: disnake.CommandInteraction
     ) -> None:
