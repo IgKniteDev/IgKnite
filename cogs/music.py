@@ -237,8 +237,8 @@ class NowCommandView(disnake.ui.View):
         super().__init__(timeout=timeout)
 
         self.inter = inter
-        self.add_item(disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True))
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
+        self.add_item(disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True))
 
     @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
     async def _loop(
