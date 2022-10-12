@@ -123,7 +123,7 @@ class InviteCommandView(disnake.ui.View):
             self.children[1].disabled = False
 
     @disnake.ui.button(
-        label='Back',
+        label='Previous',
         style=disnake.ButtonStyle.gray,
         disabled=True,
     )
@@ -202,7 +202,7 @@ class Inspection(commands.Cog):
         )
 
         if inter.guild.icon:
-            embed.set_thumbnail(url=inter.guild.icon)
+            embed.set_image(url=inter.guild.icon)
 
         await inter.send(embed=embed)
 
@@ -380,8 +380,11 @@ class Inspection(commands.Cog):
         await inter.send(
             embed=embed,
             view=InviteCommandView(
-                inter, load_page, top_page,
-                page, await inter.guild.invites()
+                inter=inter,
+                page_loader=load_page,
+                top_page=top_page,
+                page=page,
+                invites=await inter.guild.invites()
             ) if invites else MISSING
         )
 

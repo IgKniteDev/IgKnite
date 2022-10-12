@@ -10,6 +10,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Imports.
 import time
 import logging
+from datetime import datetime
 
 from decouple import config, UndefinedValueError
 
@@ -56,6 +57,10 @@ def initialize() -> None:
         exit()
 
     else:
-        # global variable (list) for storing sniped messages
+        # global variable to store start time
+        global running_since
+        running_since = round(datetime.timestamp(datetime.now()))
+
+        # global variable to store sniped messages
         global snipeables
         snipeables = []

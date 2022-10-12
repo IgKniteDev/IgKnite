@@ -1,5 +1,5 @@
 name: 💡 General Feature Request
-description: Have a new idea/feature for Milan? Please suggest!
+description: Have a new idea/feature for IgKnite? Please suggest!
 title: "[FEATURE] <description>"
 labels: ["feat"]
 body:
@@ -14,7 +14,7 @@ body:
     id: screenshots
     attributes:
       label: Screenshots
-      description: Please add screenshots if applicable
+      description: Please add screenshots if applicable.
     validations:
       required: false
   - type: textarea
