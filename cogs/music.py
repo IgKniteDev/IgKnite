@@ -2,27 +2,8 @@
 The `Music` cog for IgKnite.
 ---
 
-MIT License
-
-Copyright (c) 2022 IgKnite
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+License can be found here:
+https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 
@@ -249,9 +230,9 @@ class Spotify:
 class NowCommandView(disnake.ui.View):
     def __init__(
         self,
-        inter: disnake.Interaction,
+        inter: disnake.CommandInteraction,
         url: str,
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
 
@@ -276,23 +257,21 @@ class NowCommandView(disnake.ui.View):
 
         await inter.response.edit_message(view=self)
 
-    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.red)
+    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.gray)
     async def _skip(
         self,
-        _: disnake.ui.Button,
+        button: disnake.ui.Button,
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.skip()
+        button.disabled = True
+        button.label = 'Skipped'
 
-        await inter.response.edit_message(
-            content='Song skipped!',
-            view=None,
-            embed=None
-        )
+        await inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
         for children in self.children:
-            if 'Loop' in children.label:
+            if 'Redirect' != children.label:
                 children.disabled = True
 
         await self.inter.edit_original_message(view=self)
@@ -303,7 +282,7 @@ class PlayCommandView(disnake.ui.View):
     def __init__(
         self,
         url: str,
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
@@ -327,16 +306,49 @@ class QueueCommandSelect(disnake.ui.Select):
         ]
 
         super().__init__(
-            placeholder="Choose your song.",
+            placeholder='Choose your song.',
             options=options,
         )
 
     async def callback(
         self,
-        inter: disnake.CommandInteraction
+        inter: disnake.MessageInteraction
     ) -> None:
-        embed, _ = self.songs[int(self.values[0])].create_embed(self.inter)
-        await inter.response.edit_message(embed=embed)
+        song_index = int(self.values[0])
+        song = self.songs[song_index]
+        embed, _ = song.create_embed(self.inter)
+
+        play_button = disnake.ui.Button(label='Play', style=disnake.ButtonStyle.success)
+
+        async def play(inter: disnake.Interaction) -> None:
+            await self.inter.voice_state.play_song(song_index)
+            self.view.remove_item(play_button)
+
+            await inter.response.edit_message(
+                content='Force-playing selected song.',
+                embed=None,
+                view=None
+            )
+
+        play_button.callback = play
+        self.view.add_item(play_button)
+
+        remove_button = disnake.ui.Button(label='Remove Song', style=disnake.ButtonStyle.danger)
+
+        async def remove(inter: disnake.Interaction) -> None:
+            self.songs.remove(song_index)
+            self.view.remove_item(remove_button)
+
+            await inter.response.edit_message(
+                content='Removed song from queue.',
+                embed=None,
+                view=None
+            )
+
+        remove_button.callback = remove
+        self.view.add_item(remove_button)
+
+        await inter.response.edit_message(embed=embed, view=self.view)
 
 
 # View for the `queue` command.
@@ -344,52 +356,50 @@ class QueueCommandView(disnake.ui.View):
     def __init__(
         self,
         inter: disnake.CommandInteraction,
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
+
         self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
         self.add_item(self.select)
 
     @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
     async def clear(
         self,
-        button: disnake.ui.Button,
-        inter: disnake.MessageInteraction
+        _: disnake.ui.Button,
+        inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.clear()
 
-        button.label = 'Cleared'
-        button.style = disnake.ButtonStyle.gray
-
-        for children in self.children:
-            children.disabled = True
-
         await inter.response.edit_message(
-            view=self
+            content='Queue cleared!',
+            embed=None,
+            view=None
         )
 
     @disnake.ui.button(label='Shuffle', style=disnake.ButtonStyle.gray)
     async def shuffle(
         self,
         button: disnake.ui.Button,
-        inter: disnake.MessageInteraction
+        inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
+        self.select.songs = self.inter.voice_state.songs
 
-        button.label = 'Shuffled'
-        button.disabled = True
-
-        self.select.songs(self.inter.voice_state.songs)
+        button.style = random.choice(
+            [
+                disnake.ButtonStyle.blurple,
+                disnake.ButtonStyle.gray,
+                disnake.ButtonStyle.green
+            ]
+        )
         await inter.response.edit_message(
             view=self
         )
 
     async def on_timeout(self) -> None:
-        for children in self.children:
-            children.disabled = True
-
-        await self.inter.edit_original_message(view=self)
+        await self.inter.delete_original_message()
 
 
 # The Song class which represents the instance of a song.
@@ -529,6 +539,21 @@ class VoiceState:
 
             await self.next.wait()
 
+    async def play_song(self, song_index) -> None:
+        removed_songs = []
+        songs = self.songs
+        songs = list(songs)
+        for idx, song in enumerate(songs):
+            if (idx != song_index):
+                removed_songs.append(await self.songs.get())
+            else:
+                break
+
+        for removed in removed_songs:
+            await self.songs.put(removed)
+
+        self.skip()
+
     def play_next_song(
         self,
         error=None
@@ -591,6 +616,13 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
+    async def cog_before_message_command_invoke(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        inter.voice_state = self.get_voice_state(inter)
+        return await inter.response.defer()
+
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
@@ -611,7 +643,7 @@ class Music(commands.Cog):
 
         except AttributeError:
             await inter.send(
-                'Please switch to voice or stage channel to use this command',
+                'Please switch to a voice or stage channel to use this command.',
                 ephemeral=True
             )
 
@@ -666,14 +698,15 @@ class Music(commands.Cog):
     # volume
     @commands.slash_command(
         name='volume',
-        description='Views / sets the volume of the current track.',
+        description='Sets the volume of the current track.',
         options=[
             Option(
                 'volume',
                 'Specify a new volume to set. Has to be within 1 and 100 (it can go a li\'l further btw).',
                 OptionType.integer,
                 min_value=1,
-                max_value=200
+                max_value=200,
+                required=True
             )
         ],
         dm_permission=False
@@ -681,19 +714,13 @@ class Music(commands.Cog):
     async def _volume(
         self,
         inter: disnake.CommandInteraction,
-        volume: float | None = None
+        volume: float
     ) -> None:
         if not inter.voice_state.is_playing:
             return await inter.send(
                 'There\'s nothing being played at the moment.',
                 ephemeral=True
             )
-
-        if volume is None:
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f"Currently playing on {inter.voice_state.current.source.volume * 100}% volume."
-            )
-            return await inter.send(embed=embed)
 
         inter.voice_state.current.source.volume = volume / 100
         await inter.send(f'Volume of the player is now set to **{volume}%**')
@@ -830,7 +857,7 @@ class Music(commands.Cog):
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
-        view = QueueCommandView(inter)
+        view = QueueCommandView(inter=inter)
         await inter.send(view=view)
 
     # rmqueue
@@ -864,7 +891,42 @@ class Music(commands.Cog):
         inter.voice_state.songs.remove(index - 1)
         await inter.send('Removed item from queue.')
 
-    # play
+    # Backend for play-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _play_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        keyword: str,
+        send_embed: bool = True
+    ) -> None:
+        if not inter.voice_state.voice:
+            await self._join_logic(inter)
+
+        try:
+            source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
+
+        except YTDLError as e:
+            await inter.send(
+                f'An error occurred while processing this request: {str(e)}',
+                ephemeral=True
+            )
+
+        else:
+            song = Song(source)
+            embed = core.TypicalEmbed(inter).set_title(
+                value=f'Enqueued {song.source.title} from YouTube.'
+            )
+
+            await inter.voice_state.songs.put(song)
+            if send_embed:
+                await inter.send(
+                    embed=embed,
+                    view=PlayCommandView(
+                        url=song.source.url
+                    )
+                )
+
+    # play (slash)
     @commands.slash_command(
         name='play',
         description='Enqueues playable stuff (basically sings you songs).',
@@ -883,38 +945,6 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction,
         keyword: str
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-
-        async def put_song_to_voice_state(
-            inter: disnake.CommandInteraction,
-            keyword: str,
-            send_embed: bool = True
-        ) -> None:
-            try:
-                source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
-
-            except YTDLError as e:
-                await inter.send(
-                    f'An error occurred while processing this request: {str(e)}',
-                    ephemeral=True
-                )
-
-            else:
-                song = Song(source)
-                embed = core.TypicalEmbed(inter).set_title(
-                    value=f'Enqueued {song.source.title} from YouTube.'
-                )
-
-                await inter.voice_state.songs.put(song)
-                if send_embed:
-                    await inter.send(
-                        embed=embed,
-                        view=PlayCommandView(
-                            url=song.source.url
-                        )
-                    )
-
         if (
             'https://open.spotify.com/playlist/' in keyword
             or 'spotify:playlist:' in keyword
@@ -927,7 +957,7 @@ class Music(commands.Cog):
                 tracks.append(track)
 
             for track in tracks:
-                await put_song_to_voice_state(inter, track, send_embed=False)
+                await self._play_backend(inter, track, send_embed=False)
 
             embed = core.TypicalEmbed(inter).set_title(
                 value=f'{len(tracks)} tracks have been queued!'
@@ -946,7 +976,7 @@ class Music(commands.Cog):
                 tracks.append(track)
 
             for track in tracks:
-                await put_song_to_voice_state(inter, track, send_embed=False)
+                await self._play_backend(inter, track, send_embed=False)
 
             embed = core.TypicalEmbed(inter).set_title(
                 value=f'{len(tracks)} tracks have been queued!'
@@ -959,10 +989,22 @@ class Music(commands.Cog):
         ):
             id = Spotify.get_track_id(keyword)
             track = Spotify.get_track_features(id)
-            await put_song_to_voice_state(inter, track)
+            await self._play_backend(inter, track)
 
         else:
-            await put_song_to_voice_state(inter, keyword)
+            await self._play_backend(inter, keyword)
+
+    # play (message)
+    @commands.message_command(
+        name='Search & Play',
+        dm_permission=False
+    )
+    async def _play_message(
+        self,
+        inter: disnake.CommandInteraction,
+        message: disnake.Message
+    ) -> None:
+        await self._play_backend(inter, message.content)
 
 
 # The setup() function for the cog.

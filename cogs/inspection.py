@@ -2,27 +2,8 @@
 The `Inspection` cog for IgKnite.
 ---
 
-MIT License
-
-Copyright (c) 2022 IgKnite
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+License can be found here:
+https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 
@@ -117,7 +98,7 @@ class InviteCommandView(disnake.ui.View):
         top_page: int = 1,
         page: int = 1,
         invites: List[Invite] = [],
-        timeout: float = 35
+        timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
 
@@ -142,7 +123,7 @@ class InviteCommandView(disnake.ui.View):
             self.children[1].disabled = False
 
     @disnake.ui.button(
-        label='Back',
+        label='Previous',
         style=disnake.ButtonStyle.gray,
         disabled=True,
     )
@@ -221,7 +202,7 @@ class Inspection(commands.Cog):
         )
 
         if inter.guild.icon:
-            embed.set_thumbnail(url=inter.guild.icon)
+            embed.set_image(url=inter.guild.icon)
 
         await inter.send(embed=embed)
 
@@ -399,8 +380,11 @@ class Inspection(commands.Cog):
         await inter.send(
             embed=embed,
             view=InviteCommandView(
-                inter, load_page, top_page,
-                page, await inter.guild.invites()
+                inter=inter,
+                page_loader=load_page,
+                top_page=top_page,
+                page=page,
+                invites=await inter.guild.invites()
             ) if invites else MISSING
         )
 
