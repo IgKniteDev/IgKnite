@@ -50,3 +50,15 @@ Deletes the given *channel* from the server.
 
 ### /reset
 Deletes all the messages from the current channel.
+
+
+## The General Commands
+### /avatar [member]
+Displays your avatar or the avatar of the server *member* given.
+
+| Parameter | Required | Default |
+|---|---|---|
+| member | No | You |
+
+### /ping
+Shows your API response time, system latency, and uptime.
