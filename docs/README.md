@@ -62,3 +62,56 @@ Displays your avatar or the avatar of the server *member* given.
 
 ### /ping
 Shows your API response time, system latency, and uptime.
+
+
+## The Moderation Commands
+### /ban [member] [reason]
+Bans the given server *member* for the given *reason*.
+
+| Parameter | Required | Default |
+|---|---|---|
+| member | Yes |  |
+| reason | No | No reason provided |
+
+### /unban [member]
+Unbans the given *member* from the server.
+
+### /softban [member] [reason]
+Temporarily bans the given *member* to delete their messages.
+
+| Parameter | Required | Default |
+|---|---|---|
+| member | Yes |  |
+| reason | No | No reason provided |
+
+### /kick [member] [reason]
+Kicks the given *member* from the server.
+
+*Note: Kicked members can join the server again, but banned members can't.*
+
+| Parameter | Required | Default |
+|---|---|---|
+| member | Yes |  |
+| reason | No | No reason provided |
+
+### /timeout [member] [duration] [reason]
+Timeouts the given *member*.
+
+| Parameter | Required | Default |
+|---|---|---|
+| member | Yes |  |
+| duration | No | 30 seconds |
+| reason | No | No reason provided |
+
+### /purge [amount]
+Deletes the given *number/amount* of messages in the channel.
+
+| Parameter | Required | Default |
+|---|---|---|
+| amount | No | 1 |
+
+### /ripplepurge [member] [amount]
+Clears the messages sent by the given *member* if they fall in the given *index/amount*.
+
+### /snipe
+Recovers all the messages that were deleted/*sniped* in the last 25 seconds. *Neat, right?*
