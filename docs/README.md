@@ -115,3 +115,37 @@ Clears the messages sent by the given *member* if they fall in the given *index/
 
 ### /snipe
 Recovers all the messages that were deleted/*sniped* in the last 25 seconds. *Neat, right?*
+
+## The Inspection Commands
+### /guildinfo
+Shows all important information about the server.
+The current stats include:
+
+    - The creation date of the server
+    - Server owner
+    - Number of members
+    - Number of roles in the server
+    - Number of channels
+    - Identifier (server/guild ID)
+    - Server poster
+
+### /userinfo [member]
+Shows all important information on a user.
+
+| Parameter | Required | Default |
+|---|---|---|
+| member | No | You |
+
+The current stats include:
+
+    - Status
+    - Server join time
+    - If on mobile
+    - Bot or Human
+    - Number of roles
+    - Highest role
+    - Identifier (server/guild ID)
+    - Server poster
+
+### /roleinfo [role]
+Shows all important information related to a specific role.
