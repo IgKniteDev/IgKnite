@@ -1026,7 +1026,9 @@ class Music(commands.Cog):
         for activity in member.activities:
             if isinstance(activity, disnake.Spotify):
                 track = Spotify.get_track_features(activity.track_id)
-                await self._play_backend(inter, track)
+                return await self._play_backend(inter, track)
+
+        await inter.send('Nothing is being played on Spotify!')
 
     # playrich (slash)
     @commands.slash_command(
