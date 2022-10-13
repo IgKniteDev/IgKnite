@@ -1017,7 +1017,8 @@ class Music(commands.Cog):
                 'Mention the server member.',
                 OptionType.user
             )
-        ]
+        ],
+        dm_permission=False
     )
     async def _playrich(
         self,
