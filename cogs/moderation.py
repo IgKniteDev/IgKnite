@@ -372,11 +372,11 @@ class Moderation(commands.Cog):
     ) -> None:
         embed = core.TypicalEmbed(inter).add_field(
             'Message: ', msg
+        ).set_title(
+            value=f'{inter.author.display_name} has sent you a message!'
         ).set_thumbnail(
             url=inter.author.avatar.url
         )
-
-        embed.title = f'{inter.author.display_name} has sent you a message!'
 
         await member.send(embed=embed)
         await inter.send('Your message has been delivered!', ephemeral=True)
