@@ -624,6 +624,13 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
+    async def cog_before_user_command_invoke(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        inter.voice_state = self.get_voice_state(inter)
+        return await inter.response.defer()
+
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
@@ -1007,7 +1014,21 @@ class Music(commands.Cog):
     ) -> None:
         await self._play_backend(inter, message.content)
 
-    # playrich
+    # Backend for play-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _playrich_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member | None
+    ) -> None:
+        member = member or inter.author
+
+        for activity in member.activities:
+            if isinstance(activity, disnake.Spotify):
+                track = Spotify.get_track_features(activity.track_id)
+                await self._play_backend(inter, track)
+
+    # playrich (slash)
     @commands.slash_command(
         name='playrich',
         description='Tries to enqueue a song from one\'s Spotify rich presence.',
@@ -1025,10 +1046,19 @@ class Music(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member | None = None
     ) -> None:
-        for activity in member.activities:
-            if isinstance(activity, disnake.Spotify):
-                track = Spotify.get_track_features(activity.track_id)
-                await self._play_backend(inter, track)
+        await self._playrich_backend(inter, member)
+
+    # playrich (user)
+    @commands.user_command(
+        name='Rich Play',
+        dm_permisision=False
+    )
+    async def _playrich_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        await self._playrich_backend(inter, member)
 
 
 # The setup() function for the cog.
