@@ -20,7 +20,7 @@ from core import global_
 from core.embeds import TypicalEmbed
 
 
-# Backend for userinfo-labelled commands.
+# Backend for ping-labelled commands.
 # Do not use it within other commands unless really necessary.
 async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
     system_latency = round(inter.bot.latency * 1000)
@@ -81,7 +81,7 @@ class General(commands.Cog):
     ) -> None:
         self.bot = bot
 
-    # Backend for userinfo-labelled commands.
+    # Backend for avatar-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _avatar_backend(
         self,
@@ -98,6 +98,7 @@ class General(commands.Cog):
 
         await inter.send(embed=embed)
 
+    # avatar (slash)
     @commands.slash_command(
         name='avatar',
         description='Displays your avatar / the avatar of a server member.',
