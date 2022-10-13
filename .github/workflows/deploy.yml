@@ -13,6 +13,10 @@ jobs:
     name: Deploy App
     runs-on: ubuntu-latest
 
+    environment:
+      name: production
+      url: https://igknite.fly.dev
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,11 +26,3 @@ jobs:
 
       - name: Deploy to fly
         run: flyctl deploy --remote-only --no-cache --strategy immediate
-
-      - name: Create GitHub deployment
-        uses: altinukshini/deployment-action@releases/v1
-        id: deployment
-        with:
-          token: "${{ github.token }}"
-          target_url: https://igknite.fly.dev/
-          environment: production
