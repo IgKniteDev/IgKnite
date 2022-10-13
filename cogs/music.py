@@ -221,9 +221,10 @@ class Spotify:
         id: Any
     ) -> str:
         meta = spotify.track(id)
+        name = meta['name']
         album = meta['album']['name']
         artist = meta['album']['artists'][0]['name']
-        return f'{artist} - {album}'
+        return f'{artist} - {name} ({album})'
 
 
 # View for the `now` command.
@@ -623,6 +624,13 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
+    async def cog_before_user_command_invoke(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        inter.voice_state = self.get_voice_state(inter)
+        return await inter.response.defer()
+
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
@@ -913,12 +921,12 @@ class Music(commands.Cog):
 
         else:
             song = Song(source)
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f'Enqueued {song.source.title} from YouTube.'
-            )
-
             await inter.voice_state.songs.put(song)
+
             if send_embed:
+                embed = core.TypicalEmbed(inter).set_title(
+                    value=f'Enqueued {song.source.title} from YouTube.'
+                )
                 await inter.send(
                     embed=embed,
                     view=PlayCommandView(
@@ -1005,6 +1013,54 @@ class Music(commands.Cog):
         message: disnake.Message
     ) -> None:
         await self._play_backend(inter, message.content)
+
+    # Backend for play-labelled commands.
+    # Do not use it within other commands unless really necessary.
+    async def _playrich_backend(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member | None
+    ) -> None:
+        member = member or inter.author
+
+        for activity in member.activities:
+            if isinstance(activity, disnake.Spotify):
+                track = Spotify.get_track_features(activity.track_id)
+                return await self._play_backend(inter, track)
+
+        await inter.send('Nothing is being played on Spotify!')
+
+    # playrich (slash)
+    @commands.slash_command(
+        name='playrich',
+        description='Tries to enqueue a song from one\'s Spotify rich presence.',
+        options=[
+            Option(
+                'member',
+                'Mention the server member.',
+                OptionType.user
+            )
+        ],
+        dm_permission=False
+    )
+    async def _playrich(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member | None = None
+    ) -> None:
+        await self._playrich_backend(inter, member)
+
+    # playrich (user)
+    @commands.user_command(
+        name='Rich Play',
+        dm_permisision=False
+    )
+    async def _playrich_user(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member
+    ) -> None:
+        await self._playrich_backend(inter, member)
 
 
 # The setup() function for the cog.

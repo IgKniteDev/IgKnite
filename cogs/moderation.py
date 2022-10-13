@@ -343,6 +343,44 @@ class Moderation(commands.Cog):
         else:
             await inter.send('No messages were found in my list.', ephemeral=True)
 
+    # senddm
+    @commands.slash_command(
+        name='senddm',
+        description='Send DM to specific users.',
+        options=[
+            Option(
+                'member',
+                'Mention the server member.',
+                OptionType.user,
+                required=True
+            ),
+            Option(
+                'msg',
+                'Message you want to send.',
+                OptionType.string,
+                required=True
+            )
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def senddm(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member,
+        msg: str
+    ) -> None:
+        embed = core.TypicalEmbed(inter).add_field(
+            'Message: ', msg
+        ).set_title(
+            value=f'{inter.author.display_name} has sent you a message!'
+        ).set_thumbnail(
+            url=inter.author.avatar.url
+        )
+
+        await member.send(embed=embed)
+        await inter.send('Your message has been delivered!', ephemeral=True)
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
