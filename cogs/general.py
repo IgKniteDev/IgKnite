@@ -99,6 +99,37 @@ class General(commands.Cog):
 
         await inter.send(embed=embed)
 
+    # help
+    @commands.slash_command(
+        name='help',
+        description='Get started with IgKnite!'
+    )
+    async def _help(
+        self,
+        inter: disnake.CommandInteraction
+    ) -> None:
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Get started with IgKnite!'
+        ).add_field(
+            name='What is this?',
+            value='IgKnite is an open-source Discord bot for moderation and music.',
+            inline=False
+        ).add_field(
+            name='Where can I find the commands?',
+            value='You can find them by typing `/` in any server.',
+            inline=False
+        ).add_field(
+            name='Where can I find the source code?',
+            value='You can find it [here](https://github.com/IgKniteDev/IgKnite).',
+            inline=False
+        ).add_field(
+            name='Where can I find the documentation?',
+            value='You can find it [here](https://igknition.ml/docs/reference.html).',
+            inline=False
+        )
+
+        await inter.send(embed=embed)
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
