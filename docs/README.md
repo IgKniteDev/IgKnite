@@ -1,7 +1,7 @@
 # IgKnite: Available Commands
 IgKnite currentry has a total of 36 available bot commands, roughly distributed among four categories. All the commands are built on Discord's bleeding edge API and use the latest features.
 
-The following is a list of all the available commands (updated: October 11, 2022).
+The following is a list of all the available commands (updated: October 13, 2022).
 
 ## The Customization Commands
 ### /makerole [name]
@@ -149,3 +149,51 @@ The current stats include:
 
 ### /roleinfo [role]
 Shows all important information related to a specific role.
+
+
+## The Music Commands
+### /play [keyword]
+Searches a soundtrack with the given *keyword* and adds it to the queue.
+
+### /pause
+Pauses the currently playing song.
+
+### /resume
+Resumes the currently playing song.
+
+### /stop
+Stops playing the song and clears the queue.
+
+### /join
+Joins the VC you are in.
+
+### /leave
+Leaves the VC you are in (duh?).
+
+### /volume [volume]
+Sets the volume of the playing song. Just say `/volume 50`.
+
+### /now
+Displays an interactive control view for the current song.
+
+The stats include:
+
+    - Song name
+    - Song duration
+    - Requester
+
+The control panel has following buttons:
+
+    - Toggle loop
+    - Skip
+    - Vulume
+    - Redirect (opens the original source)
+
+### /skip
+Vote to skip a song. The requester can automatically skip.
+
+### /queue
+Shows the player's queue.
+
+### /rmqueue [index]
+Removes a song from the queue at a given *index*.
