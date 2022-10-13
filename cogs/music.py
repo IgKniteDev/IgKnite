@@ -221,9 +221,10 @@ class Spotify:
         id: Any
     ) -> str:
         meta = spotify.track(id)
+        name = meta['name']
         album = meta['album']['name']
         artist = meta['album']['artists'][0]['name']
-        return f'{artist} - {album}'
+        return f'{artist} - {name} ({album})'
 
 
 # View for the `now` command.
@@ -913,12 +914,12 @@ class Music(commands.Cog):
 
         else:
             song = Song(source)
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f'Enqueued {song.source.title} from YouTube.'
-            )
-
             await inter.voice_state.songs.put(song)
+
             if send_embed:
+                embed = core.TypicalEmbed(inter).set_title(
+                    value=f'Enqueued {song.source.title} from YouTube.'
+                )
                 await inter.send(
                     embed=embed,
                     view=PlayCommandView(
@@ -1005,6 +1006,29 @@ class Music(commands.Cog):
         message: disnake.Message
     ) -> None:
         await self._play_backend(inter, message.content)
+
+    # playrich
+    @commands.slash_command(
+        name='playrich',
+        description='Tries to enqueue a song from one\'s Spotify rich presence.',
+        options=[
+            Option(
+                'member',
+                'Mention the server member.',
+                OptionType.user
+            )
+        ],
+        dm_permission=False
+    )
+    async def _playrich(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member | None = None
+    ) -> None:
+        for activity in member.activities:
+            if isinstance(activity, disnake.Spotify):
+                track = Spotify.get_track_features(activity.track_id)
+                await self._play_backend(inter, track)
 
 
 # The setup() function for the cog.
