@@ -48,6 +48,10 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
     ).add_field(
         name='Uptime',
         value=f'{h}h {m}m {s}s'
+    ).add_field(
+        name='Patch Version',
+        value=core.BOT_METADATA['VERSION'],
+        inline=False
     )
 
     return embed
@@ -63,12 +67,6 @@ class PingCommandView(disnake.ui.View):
         super().__init__(timeout=timeout)
         self.inter = inter
 
-        self.add_item(disnake.ui.Button(
-            label=core.BOT_METADATA['VERSION'],
-            style=disnake.ButtonStyle.gray,
-            disabled=True)
-        )
-
     @disnake.ui.button(label='Refresh', style=disnake.ButtonStyle.gray)
     async def _refresh(
         self,
@@ -77,6 +75,9 @@ class PingCommandView(disnake.ui.View):
     ) -> None:
         embed = await _ping_backend(inter)
         await inter.edit_original_message(embed=embed, view=self)
+
+    async def on_timeout(self) -> None:
+        return await super().on_timeout()
 
 
 # View for the 'help' command.
