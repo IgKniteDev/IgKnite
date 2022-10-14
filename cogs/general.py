@@ -63,6 +63,12 @@ class PingCommandView(disnake.ui.View):
         super().__init__(timeout=timeout)
         self.inter = inter
 
+        self.add_item(disnake.ui.Button(
+            label=core.BOT_METADATA['VERSION'],
+            style=disnake.ButtonStyle.gray,
+            disabled=True)
+        )
+
     @disnake.ui.button(label='Refresh', style=disnake.ButtonStyle.gray)
     async def _refresh(
         self,
