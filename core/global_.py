@@ -64,3 +64,11 @@ def initialize() -> None:
         # global variable to store sniped messages
         global snipeables
         snipeables = []
+
+        # global variable to store the bot's metadata
+        global metadata
+        metadata = {
+            'repository': 'https://github.com/IgKniteDev/IgKnite',
+            'documentation': 'https://igknition.ml/docs',
+            'version': '2022.10.14'
+        }
