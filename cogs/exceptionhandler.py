@@ -12,6 +12,7 @@ from typing import Any
 
 import disnake
 from disnake.ext import commands
+from disnake import errors
 
 import core
 
@@ -32,8 +33,16 @@ class ExceptionHandler(commands.Cog):
     ) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
-
+    
+        # MissingPermissions
         if (
+            isinstance(error, commands.errors.MissingPermissions)
+            or isinstance(error, errors.Forbidden)
+        ):
+            embed.set_title('Nice try! You don\'t have permission to do that.')
+
+        # MissingRole
+        elif (
             isinstance(error, commands.errors.MissingRole)
             or isinstance(error, commands.errors.MissingAnyRole)
         ):
@@ -41,7 +50,65 @@ class ExceptionHandler(commands.Cog):
 
         else:
             embed.set_title('Whoops! An alien error occured.')
+        
+        embed.set_description(str(error))
+        await inter.send(embed=embed, ephemeral=True)
+    
+    @commands.Cog.listener()
+    async def on_user_command_error(
+        self,
+        inter: disnake.CommandInteraction,
+        error: Any
+    ) -> None:
+        error = getattr(error, 'original', error)
+        embed = core.TypicalEmbed(inter, is_error=True)
 
+        # MissingPermissions
+        if (
+            isinstance(error, commands.errors.MissingPermissions)
+            or isinstance(error, errors.Forbidden)
+        ):
+            embed.set_title('Nice try! You don\'t have permission to do that.')
+
+        # MissingRole
+        elif (
+            isinstance(error, commands.errors.MissingRole)
+            or isinstance(error, commands.errors.MissingAnyRole)
+        ):
+            embed.set_title('Whoops! You\'re missing a role.')
+
+        else:
+            embed.set_title('Whoops! An alien error occured.')
+        
+        embed.set_description(str(error))
+        await inter.send(embed=embed, ephemeral=True)
+
+    @commands.Cog.listener()
+    async def on_message_command_error(
+        self,
+        inter: disnake.CommandInteraction,
+        error: Any
+    ) -> None:
+        error = getattr(error, 'original', error)
+        embed = core.TypicalEmbed(inter, is_error=True)
+    
+        # MissingPermissions
+        if (
+            isinstance(error, commands.errors.MissingPermissions)
+            or isinstance(error, errors.Forbidden)
+        ):
+            embed.set_title('Nice try! You don\'t have permission to do that.')
+
+        # MissingRole
+        elif (
+            isinstance(error, commands.errors.MissingRole)
+            or isinstance(error, commands.errors.MissingAnyRole)
+        ):
+            embed.set_title('Whoops! You\'re missing a role.')
+
+        else:
+            embed.set_title('Whoops! An alien error occured.')
+        
         embed.set_description(str(error))
         await inter.send(embed=embed, ephemeral=True)
 
