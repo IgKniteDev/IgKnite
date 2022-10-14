@@ -33,7 +33,7 @@ class ExceptionHandler(commands.Cog):
     ) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
-    
+
         # MissingPermissions
         if (
             isinstance(error, commands.errors.MissingPermissions)
@@ -50,10 +50,10 @@ class ExceptionHandler(commands.Cog):
 
         else:
             embed.set_title('Whoops! An alien error occured.')
-        
+
         embed.set_description(str(error))
         await inter.send(embed=embed, ephemeral=True)
-    
+
     @commands.Cog.listener()
     async def on_user_command_error(
         self,
@@ -79,7 +79,7 @@ class ExceptionHandler(commands.Cog):
 
         else:
             embed.set_title('Whoops! An alien error occured.')
-        
+
         embed.set_description(str(error))
         await inter.send(embed=embed, ephemeral=True)
 
@@ -91,7 +91,7 @@ class ExceptionHandler(commands.Cog):
     ) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
-    
+
         # MissingPermissions
         if (
             isinstance(error, commands.errors.MissingPermissions)
@@ -108,7 +108,7 @@ class ExceptionHandler(commands.Cog):
 
         else:
             embed.set_title('Whoops! An alien error occured.')
-        
+
         embed.set_description(str(error))
         await inter.send(embed=embed, ephemeral=True)
 

@@ -420,7 +420,9 @@ class Song:
     ) -> Tuple[core.TypicalEmbed, disnake.ui.View]:
         duration = 'Live' if not self.source.duration else self.source.duration
 
-        embed = core.TypicalEmbed(inter).add_field(
+        embed = core.TypicalEmbed(inter).set_title(
+            value=self.source.title
+        ).add_field(
             name='Duration',
             value=duration
         ).add_field(
@@ -429,7 +431,6 @@ class Song:
         ).set_image(
             url=self.source.thumbnail
         )
-        embed.title = self.source.title
         view = NowCommandView(inter=inter, url=self.source.url)
 
         return embed, view
