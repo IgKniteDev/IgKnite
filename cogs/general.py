@@ -77,8 +77,8 @@ class PingCommandView(disnake.ui.View):
 class HelpCommandView(disnake.ui.View):
     def __init__(self):
         super().__init__()
-        self.add_item(disnake.ui.Button(label="Github", url=global_.repository))
-        self.add_item(disnake.ui.Button(label="Docs", url=global_.documentation))
+        self.add_item(disnake.ui.Button(label="Github", url=global_.metadata.get('repository')))
+        self.add_item(disnake.ui.Button(label="Docs", url=global_.metadata.get('documentation')))
 
 
 # The actual cog.
