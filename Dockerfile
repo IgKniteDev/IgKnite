@@ -12,5 +12,5 @@ RUN apt-get -y update && apt-get -y upgrade && apt-get install -y --no-install-r
 # Copy project files to working directory.
 COPY . .
 
-# Run.
-CMD [ "python", "main.py" ]
+# Real-time project view.
+ENV PYTHONUNBUFFERED 1
