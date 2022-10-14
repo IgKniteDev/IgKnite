@@ -73,6 +73,14 @@ class PingCommandView(disnake.ui.View):
         await inter.edit_original_message(embed=embed, view=self)
 
 
+# View for the 'help' commands
+class HelpCommandView(disnake.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.add_item(disnake.ui.Button(label="Github", url=global_.github))
+        self.add_item(disnake.ui.Button(label="Docs", url=global_.docs))
+
+
 # The actual cog.
 class General(commands.Cog):
     def __init__(
@@ -141,35 +149,24 @@ class General(commands.Cog):
         await inter.send(embed=embed, view=PingCommandView(inter=inter))
 
     # help
-    @commands.slash_command(
-        name='help',
-        description='Get started with IgKnite!'
-    )
-    async def _help(
-        self,
-        inter: disnake.CommandInteraction
-    ) -> None:
-        embed = core.TypicalEmbed(inter).set_title(
-            value='Get started with IgKnite!'
+    @commands.slash_command(description="Getting started with IgKnite")
+    async def help(inter):
+        embed = core.TypicalEmbed(
+            inter=inter,
+            disabled_footer=True
+        ).set_title(
+            value="Getting started with IgKnite!"
         ).add_field(
-            name='What is this?',
-            value='IgKnite is an open-source Discord bot for moderation and music.',
+            name="What is this?",
+            value="IgKnite is an open-source Discord bot for moderation and music.",
             inline=False
         ).add_field(
-            name='Where can I find the commands?',
-            value='You can find them by typing `/` in any server.',
-            inline=False
-        ).add_field(
-            name='Where can I find the source code?',
-            value='You can find it [here](https://github.com/IgKniteDev/IgKnite).',
-            inline=False
-        ).add_field(
-            name='Where can I find the documentation?',
-            value='You can find it [here](https://igknition.ml/docs/reference.html).',
+            name="Where can I find the commands?",
+            value="You can find them by typing `/` in any server.",
             inline=False
         )
 
-        await inter.send(embed=embed)
+        await inter.send(embed=embed, view=HelpCommandView())
 
 
 # The setup() function for the cog.
