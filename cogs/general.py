@@ -73,12 +73,12 @@ class PingCommandView(disnake.ui.View):
         await inter.edit_original_message(embed=embed, view=self)
 
 
-# View for the 'help' commands
+# View for the 'help' command.
 class HelpCommandView(disnake.ui.View):
     def __init__(self):
         super().__init__()
-        self.add_item(disnake.ui.Button(label="Github", url=global_.repository))
-        self.add_item(disnake.ui.Button(label="Docs", url=global_.documentation))
+        self.add_item(disnake.ui.Button(label='GitHub', url=core.BOT_METADATA['REPOSITORY']))
+        self.add_item(disnake.ui.Button(label='Documentation', url=core.BOT_METADATA['DOCUMENTATION']))
 
 
 # The actual cog.
@@ -150,21 +150,18 @@ class General(commands.Cog):
         await inter.send(embed=embed, view=PingCommandView(inter=inter))
 
     # help
-    @commands.slash_command(description="Getting started with IgKnite")
+    @commands.slash_command(
+        name='help',
+        description='Get to know IgKnite!'
+    )
     async def help(inter):
         embed = core.TypicalEmbed(
             inter=inter,
             disabled_footer=True
         ).set_title(
-            value="Getting started with IgKnite!"
-        ).add_field(
-            name="What is this?",
-            value="IgKnite is an open-source Discord bot for moderation and music.",
-            inline=False
-        ).add_field(
-            name="Where can I find the commands?",
-            value="You can find them by typing `/` in any server.",
-            inline=False
+            value='Hey there! I\'m IgKnite.'
+        ).set_description(
+            value='I\'m a bot with no text commands (you heard that right) and I\'m here to help you manage and moderate your Discord server alongside having a midnight music party with your friends in a random voice channel. Looking forward to being friends with you!'
         )
 
         await inter.send(embed=embed, view=HelpCommandView())
