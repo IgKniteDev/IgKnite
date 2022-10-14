@@ -77,7 +77,10 @@ class PingCommandView(disnake.ui.View):
         await inter.edit_original_message(embed=embed, view=self)
 
     async def on_timeout(self) -> None:
-        return await super().on_timeout()
+        for children in self.children:
+            children.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # View for the 'help' command.
