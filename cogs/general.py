@@ -83,14 +83,6 @@ class PingCommandView(disnake.ui.View):
         await self.inter.edit_original_message(view=self)
 
 
-# View for the 'help' command.
-class HelpCommandView(disnake.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.add_item(disnake.ui.Button(label='GitHub', url=core.BOT_METADATA['REPOSITORY']))
-        self.add_item(disnake.ui.Button(label='Documentation', url=core.BOT_METADATA['DOCUMENTATION']))
-
-
 # The actual cog.
 class General(commands.Cog):
     def __init__(
@@ -174,7 +166,15 @@ class General(commands.Cog):
             value='I\'m a bot with no text commands (you heard that right) and I\'m here to help you manage and moderate your Discord server alongside having a midnight music party with your friends in a random voice channel. Looking forward to being friends with you!'
         )
 
-        await inter.send(embed=embed, view=HelpCommandView())
+        view = core.SmallView(inter).add_button(
+            label='GitHub',
+            url=core.BOT_METADATA['REPOSITORY']
+        ).add_button(
+            label='Documentation',
+            url=core.BOT_METADATA['DOCUMENTATION']
+        )
+
+        await inter.send(embed=embed, view=view)
 
 
 # The setup() function for the cog.
