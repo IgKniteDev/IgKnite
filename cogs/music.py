@@ -299,17 +299,25 @@ class QueueCommandSelect(disnake.ui.Select):
         self.songs = songs
         self.inter = inter
 
+        options = self.options_from_songs(self.songs)
+
+        super().__init__(
+            placeholder='Choose your song.',
+            options=options,
+        )
+
+    def options_from_songs(self, songs) -> list:
         options = [
             disnake.SelectOption(
                 value=i,
                 label=song.source.title
             ) for i, song in enumerate(songs)
         ]
+        return options
 
-        super().__init__(
-            placeholder='Choose your song.',
-            options=options,
-        )
+    def update_songs(self, songs) -> None:
+        self.songs = songs
+        self.options = self.options_from_songs(songs)
 
     async def callback(
         self,
@@ -386,7 +394,7 @@ class QueueCommandView(disnake.ui.View):
         inter: disnake.Interaction
     ) -> None:
         self.inter.voice_state.songs.shuffle()
-        self.select.songs = self.inter.voice_state.songs
+        self.select.update_songs(self.inter.voice_state.songs)
 
         button.style = random.choice(
             [
