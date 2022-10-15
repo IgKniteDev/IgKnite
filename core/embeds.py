@@ -64,17 +64,33 @@ class SmallView(disnake.ui.View):
     Can be used for simple views with buttons.
     '''
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(
+        self,
+        inter: disnake.CommandInteraction,
+        *,
+        timeout: float = 60
+    ) -> None:
+        super().__init__(timeout=timeout)
+        self.inter = inter
 
     def add_button(
         self,
+        *,
         label: str,
-        url: str,
-        style=disnake.ButtonStyle.gray
+        url: str | None = None,
+        style=disnake.ButtonStyle.gray,
+        disabled: bool = False
     ) -> None:
         '''
         Adds a button to the view.
         '''
 
-        self.add_item(disnake.ui.Button(label=label, url=url, style=style))
+        self.add_item(disnake.ui.Button(label=label, url=url, style=style, disabled=disabled))
+        return self
+
+    async def on_timeout(self) -> None:
+        for children in self.children:
+            if children.style != disnake.ButtonStyle.link:
+                children.disabled = True
+
+        await self.inter.edit_original_message(view=self)
