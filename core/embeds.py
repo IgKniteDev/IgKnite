@@ -56,3 +56,25 @@ class TypicalEmbed(disnake.Embed):
         '''
         self.description = value
         return self
+
+
+class TypicalView(disnake.ui.View):
+    '''
+    Represents a view common to all the normal commands.
+    '''
+
+    def __init__(
+        self,
+        inter: disnake.CommandInteraction,
+        *,
+        disabled_footer: bool = False,
+        is_error: bool = False
+    ) -> None:
+        super().__init__()
+
+    def add_button(self, label: str, url: str, style=disnake.ButtonStyle.grey) -> None:
+        '''
+        Adds a button to the view.
+        '''
+        self.add_item(disnake.ui.Button(label=label, url=url, style=style))
+        return self
