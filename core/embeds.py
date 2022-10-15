@@ -71,4 +71,3 @@ class TypicalView(disnake.ui.View):
         Adds a button to the view.
         '''
         self.add_item(disnake.ui.Button(label=label, url=url, style=style))
-        return self
