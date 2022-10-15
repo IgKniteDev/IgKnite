@@ -46,7 +46,7 @@ Despite its youth, IgKnite intends to grow alongside the community, focusing on 
 
 <br>
 
-## 🪶 How to use?
+## 🪶 How to use it?
 
 In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through!
 
@@ -54,7 +54,7 @@ In order to learn about everything; from adding IgKnite to your Discord server t
 
 ## 📓 Contributing
 
-If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D 
+If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D 
 
 <br>
 
