@@ -56,3 +56,18 @@ class TypicalEmbed(disnake.Embed):
         '''
         self.description = value
         return self
+
+
+class TypicalView(disnake.ui.View):
+    '''
+    Can be used for simple views with buttons.
+    '''
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def add_button(self, label: str, url: str, style=disnake.ButtonStyle.grey) -> None:
+        '''
+        Adds a button to the view.
+        '''
+        self.add_item(disnake.ui.Button(label=label, url=url, style=style))
