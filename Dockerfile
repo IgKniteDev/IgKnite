@@ -14,3 +14,6 @@ COPY . .
 
 # Real-time project view.
 ENV PYTHONUNBUFFERED 1
+
+# Run.
+CMD [ "python", "main.py" ]
