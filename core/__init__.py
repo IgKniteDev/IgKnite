@@ -22,5 +22,5 @@ __version__ = '.'.join(__version_info__)
 BOT_METADATA = {
     'REPOSITORY': 'https://github.com/IgKniteDev/IgKnite',
     'DOCUMENTATION': 'https://igknition.ml/docs',
-    'VERSION': __version__
+    'VERSION': __version__,
 }

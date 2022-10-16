@@ -19,32 +19,25 @@ import core
 
 # The actual cog.
 class ExceptionHandler(commands.Cog):
-    def __init__(
-        self,
-        bot: core.IgKnite
-    ) -> None:
+    def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_slash_command_error(
-        self,
-        inter: disnake.CommandInteraction,
-        error: Any
+        self, inter: disnake.CommandInteraction, error: Any
     ) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
         # MissingPermissions
-        if (
-            isinstance(error, commands.errors.MissingPermissions)
-            or isinstance(error, errors.Forbidden)
+        if isinstance(error, commands.errors.MissingPermissions) or isinstance(
+            error, errors.Forbidden
         ):
             embed.set_title('Nice try! You don\'t have permission to do that.')
 
         # MissingRole
-        elif (
-            isinstance(error, commands.errors.MissingRole)
-            or isinstance(error, commands.errors.MissingAnyRole)
+        elif isinstance(error, commands.errors.MissingRole) or isinstance(
+            error, commands.errors.MissingAnyRole
         ):
             embed.set_title('Whoops! You\'re missing a role.')
 
@@ -56,24 +49,20 @@ class ExceptionHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_user_command_error(
-        self,
-        inter: disnake.CommandInteraction,
-        error: Any
+        self, inter: disnake.CommandInteraction, error: Any
     ) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
         # MissingPermissions
-        if (
-            isinstance(error, commands.errors.MissingPermissions)
-            or isinstance(error, errors.Forbidden)
+        if isinstance(error, commands.errors.MissingPermissions) or isinstance(
+            error, errors.Forbidden
         ):
             embed.set_title('Nice try! You don\'t have permission to do that.')
 
         # MissingRole
-        elif (
-            isinstance(error, commands.errors.MissingRole)
-            or isinstance(error, commands.errors.MissingAnyRole)
+        elif isinstance(error, commands.errors.MissingRole) or isinstance(
+            error, commands.errors.MissingAnyRole
         ):
             embed.set_title('Whoops! You\'re missing a role.')
 
@@ -85,24 +74,20 @@ class ExceptionHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_command_error(
-        self,
-        inter: disnake.CommandInteraction,
-        error: Any
+        self, inter: disnake.CommandInteraction, error: Any
     ) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
         # MissingPermissions
-        if (
-            isinstance(error, commands.errors.MissingPermissions)
-            or isinstance(error, errors.Forbidden)
+        if isinstance(error, commands.errors.MissingPermissions) or isinstance(
+            error, errors.Forbidden
         ):
             embed.set_title('Nice try! You don\'t have permission to do that.')
 
         # MissingRole
-        elif (
-            isinstance(error, commands.errors.MissingRole)
-            or isinstance(error, commands.errors.MissingAnyRole)
+        elif isinstance(error, commands.errors.MissingRole) or isinstance(
+            error, commands.errors.MissingAnyRole
         ):
             embed.set_title('Whoops! You\'re missing a role.')
 
