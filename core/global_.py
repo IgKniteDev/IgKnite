@@ -39,20 +39,22 @@ def initialize() -> None:
         global tokens
         tokens = {
             'discord': config('DISCORD_TOKEN', cast=str),
-            'spotify': config('SPOTIFY_CLIENT_SECRET', cast=str)
+            'spotify': config('SPOTIFY_CLIENT_SECRET', cast=str),
         }
 
         global identifiers
         identifiers = {
             'discord_owner': config('DISCORD_OWNER_ID', cast=int),
-            'spotify_client': config('SPOTIFY_CLIENT_ID', cast=str)
+            'spotify_client': config('SPOTIFY_CLIENT_ID', cast=str),
         }
 
     except UndefinedValueError:
-        logging.error('''
+        logging.error(
+            '''
             One or more secrets have been left undefined.
             Consider going through the README.md file for proper instructions on setting IgKnite up.
-        ''')
+        '''
+        )
         time.sleep(5)
         exit()
 

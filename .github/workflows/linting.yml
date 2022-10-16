@@ -1,4 +1,4 @@
-name: Linting (flake8)
+name: Lint & Format
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  flake8_lint:
-    name: Lint
+  linting:
+    name: flake8
     runs-on: ubuntu-latest
     
     steps:
@@ -24,3 +24,37 @@ jobs:
 
       - name: Run flake8
         uses: py-actions/flake8@v2
+
+  format:
+    name: black
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check
+        id: checkifneeded
+        uses: psf/black@stable
+        with:
+          options: "--check --verbose --skip-string-normalization"
+          version: "~= 22.0"
+        continue-on-error: true
+
+      - name: Format
+        uses: psf/black@stable
+        with:
+          options: "--verbose --skip-string-normalization"
+          version: "~= 22.0"
+
+      - name: Create pull request
+        if: steps.checkifneeded.outcome != 'success'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Format Python code with psf/black push"
+          commit-message: ":art: Format Python code with psf/black"
+          body: |
+            Formatter errors found in: ${{ github.sha }}.
+          base: ${{ github.head_ref }}
+          branch: actions/black

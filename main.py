@@ -20,8 +20,8 @@ bot = IgKnite(
         'cogs.general',
         'cogs.inspection',
         'cogs.moderation',
-        'cogs.music'
-    ]
+        'cogs.music',
+    ],
 )
 
 # Run!

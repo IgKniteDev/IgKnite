@@ -14,7 +14,7 @@ from .embeds import *
 
 
 # Set version number.
-__version_info__ = ('2022', '10', '14')  # Year.Month.Day
+__version_info__ = ('2022', '10', '16')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
 
 
@@ -22,5 +22,5 @@ __version__ = '.'.join(__version_info__)
 BOT_METADATA = {
     'REPOSITORY': 'https://github.com/IgKniteDev/IgKnite',
     'DOCUMENTATION': 'https://igknition.ml/docs',
-    'VERSION': __version__
+    'VERSION': __version__,
 }

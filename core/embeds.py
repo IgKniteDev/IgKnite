@@ -25,9 +25,7 @@ class TypicalEmbed(disnake.Embed):
         disabled_footer: bool = False,
         is_error: bool = False
     ) -> None:
-        super().__init__(
-            color=(3158326 if not is_error else 16608388)
-        )
+        super().__init__(color=(3158326 if not is_error else 16608388))
 
         if not disabled_footer:
             self.set_footer(
@@ -37,10 +35,10 @@ class TypicalEmbed(disnake.Embed):
                         'Stunned stork!',
                         'A perfect debugged life doesn\'t exist.',
                         'Haven\'t I made it obvious?',
-                        'Hello World, from the other side!'
+                        'Hello World, from the other side!',
                     ]
                 ),
-                icon_url=inter.author.avatar
+                icon_url=inter.author.avatar,
             )
 
     def set_title(self, value: str) -> None:
@@ -65,10 +63,7 @@ class SmallView(disnake.ui.View):
     '''
 
     def __init__(
-        self,
-        inter: disnake.CommandInteraction,
-        *,
-        timeout: float = 60
+        self, inter: disnake.CommandInteraction, *, timeout: float = 60
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
@@ -85,7 +80,9 @@ class SmallView(disnake.ui.View):
         Adds a button to the view.
         '''
 
-        self.add_item(disnake.ui.Button(label=label, url=url, style=style, disabled=disabled))
+        self.add_item(
+            disnake.ui.Button(label=label, url=url, style=style, disabled=disabled)
+        )
         return self
 
     async def on_timeout(self) -> None:
