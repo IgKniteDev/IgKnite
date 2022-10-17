@@ -315,6 +315,68 @@ class Moderation(commands.Cog):
         await member.send(embed=embed)
         await inter.send('Your message has been delivered!', ephemeral=True)
 
+    # pins
+    @commands.slash_command(
+        name='pins',
+        description='Shows all pinned messages in the current channel.',
+        dm_permission=False,
+    )
+    async def _pins(self, inter: disnake.CommandInteraction) -> None:
+        embed = core.TypicalEmbed(inter).set_title(value='Pinned Messages  📌')
+        pins = await inter.channel.pins()
+        if pins:
+            count = 1
+            for pin in pins:
+                embed.add_field(
+                    name=f'{count}. {pin.author.name}',
+                    value=f'{pin.content} \n\n',
+                    inline=False,
+                )
+        else:
+            embed.set_description(value='There are no pinned messages in this channel.')
+
+        await inter.send(embed=embed)
+
+    # clearpins
+    @commands.slash_command(
+        name='clearpins',
+        description='Clears all pinned messages in the current channel.',
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _clearpins(self, inter: disnake.CommandInteraction) -> None:
+        pins = await inter.channel.pins()
+        if pins:
+            for pin in pins:
+                await pin.unpin()
+            await inter.send('All pins have been cleared!', ephemeral=True)
+        else:
+            await inter.send('There are no pins to clear!', ephemeral=True)
+
+    # pins the last message
+    @commands.slash_command(
+        name='pin',
+        description='Pins the last message by a user to the channel.',
+        dm_permission=False,
+        options=[
+            Option(
+                'member', 'Mention the server member.', OptionType.user, required=True
+            )
+        ]
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _pin(self, inter: disnake.CommandInteraction, member: disnake.Member) -> None:
+        async for message in inter.channel.history():
+            if message.author == member:
+                await message.pin()
+                embed = core.TypicalEmbed(inter).set_title(
+                    value=f'Pinned {message.author.name}\'s message:'
+                ).set_description(
+                    value=f'{message.content} \n\n [Jump to message]({message.jump_url})'
+                )
+                await inter.send(embed=embed, ephemeral=True)
+                break
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
