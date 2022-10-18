@@ -354,7 +354,7 @@ class Moderation(commands.Cog):
 
     # pins the last message
     @commands.slash_command(
-        name='pin',
+        name='pinlast',
         description='Pins the last message by a user to the channel.',
         dm_permission=False,
         options=[
