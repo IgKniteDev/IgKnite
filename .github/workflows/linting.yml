@@ -52,9 +52,11 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Format Python code with psf/black push"
-          commit-message: ":art: Format Python code with psf/black"
+          title: "Resolved formatting errors"
+          commit-message: "format code using psf/black"
           body: |
             Formatter errors found in: ${{ github.sha }}.
           base: ${{ github.head_ref }}
           branch: actions/black
+          reviewers: hitblast
+          delete-branch: true
