@@ -10,7 +10,7 @@ from core import global_, IgKnite
 
 # Initialize the global variables from core.global_ .
 global_.initialize()
-th = 
+
 # Set up an instance of IgKnite.
 bot = IgKnite(
     intents=disnake.Intents.all(),

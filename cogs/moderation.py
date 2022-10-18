@@ -361,17 +361,21 @@ class Moderation(commands.Cog):
             Option(
                 'member', 'Mention the server member.', OptionType.user, required=True
             )
-        ]
+        ],
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _pin(self, inter: disnake.CommandInteraction, member: disnake.Member) -> None:
+    async def _pin(
+        self, inter: disnake.CommandInteraction, member: disnake.Member
+    ) -> None:
         async for message in inter.channel.history():
             if message.author == member:
                 await message.pin()
-                embed = core.TypicalEmbed(inter).set_title(
-                    value=f'Pinned {message.author.name}\'s message:'
-                ).set_description(
-                    value=f'{message.content} \n\n [Jump to message]({message.jump_url})'
+                embed = (
+                    core.TypicalEmbed(inter)
+                    .set_title(value=f'Pinned {message.author.name}\'s message:')
+                    .set_description(
+                        value=f'{message.content} \n\n [Jump to message]({message.jump_url})'
+                    )
                 )
                 await inter.send(embed=embed, ephemeral=True)
                 break
