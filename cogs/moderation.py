@@ -325,8 +325,7 @@ class Moderation(commands.Cog):
         embed = core.TypicalEmbed(inter).set_title(value='Pinned Messages  📌')
         pins = await inter.channel.pins()
         if pins:
-            count = 1
-            for pin in pins:
+            for count, pin in enumerate(pins):
                 embed.add_field(
                     name=f'{count}. {pin.author.name}',
                     value=f'{pin.content} \n\n',
