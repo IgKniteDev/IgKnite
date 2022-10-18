@@ -16,6 +16,16 @@ import core
 from core.datacls import LockRoles
 
 
+# Hex to RGB converter
+def get_color(hex: str) -> disnake.Colour:
+    hex = hex.lstrip('#')
+    try:
+        color = tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
+    except ValueError:
+        return disnake.Colour.default()
+    return disnake.Colour.from_rgb(*color)
+
+
 # The actual cog.
 class Customization(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
@@ -36,14 +46,22 @@ class Customization(commands.Cog):
                 'Give a name for the new role.',
                 OptionType.string,
                 required=True,
+            ),
+            Option(
+                'color',
+                'Give a color for the new role in Hex.',
+                OptionType.string,
+                required=False
             )
         ],
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _makerole(self, inter: disnake.CommandInteraction, name: str) -> None:
-        role = await inter.guild.create_role(name=name)
-        await inter.send(f'Role {role.mention} has been created!')
+    async def _makerole(self, inter: disnake.CommandInteraction, name: str, color: str = '#000000') -> None:
+        color = get_color(color)
+        await inter.guild.create_role(name=name, color=color)
+        embed = disnake.Embed(description=f'Role `{name}` has been created.', color=color)
+        await inter.send(embed=embed)
 
     # assignrole
     @commands.slash_command(
