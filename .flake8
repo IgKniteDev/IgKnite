@@ -4,3 +4,4 @@ per-file-ignores =
     core/__init__.py:F401,F403
     core/global_.py:F841
     cogs/general.py:E501
+    cogs/customization.py:E203
