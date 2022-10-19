@@ -20,7 +20,7 @@ from core.datacls import LockRoles
 def get_color(hex: str) -> disnake.Colour:
     hex = hex.lstrip('#')
     try:
-        color = tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
+        color = tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
     except ValueError:
         return disnake.Colour.default()
     return disnake.Colour.from_rgb(*color)
@@ -51,16 +51,20 @@ class Customization(commands.Cog):
                 'color',
                 'Give a color for the new role in Hex.',
                 OptionType.string,
-                required=False
-            )
+                required=False,
+            ),
         ],
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _makerole(self, inter: disnake.CommandInteraction, name: str, color: str = '#000000') -> None:
+    async def _makerole(
+        self, inter: disnake.CommandInteraction, name: str, color: str = '#000000'
+    ) -> None:
         color = get_color(color)
         await inter.guild.create_role(name=name, color=color)
-        embed = disnake.Embed(description=f'Role `{name}` has been created.', color=color)
+        embed = disnake.Embed(
+            description=f'Role `{name}` has been created.', color=color
+        )
         await inter.send(embed=embed)
 
     # assignrole
