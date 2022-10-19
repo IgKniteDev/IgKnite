@@ -10,8 +10,8 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Imports.
 import math
 from time import mktime
-from typing import List
 from datetime import datetime
+from typing import List, Tuple
 
 import disnake
 from disnake import Option, OptionType, Invite
@@ -22,63 +22,13 @@ import core
 from core.datacls import LockRoles
 
 
-# Selection menu for the `invites` command.
-class InviteCommandSelect(disnake.ui.Select):
-    def __init__(
-        self, inter: disnake.CommandInteraction, invites: List[Invite]
-    ) -> None:
-        self.inter = inter
-        self.invites = invites[0:25]
-
-        options = []
-        for i in range(len(self.invites)):
-            options.append(
-                disnake.SelectOption(
-                    label=f'#{i + 1} - {invites[i].code}',
-                    value=i,
-                    description=invites[i].inviter.name,
-                )
-            )
-
-        super().__init__(options=options)
-
-    async def callback(self, inter: disnake.MessageInteraction) -> None:
-        index = int(self.values[0])
-        invite = self.invites[index]
-
-        if invite.max_age == 0:
-            max_age = 'never'
-        else:
-            date_time = datetime.fromtimestamp(mktime(invite.expires_at.timetuple()))
-            max_age = f'<t:{int(mktime(date_time.timetuple()))}:R>'
-
-        if invite.max_uses == 0:
-            usage = f'{invite.uses} / ∞'
-        else:
-            usage = f'{invite.uses} / {invite.max_uses}'
-
-        embed = (
-            core.TypicalEmbed(inter)
-            .set_title(value=f'Invite | `{invite.code}`')
-            .add_field(name='Inviter', value=invite.inviter)
-            .add_field(name='Code', value=invite.code)
-            .add_field(name='Link', value=f'https://discord.gg/{invite.code}')
-            .add_field(name='Expires', value=max_age)
-            .add_field(name='Usage', value=usage)
-        )
-
-        await inter.response.send_message(embed=embed, ephemeral=True)
-
-
 # View for the `invites` command.
 class InviteCommandView(disnake.ui.View):
     def __init__(
         self,
-        inter: disnake.CommandInteraction,
         page_loader,
         top_page: int = 1,
         page: int = 1,
-        invites: List[Invite] = [],
         timeout: float = 60,
     ) -> None:
         super().__init__(timeout=timeout)
@@ -86,8 +36,6 @@ class InviteCommandView(disnake.ui.View):
         self.page_loader = page_loader
         self.top_page = top_page
         self.page = page
-        self.invites = []
-        self.add_item(InviteCommandSelect(inter, invites))
 
         if self.page + 1 > self.top_page:
             self.children[1].disabled = True
@@ -108,7 +56,7 @@ class InviteCommandView(disnake.ui.View):
         style=disnake.ButtonStyle.gray,
         disabled=True,
     )
-    async def go_down(
+    async def previous(
         self, _: disnake.ui.Button, inter: disnake.MessageInteraction
     ) -> None:
         self.page -= 1
@@ -121,7 +69,7 @@ class InviteCommandView(disnake.ui.View):
         )
 
     @disnake.ui.button(label='Next', style=disnake.ButtonStyle.gray)
-    async def go_up(
+    async def next(
         self, _: disnake.ui.Button, inter: disnake.MessageInteraction
     ) -> None:
         self.page += 1
@@ -263,7 +211,7 @@ class Inspection(commands.Cog):
         invites_per_page = 5
         top_page = math.ceil(len(invites) / invites_per_page)
 
-        async def load_page(page_num: int) -> core.TypicalEmbed:
+        async def page_loader(page_num: int) -> Tuple[core.TypicalEmbed, List[Invite]]:
             page = page_num
 
             embed = (
@@ -274,7 +222,7 @@ class Inspection(commands.Cog):
             if invites:
                 embed.set_footer(text=f'{page}/{top_page}')
             else:
-                embed.set_description("There are no invites to this server yet")
+                embed.set_description('There are no invites to this server yet.')
 
             for i in range(
                 (page_num * invites_per_page) - invites_per_page,
@@ -299,15 +247,13 @@ class Inspection(commands.Cog):
 
             return embed
 
-        embed = await load_page(page)
+        embed = await page_loader(page)
         await inter.send(
             embed=embed,
             view=InviteCommandView(
-                inter=inter,
-                page_loader=load_page,
+                page_loader=page_loader,
                 top_page=top_page,
                 page=page,
-                invites=await inter.guild.invites(),
             )
             if invites
             else MISSING,
