@@ -281,13 +281,10 @@ class Inspection(commands.Cog):
         if member:
             await inter.send(
                 f'Revoked {deletion_count} invites made by {member.mention}.',
-                ephemeral=True
+                ephemeral=True,
             )
         else:
-            await inter.send(
-                f'Revoked {deletion_count} invites.',
-                ephemeral=True
-            )
+            await inter.send(f'Revoked {deletion_count} invites.', ephemeral=True)
 
     # audit
     @commands.slash_command(
