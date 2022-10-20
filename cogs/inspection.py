@@ -259,6 +259,33 @@ class Inspection(commands.Cog):
             else MISSING,
         )
 
+    # revokeinvites
+    @commands.slash_command(
+        name='revokeinvites',
+        description='Revokes invites. By default this removes all invites but you can choose a server member.',
+        options=[Option('member', 'Mention the server member.', OptionType.user)],
+    )
+    async def _revokeinvites(
+        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+    ) -> None:
+        deletion_count = 0
+
+        await inter.response.defer()
+        for invite in await inter.guild.invites():
+            if (member and invite.inviter == member) or (not member):
+                await invite.delete()
+                deletion_count += 1
+            else:
+                pass
+
+        if member:
+            await inter.send(
+                f'Revoked {deletion_count} invites made by {member.mention}.',
+                ephemeral=True,
+            )
+        else:
+            await inter.send(f'Revoked {deletion_count} invites.', ephemeral=True)
+
     # audit
     @commands.slash_command(
         name='audit',
