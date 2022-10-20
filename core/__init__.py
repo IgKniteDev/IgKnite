@@ -14,7 +14,7 @@ from .embeds import *
 
 
 # Set version number.
-__version_info__ = ('2022', '10', '19')  # Year.Month.Day
+__version_info__ = ('2022', '10', '20')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
 
 
