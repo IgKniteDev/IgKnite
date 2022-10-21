@@ -5,38 +5,39 @@ on:
     branches:
       - main
 
-format:
-  name: black
-  runs-on: ubuntu-latest
+jobs:
+  format:
+    name: black
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Check
-      id: checkifneeded
-      uses: psf/black@stable
-      with:
-        options: "--check --verbose --skip-string-normalization"
-        version: "~= 22.0"
-      continue-on-error: true
+      - name: Check
+        id: checkifneeded
+        uses: psf/black@stable
+        with:
+          options: "--check --verbose --skip-string-normalization"
+          version: "~= 22.0"
+        continue-on-error: true
 
-    - name: Format
-      uses: psf/black@stable
-      with:
-        options: "--verbose --skip-string-normalization"
-        version: "~= 22.0"
+      - name: Format
+        uses: psf/black@stable
+        with:
+          options: "--verbose --skip-string-normalization"
+          version: "~= 22.0"
 
-    - name: Create pull request
-      if: steps.checkifneeded.outcome != 'success'
-      uses: peter-evans/create-pull-request@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        title: "Resolved formatting errors"
-        commit-message: "format code using psf/black"
-        body: |
-          Formatter errors found in: ${{ github.sha }}.
-        base: ${{ github.head_ref }}
-        branch: actions/black
-        reviewers: hitblast
-        delete-branch: true
+      - name: Create pull request
+        if: steps.checkifneeded.outcome != 'success'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Resolved formatting errors"
+          commit-message: "format code using psf/black"
+          body: |
+            Formatter errors found in: ${{ github.sha }}.
+          base: ${{ github.head_ref }}
+          branch: actions/black
+          reviewers: hitblast
+          delete-branch: true
