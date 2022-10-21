@@ -363,13 +363,15 @@ class Moderation(commands.Cog):
                 OptionType.integer,
                 min_value=0,
                 max_value=21600,
-                required=False
+                required=False,
             )
         ],
-        dm_permission=False
+        dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _slowmode(self, inter: disnake.CommandInteraction, seconds: int = 30) -> None:
+    async def _slowmode(
+        self, inter: disnake.CommandInteraction, seconds: int = 30
+    ) -> None:
         await inter.channel.edit(slowmode_delay=seconds)
         await inter.send(f'Slowmode has been set to **{seconds}** seconds.')
 
