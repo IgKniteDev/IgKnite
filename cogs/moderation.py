@@ -352,6 +352,38 @@ class Moderation(commands.Cog):
         else:
             await inter.send('There are no pins to clear!', ephemeral=True)
 
+    # slowmode
+    @commands.slash_command(
+        name='slowmode',
+        description='Sets the slowmode of the current channel.',
+        options=[
+            Option(
+                'seconds',
+                'The amount of seconds to set the slowmode to.',
+                OptionType.integer,
+                min_value=0,
+                max_value=21600,
+                required=False
+            )
+        ],
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _slowmode(self, inter: disnake.CommandInteraction, seconds: int = 30) -> None:
+        await inter.channel.edit(slowmode_delay=seconds)
+        await inter.send(f'Slowmode has been set to **{seconds}** seconds.')
+
+    # slowmodeoff
+    @commands.slash_command(
+        name='noslomo',
+        description='Turns off slowmode in the current channel.',
+        dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _noslomo(self, inter: disnake.CommandInteraction) -> None:
+        await inter.channel.edit(slowmode_delay=0)
+        await inter.send('Slowmode has been turned off.')
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
