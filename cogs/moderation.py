@@ -9,7 +9,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import disnake
-from disnake import Option, OptionType
+from disnake import Option, OptionType, OptionChoice
 from disnake.ext import commands
 
 import core
@@ -355,22 +355,37 @@ class Moderation(commands.Cog):
     # slowmode
     @commands.slash_command(
         name='slowmode',
-        description='Sets the slowmode of the current channel.',
+        description='Sets slowmode for the current channel.',
         options=[
             Option(
                 'seconds',
-                'The amount of seconds to set the slowmode to, 0 to disable.',
+                'The amount of seconds to set the slowmode to. Set 0 to disable.',
                 OptionType.integer,
                 min_value=0,
                 max_value=21600,
-                required=False,
+                choices=[
+                    OptionChoice('5s', 5),
+                    OptionChoice('10s', 10),
+                    OptionChoice('15s', 15),
+                    OptionChoice('30s', 30),
+                    OptionChoice('1m', 60),
+                    OptionChoice('2m', 120),
+                    OptionChoice('5m', 300),
+                    OptionChoice('10m', 600),
+                    OptionChoice('15m', 900),
+                    OptionChoice('30m', 1800),
+                    OptionChoice('1h', 3600),
+                    OptionChoice('2h', 7200),
+                    OptionChoice('6h', 21600)
+                ],
+                required=True
             )
         ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _slowmode(
-        self, inter: disnake.CommandInteraction, seconds: int = 30
+        self, inter: disnake.CommandInteraction, seconds: int
     ) -> None:
         await inter.channel.edit(slowmode_delay=seconds)
         await inter.send(f'Slowmode has been set to **{seconds}** seconds.')
