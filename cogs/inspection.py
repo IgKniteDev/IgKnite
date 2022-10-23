@@ -264,6 +264,7 @@ class Inspection(commands.Cog):
         name='revokeinvites',
         description='Revokes invites. By default this removes all invites but you can choose a server member.',
         options=[Option('member', 'Mention the server member.', OptionType.user)],
+        dm_permission=False,
     )
     async def _revokeinvites(
         self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
