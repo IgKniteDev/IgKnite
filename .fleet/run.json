@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "run bot",
+            "program": "python",
+            "args": ["main.py"]
+        }
+    ]
+}
