@@ -67,3 +67,4 @@ class IgKnite(commands.AutoShardedInteractionBot):
         for channel in guild.channels:
             if channel.name.startswith('Members:'):
                 await channel.edit(name=f'Members: {guild.member_count}')
+                break
