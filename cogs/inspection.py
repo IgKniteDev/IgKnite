@@ -313,6 +313,50 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed, ephemeral=True)
 
+    # show member count in VC
+    @commands.slash_command(
+        name='membercount',
+        description='Shows the current member count in the server.',
+        options=[
+            Option(
+                'sticky',
+                'Set True to show member count in side bar.',
+                OptionType.boolean,
+            )
+        ],
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _membercount(
+        self, inter: disnake.CommandInteraction, sticky: bool = False
+    ) -> None:
+        embed = (
+            core.TypicalEmbed(inter)
+            .set_title(value='Member Count')
+            .set_description(
+                value=f'There are currently {len(inter.guild.members)} members in the server.'
+            )
+        )
+
+        for channel in inter.guild.channels:
+            if channel.name.startswith('Members:'):
+                await channel.delete()
+
+        if sticky:
+            await inter.guild.create_voice_channel(
+                name=f'Members: {inter.guild.member_count}',
+                position=0,
+                overwrites={
+                    inter.guild.default_role: disnake.PermissionOverwrite(connect=False),
+                    inter.guild.me: disnake.PermissionOverwrite(manage_channels=True, connect=False),
+                }
+            )
+            embed.set_footer(text='Sticky mode enabled.')
+            await inter.send(embed=embed)
+
+        else:
+            await inter.send(embed=embed)
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
