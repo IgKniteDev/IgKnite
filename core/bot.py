@@ -61,3 +61,9 @@ class IgKnite(commands.AutoShardedInteractionBot):
         global_.snipeables.append(message)
         await asyncio.sleep(25)
         global_.snipeables.remove(message)
+
+    async def on_member_join(self, member: disnake.Member) -> None:
+        guild = member.guild
+        for channel in guild.channels:
+            if channel.name.startswith('Members:'):
+                await channel.edit(name=f'Members: {guild.member_count}')
