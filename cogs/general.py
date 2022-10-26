@@ -79,7 +79,7 @@ class General(commands.Cog):
     async def _avatar_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member = None
     ) -> None:
-        member = inter.author if not member else member
+        member = member or inter.author
 
         embed = (
             core.TypicalEmbed(inter)
