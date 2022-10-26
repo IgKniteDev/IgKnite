@@ -374,7 +374,7 @@ class Song:
     def create_embed(
         self, inter: disnake.CommandInteraction
     ) -> Tuple[core.TypicalEmbed, disnake.ui.View]:
-        duration = 'Live' if not self.source.duration else self.source.duration
+        duration = self.source.duration or 'Live'
 
         embed = (
             core.TypicalEmbed(inter)
