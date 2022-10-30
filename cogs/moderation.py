@@ -402,10 +402,10 @@ class Moderation(commands.Cog):
             ),
         )
 
-        embed = core.TypicalEmbed(inter).set_title(
-            value='Added these words to banned list:'
-        ).set_description(
-            value=', '.join(keywords)
+        embed = (
+            core.TypicalEmbed(inter)
+            .set_title(value='Added these words to banned list:')
+            .set_description(value=', '.join(keywords))
         )
         await inter.send(embed=embed)
 
