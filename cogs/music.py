@@ -8,24 +8,21 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
-import random
 import asyncio
 import functools
 import itertools
+import random
 from typing import Any, Tuple
-from async_timeout import timeout
-
-import youtube_dl
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
-
-import disnake
-from disnake import Option, OptionType, ChannelType
-from disnake.ext import commands
 
 import core
+import disnake
+import spotipy
+import youtube_dl
+from async_timeout import timeout
 from core import global_
-
+from disnake import ChannelType, Option, OptionType
+from disnake.ext import commands
+from spotipy.oauth2 import SpotifyClientCredentials
 
 # Bug reports message.
 youtube_dl.utils.bug_reports_message = lambda: ''

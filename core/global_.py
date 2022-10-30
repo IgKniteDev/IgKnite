@@ -8,11 +8,11 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
-import time
 import logging
+import time
 from datetime import datetime
 
-from decouple import config, UndefinedValueError
+from decouple import UndefinedValueError, config
 
 
 # The initialize() function.

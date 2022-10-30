@@ -8,13 +8,12 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
-import disnake
-from disnake import Option, OptionType, OptionChoice
-from disnake.ext import commands
-
 import core
+import disnake
 from core import global_
 from core.datacls import LockRoles
+from disnake import Option, OptionChoice, OptionType
+from disnake.ext import commands
 
 
 # The actual cog.

@@ -8,15 +8,14 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
+import core
 import disnake
-from disnake import Option, OptionType, ChannelType
+from core.datacls import LockRoles
+from disnake import ChannelType, Option, OptionType
 from disnake.ext import commands
 
-import core
-from core.datacls import LockRoles
 
-
-# Hex to RGB converter
+# Hex to RGB converter.
 def get_color(hex: str) -> disnake.Colour:
     hex = hex.lstrip('#')
     try:
