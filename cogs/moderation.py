@@ -10,7 +10,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Imports.
 import core
 import disnake
-from core import global_
+from core import keychain
 from core.datacls import LockRoles
 from disnake import Option, OptionChoice, OptionType
 from disnake.ext import commands
@@ -236,8 +236,8 @@ class Moderation(commands.Cog):
         webhook: disnake.Webhook = None
         sniped_count: int = 0
 
-        if global_.snipeables:
-            for snipeable in global_.snipeables:
+        if keychain.snipeables:
+            for snipeable in keychain.snipeables:
                 if snipeable.guild == inter.guild:
                     if webhook and webhook.name == snipeable.author.display_name:
                         pass

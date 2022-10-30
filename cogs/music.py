@@ -19,7 +19,7 @@ import disnake
 import spotipy
 import youtube_dl
 from async_timeout import timeout
-from core import global_
+from core import keychain
 from disnake import ChannelType, Option, OptionType
 from disnake.ext import commands
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -30,8 +30,7 @@ youtube_dl.utils.bug_reports_message = lambda: ''
 # Creating a spotipy.Spotify instance.
 spotify = spotipy.Spotify(
     auth_manager=SpotifyClientCredentials(
-        client_id=global_.identifiers['spotify_client'],
-        client_secret=global_.tokens['spotify'],
+        client_id=keychain.spotify_client_id, client_secret=keychain.spotify_client_secret
     )
 )
 
