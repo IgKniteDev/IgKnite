@@ -388,6 +388,54 @@ class Moderation(commands.Cog):
         await inter.channel.edit(slowmode_delay=seconds)
         await inter.send(f'Slowmode has been set to **{seconds}** seconds.')
 
+    # add keyword to automod rule
+    @commands.slash_command(
+        name="banword",
+        description="Add keywords to ban.",
+        options=[
+            Option(
+                "keywords",
+                "The keywords you want to add to the automod rule, separated by comma.",
+                OptionType.string,
+                required=True,
+            )
+        ],
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _banword(
+        self, inter: disnake.CommandInteraction, keywords: str
+    ) -> None:
+
+        keywords = keywords.split(",")
+        try:
+            rules = await inter.guild.fetch_automod_rules()
+            for i in rules:
+                if i.name == "Igknite Banwords":
+                    rule = i
+                    break
+            else:
+                rule = None
+        except disnake.NotFound:
+            rule = None
+
+        if rule is None:
+            rule = await inter.guild.create_automod_rule(
+                    name="Igknite Banwords",
+                    event_type=disnake.AutoModEventType.message_send,
+                    trigger_type=disnake.AutoModTriggerType.keyword,
+                    trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
+                    actions=[disnake.AutoModBlockMessageAction()],
+                    enabled=True
+                )
+        meta = rule.trigger_metadata
+        await rule.edit(
+            trigger_metadata=meta.with_changes(
+                keyword_filter=meta.keyword_filter + keywords,
+            ),
+        )
+        await inter.send(f"Added `{keywords}` to the banword list.")
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
