@@ -6,7 +6,8 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import disnake
-from core import global_, IgKnite
+
+from core import IgKnite, global_
 
 # Initialize the global variables from core.global_ .
 global_.initialize()

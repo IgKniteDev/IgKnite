@@ -10,11 +10,10 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Imports.
 from typing import Any
 
-import disnake
-from disnake.ext import commands
-from disnake import errors
-
 import core
+import disnake
+from disnake import errors
+from disnake.ext import commands
 
 
 # The actual cog.

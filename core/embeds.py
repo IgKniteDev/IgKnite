@@ -9,6 +9,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import random
+
 import disnake
 
 

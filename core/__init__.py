@@ -8,10 +8,10 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Initialize scripts.
-from . import datacls as datacls, global_ as global_
+from . import datacls as datacls
+from . import global_ as global_
 from .bot import *
 from .embeds import *
-
 
 # Set version number.
 __version_info__ = ('2022', '10', '21')  # Year.Month.Day
