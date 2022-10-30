@@ -363,7 +363,7 @@ class Moderation(commands.Cog):
         options=[
             Option(
                 'keywords',
-                'The keywords you want to add to the automod rule, separated by comma.',
+                'The keywords you want to add to the AutoMod rule, separated by comma.',
                 OptionType.string,
                 required=True,
             )
@@ -372,12 +372,12 @@ class Moderation(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
-
         keywords = keywords.split(',')
+
         try:
             rules = await inter.guild.fetch_automod_rules()
             for i in rules:
-                if i.name == 'Igknite Banwords':
+                if i.name == 'IgKnite Banwords':
                     rule = i
                     break
             else:
@@ -387,20 +387,27 @@ class Moderation(commands.Cog):
 
         if rule is None:
             rule = await inter.guild.create_automod_rule(
-                name='Igknite Banwords',
+                name='IgKnite Banwords',
                 event_type=disnake.AutoModEventType.message_send,
                 trigger_type=disnake.AutoModTriggerType.keyword,
                 trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
                 actions=[disnake.AutoModBlockMessageAction()],
                 enabled=True,
             )
+
         meta = rule.trigger_metadata
         await rule.edit(
             trigger_metadata=meta.with_changes(
                 keyword_filter=meta.keyword_filter + keywords,
             ),
         )
-        await inter.send(f'Added `{keywords}` to the banword list.')
+
+        embed = core.TypicalEmbed(inter).set_title(
+            value='Added these words to banned list:'
+        ).set_description(
+            value=', '.join(keywords)
+        )
+        await inter.send(embed=embed)
 
 
 # The setup() function for the cog.
