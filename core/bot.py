@@ -14,7 +14,7 @@ from typing import List
 import disnake
 from disnake.ext import commands, tasks
 
-from core import global_
+from .chain import keychain
 
 
 # Set up a custom class for core functionality.
@@ -56,6 +56,6 @@ class IgKnite(commands.AutoShardedInteractionBot):
             return
 
     async def on_message_delete(self, message: disnake.Message) -> None:
-        global_.snipeables.append(message)
+        keychain.snipeables.append(message)
         await asyncio.sleep(25)
-        global_.snipeables.remove(message)
+        keychain.snipeables.remove(message)

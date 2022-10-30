@@ -7,13 +7,11 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Imports.
 import disnake
 
-from core import IgKnite, global_
-
-# Initialize the global variables from core.global_ .
-global_.initialize()
+import core
+from core import keychain
 
 # Set up an instance of IgKnite.
-bot = IgKnite(
+bot = core.IgKnite(
     intents=disnake.Intents.all(),
     initial_extensions=[
         'cogs.customization',
@@ -27,4 +25,4 @@ bot = IgKnite(
 
 # Run!
 if __name__ == '__main__':
-    bot.run(global_.tokens['discord'])
+    bot.run(keychain.discord_token)

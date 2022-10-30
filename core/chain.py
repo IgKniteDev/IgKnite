@@ -1,5 +1,5 @@
 '''
-Global variables and instances for the core package.
+The KeyChain utility for managing the environment inside IgKnite.
 ---
 
 License can be found here:
@@ -20,8 +20,8 @@ class KeyChain:
             self.discord_token = config('DISCORD_TOKEN', cast=str)
             self.discord_owner_id = config('DISCORD_OWNER_ID', cast=int)
 
-            self.spotify_token = config('SPOTIFY_CLIENT_SECRET', cast=str)
-            self.client_spotify = config('SPOTIFY_CLIENT_ID', cast=str)
+            self.spotify_client_secret = config('SPOTIFY_CLIENT_SECRET', cast=str)
+            self.spotify_client_id = config('SPOTIFY_CLIENT_ID', cast=str)
 
         except UndefinedValueError:
             logging.error(
@@ -32,3 +32,7 @@ class KeyChain:
 
         else:
             self.snipeables = []
+
+
+# Initializing it.
+keychain = KeyChain()

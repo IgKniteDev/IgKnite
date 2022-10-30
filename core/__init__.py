@@ -11,10 +11,9 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 from datetime import datetime
 
 from . import datacls as datacls
-from . import global_ as global_
 from .bot import *
+from .chain import *
 from .embeds import *
-from .global_ import Secrets
 
 # Set version number.
 __version_info__ = ('2022', '10', '30')  # Year.Month.Day
@@ -29,6 +28,3 @@ BOT_METADATA = {
 
 # Track uptime.
 running_since = round(datetime.timestamp(datetime.now()))
-
-# Load secrets.
-secrets = Secrets()

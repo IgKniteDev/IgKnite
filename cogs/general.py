@@ -13,7 +13,6 @@ from datetime import datetime
 
 import core
 import disnake
-from core import global_
 from core.embeds import TypicalEmbed
 from disnake import Option, OptionType
 from disnake.ext import commands
@@ -30,7 +29,7 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
 
     api_latency = round((end_time - start_time) * 1000)
 
-    uptime = round(datetime.timestamp(datetime.now())) - global_.running_since
+    uptime = round(datetime.timestamp(datetime.now())) - core.running_since
     h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
 
     embed = (
