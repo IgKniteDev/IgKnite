@@ -23,9 +23,7 @@ class ExceptionHandler(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_slash_command_error(
-        self, inter: disnake.CommandInteraction, error: Any
-    ) -> None:
+    async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
@@ -48,9 +46,7 @@ class ExceptionHandler(commands.Cog):
         await inter.send(embed=embed, ephemeral=True)
 
     @commands.Cog.listener()
-    async def on_user_command_error(
-        self, inter: disnake.CommandInteraction, error: Any
-    ) -> None:
+    async def on_user_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
@@ -73,9 +69,7 @@ class ExceptionHandler(commands.Cog):
         await inter.send(embed=embed, ephemeral=True)
 
     @commands.Cog.listener()
-    async def on_message_command_error(
-        self, inter: disnake.CommandInteraction, error: Any
-    ) -> None:
+    async def on_message_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
 
