@@ -256,7 +256,8 @@ class Inspection(commands.Cog):
     # revokeinvites
     @commands.slash_command(
         name='revokeinvites',
-        description='Revokes invites. By default this removes all invites but you can choose a server member.',
+        description='Revokes invites. '
+        + 'By default this removes all invites but you can choose a server member.',
         options=[Option('member', 'Mention the server member.', OptionType.user)],
         dm_permission=False,
     )

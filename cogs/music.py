@@ -555,7 +555,8 @@ class Music(commands.Cog):
     # join
     @commands.slash_command(
         name='join',
-        description='Joins the voice channel you\'re in. You can also specify which channel to join.',
+        description='Joins the voice channel you\'re in. '
+        + 'You can also specify which channel to join.',
         options=[
             Option(
                 'channel',
@@ -603,7 +604,8 @@ class Music(commands.Cog):
         options=[
             Option(
                 'volume',
-                'Specify a new volume to set. Has to be within 1 and 100 (it can go a li\'l further btw).',
+                'Specify a new volume to set. '
+                + 'Has to be within 1 and 100 (it can go a li\'l further btw).',
                 OptionType.integer,
                 min_value=1,
                 max_value=200,
