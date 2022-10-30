@@ -18,14 +18,14 @@ jobs:
         id: checkifneeded
         uses: psf/black@stable
         with:
-          options: "--check --verbose --skip-string-normalization"
+          options: "--check --verbose"
           version: "~= 22.0"
         continue-on-error: true
 
       - name: Format
         uses: psf/black@stable
         with:
-          options: "--verbose --skip-string-normalization"
+          options: "--verbose"
           version: "~= 22.0"
 
       - name: Create pull request

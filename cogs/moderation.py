@@ -22,9 +22,7 @@ class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    async def cog_before_slash_command_invoke(
-        self, inter: disnake.CommandInteraction
-    ) -> None:
+    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
         return await inter.response.defer()
 
     # ban
@@ -32,9 +30,7 @@ class Moderation(commands.Cog):
         name='ban',
         description='Bans a member from the server.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option('reason', 'Give a reason for the ban.', OptionType.string),
         ],
         dm_permission=False,
@@ -47,9 +43,7 @@ class Moderation(commands.Cog):
         reason: str = 'No reason provided.',
     ) -> None:
         await inter.guild.ban(member, reason=reason)
-        await inter.send(
-            f'Member **{member.display_name}** has been banned! Reason: {reason}'
-        )
+        await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
     # Backend for softban-labelled commands.
     # Do not use it within other commands unless really necessary.
@@ -63,18 +57,14 @@ class Moderation(commands.Cog):
     ) -> None:
         await inter.guild.ban(member, delete_message_days=days, reason=reason)
         await inter.guild.unban(member)
-        await inter.send(
-            f'Member **{member.display_name}** has been softbanned! Reason: {reason}'
-        )
+        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
 
     # softban (slash)
     @commands.slash_command(
         name='softban',
         description='Temporarily bans members to delete their messages.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option('reason', 'Give a reason for the softban.', OptionType.string),
         ],
         dm_permission=False,
@@ -101,9 +91,7 @@ class Moderation(commands.Cog):
         name='kick',
         description='Kicks a member from the server.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option('reason', 'Give a reason for the kick.', OptionType.string),
         ],
         dm_permission=False,
@@ -116,18 +104,14 @@ class Moderation(commands.Cog):
         reason: str = 'No reason provided.',
     ) -> None:
         await inter.guild.kick(member, reason=reason)
-        await inter.send(
-            f'Member **{member.display_name}** has been kicked! Reason: {reason}'
-        )
+        await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
 
     # timeout
     @commands.slash_command(
         name='timeout',
         description='Timeouts a member.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option(
                 'duration',
                 'Give a duration for the timeout in seconds. Defaults to 30 seconds.',
@@ -147,25 +131,17 @@ class Moderation(commands.Cog):
         reason: str = 'No reason provided.',
     ) -> None:
         await member.timeout(duration=duration, reason=reason)
-        await inter.send(
-            f'Member **{member.display_name}** has been timed out! Reason: {reason}'
-        )
+        await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
 
     # unban
     @commands.slash_command(
         name='unban',
         description='Unbans a member from the server.',
-        options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            )
-        ],
+        options=[Option('member', 'Mention the server member.', OptionType.user, required=True)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _unban(
-        self, inter: disnake.CommandInteraction, member: disnake.Member
-    ) -> None:
+    async def _unban(self, inter: disnake.CommandInteraction, member: disnake.Member) -> None:
         await inter.guild.unban(member)
         await inter.send(f'Member **{member.display_name}** has been unbanned!')
 
@@ -215,9 +191,7 @@ class Moderation(commands.Cog):
         name='ripplepurge',
         description='Clears messages that are sent by a specific user within the given index.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option(
                 'amount',
                 'The amount of messages to purge. Defaults to 10.',
@@ -270,9 +244,7 @@ class Moderation(commands.Cog):
                         pass
 
                     else:
-                        webhook = await inter.channel.create_webhook(
-                            name=snipeable.author
-                        )
+                        webhook = await inter.channel.create_webhook(name=snipeable.author)
 
                     await webhook.send(
                         content=snipeable.content,
@@ -292,12 +264,8 @@ class Moderation(commands.Cog):
         name='senddm',
         description='Send DM to specific users.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
-            Option(
-                'msg', 'Message you want to send.', OptionType.string, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
+            Option('msg', 'Message you want to send.', OptionType.string, required=True),
         ],
         dm_permission=False,
     )
@@ -390,12 +358,12 @@ class Moderation(commands.Cog):
 
     # add keyword to automod rule
     @commands.slash_command(
-        name="banword",
-        description="Add keywords to ban.",
+        name='banword',
+        description='Add keywords to ban.',
         options=[
             Option(
-                "keywords",
-                "The keywords you want to add to the automod rule, separated by comma.",
+                'keywords',
+                'The keywords you want to add to the automod rule, separated by comma.',
                 OptionType.string,
                 required=True,
             )
@@ -405,11 +373,11 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
 
-        keywords = keywords.split(",")
+        keywords = keywords.split(',')
         try:
             rules = await inter.guild.fetch_automod_rules()
             for i in rules:
-                if i.name == "Igknite Banwords":
+                if i.name == 'Igknite Banwords':
                     rule = i
                     break
             else:
@@ -419,7 +387,7 @@ class Moderation(commands.Cog):
 
         if rule is None:
             rule = await inter.guild.create_automod_rule(
-                name="Igknite Banwords",
+                name='Igknite Banwords',
                 event_type=disnake.AutoModEventType.message_send,
                 trigger_type=disnake.AutoModTriggerType.keyword,
                 trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
@@ -432,7 +400,7 @@ class Moderation(commands.Cog):
                 keyword_filter=meta.keyword_filter + keywords,
             ),
         )
-        await inter.send(f"Added `{keywords}` to the banword list.")
+        await inter.send(f'Added `{keywords}` to the banword list.')
 
 
 # The setup() function for the cog.

@@ -56,9 +56,7 @@ class InviteCommandView(disnake.ui.View):
         style=disnake.ButtonStyle.gray,
         disabled=True,
     )
-    async def previous(
-        self, _: disnake.ui.Button, inter: disnake.MessageInteraction
-    ) -> None:
+    async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page -= 1
         self.paginator_logic()
 
@@ -69,9 +67,7 @@ class InviteCommandView(disnake.ui.View):
         )
 
     @disnake.ui.button(label='Next', style=disnake.ButtonStyle.gray)
-    async def next(
-        self, _: disnake.ui.Button, inter: disnake.MessageInteraction
-    ) -> None:
+    async def next(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page += 1
         self.paginator_logic()
 
@@ -131,9 +127,9 @@ class Inspection(commands.Cog):
             .add_field(name='Status', value=member.status)
             .add_field(
                 name='Birth',
-                value=datetime.strptime(
-                    str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
-                ).strftime('%b %d, %Y'),
+                value=datetime.strptime(str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime(
+                    '%b %d, %Y'
+                ),
             )
             .add_field(name='On Mobile', value=member.is_on_mobile())
             .add_field(name='Race', value="Bot" if member.bot else "Human")
@@ -173,17 +169,15 @@ class Inspection(commands.Cog):
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _roleinfo(
-        self, inter: disnake.CommandInteraction, role: disnake.Role
-    ) -> None:
+    async def _roleinfo(self, inter: disnake.CommandInteraction, role: disnake.Role) -> None:
         embed = (
             core.TypicalEmbed(inter)
             .set_title(value=f'Role information: @{role.name}')
             .add_field(
                 name='Birth',
-                value=datetime.strptime(
-                    str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
-                ).strftime('%b %d, %Y'),
+                value=datetime.strptime(str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime(
+                    '%b %d, %Y'
+                ),
             )
             .add_field(name='Mentionable', value=role.mentionable)
             .add_field(name='Managed By Integration', value=role.managed)
@@ -262,8 +256,10 @@ class Inspection(commands.Cog):
     # revokeinvites
     @commands.slash_command(
         name='revokeinvites',
-        description='Revokes invites. By default this removes all invites but you can choose a server member.',
+        description='Revokes invites. '
+        + 'By default this removes all invites but you can choose a server member.',
         options=[Option('member', 'Mention the server member.', OptionType.user)],
+        dm_permission=False,
     )
     async def _revokeinvites(
         self, inter: disnake.CommandInteraction, member: disnake.Member | None = None

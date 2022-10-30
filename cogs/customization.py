@@ -31,9 +31,7 @@ class Customization(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    async def cog_before_slash_command_invoke(
-        self, inter: disnake.CommandInteraction
-    ) -> None:
+    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
         return await inter.response.defer()
 
     # makerole
@@ -62,9 +60,7 @@ class Customization(commands.Cog):
     ) -> None:
         color = get_color(color)
         await inter.guild.create_role(name=name, color=color)
-        embed = disnake.Embed(
-            description=f'Role `{name}` has been created.', color=color
-        )
+        embed = disnake.Embed(description=f'Role `{name}` has been created.', color=color)
         await inter.send(embed=embed)
 
     # assignrole
@@ -72,9 +68,7 @@ class Customization(commands.Cog):
         name='assignrole',
         description='Assign a role to a server member.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option(
                 'role',
                 'Mention the role to assign to the user.',
@@ -92,25 +86,17 @@ class Customization(commands.Cog):
         role: disnake.Role,
     ) -> None:
         await member.add_roles(role)
-        await inter.send(
-            f'Role {role.mention} has been assigned to **{member.display_name}**!'
-        )
+        await inter.send(f'Role {role.mention} has been assigned to **{member.display_name}**!')
 
     # removerole
     @commands.slash_command(
         name='removerole',
         description='Remove a role from the server.',
-        options=[
-            Option(
-                'role', 'Mention the role to remove.', OptionType.role, required=True
-            )
-        ],
+        options=[Option('role', 'Mention the role to remove.', OptionType.role, required=True)],
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _removerole(
-        self, inter: disnake.CommandInteraction, role: disnake.Role
-    ) -> None:
+    async def _removerole(self, inter: disnake.CommandInteraction, role: disnake.Role) -> None:
         await role.delete()
         await inter.send(f'Role **@{role.name}** has been removed!')
 
@@ -134,9 +120,7 @@ class Customization(commands.Cog):
                 OptionType.integer,
                 min_value=1,
             ),
-            Option(
-                'reason', 'Give a reason for creating the invite.', OptionType.string
-            ),
+            Option('reason', 'Give a reason for creating the invite.', OptionType.string),
         ],
         dm_permission=False,
     )
@@ -170,9 +154,7 @@ class Customization(commands.Cog):
         name='nick',
         description='Change nickname of a member.',
         options=[
-            Option(
-                'member', 'Mention the server member.', OptionType.user, required=True
-            ),
+            Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option(
                 'nickname',
                 'Give the nickname to set for the mentioned user.',
@@ -218,9 +200,7 @@ class Customization(commands.Cog):
         category: disnake.CategoryChannel | None = None,
         topic: str | None = None,
     ) -> None:
-        channel = await inter.guild.create_text_channel(
-            name=name, topic=topic, category=category
-        )
+        channel = await inter.guild.create_text_channel(name=name, topic=topic, category=category)
         await inter.send(f'Channel {channel.mention} has been created!')
 
     # makevc
