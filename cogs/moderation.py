@@ -403,9 +403,7 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _banword(
-        self, inter: disnake.CommandInteraction, keywords: str
-    ) -> None:
+    async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
 
         keywords = keywords.split(",")
         try:
@@ -421,13 +419,13 @@ class Moderation(commands.Cog):
 
         if rule is None:
             rule = await inter.guild.create_automod_rule(
-                    name="Igknite Banwords",
-                    event_type=disnake.AutoModEventType.message_send,
-                    trigger_type=disnake.AutoModTriggerType.keyword,
-                    trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
-                    actions=[disnake.AutoModBlockMessageAction()],
-                    enabled=True
-                )
+                name="Igknite Banwords",
+                event_type=disnake.AutoModEventType.message_send,
+                trigger_type=disnake.AutoModTriggerType.keyword,
+                trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
+                actions=[disnake.AutoModBlockMessageAction()],
+                enabled=True,
+            )
         meta = rule.trigger_metadata
         await rule.edit(
             trigger_metadata=meta.with_changes(
