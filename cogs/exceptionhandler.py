@@ -21,15 +21,18 @@ class ExceptionHandler(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
-        error = getattr(error, 'original', error)
-        embed = core.TypicalEmbed(inter, is_error=True)
+    def get_view(self, inter: disnake.CommandInteraction) -> core.SmallView:
         view = core.SmallView(inter).add_button(
             label='Report Bug',
             url=core.BOT_METADATA['REPOSITORY'] + '/issues/new?template=bug.yml',
             style=disnake.ButtonStyle.red,
         )
+        return view
+
+    @commands.Cog.listener()
+    async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
+        error = getattr(error, 'original', error)
+        embed = core.TypicalEmbed(inter, is_error=True)
 
         # MissingPermissions
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
@@ -47,7 +50,7 @@ class ExceptionHandler(commands.Cog):
             embed.set_title('Whoops! An alien error occured.')
 
         embed.set_description(str(error))
-        await inter.send(embed=embed, view=view, ephemeral=True)
+        await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
     async def on_user_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
@@ -70,7 +73,7 @@ class ExceptionHandler(commands.Cog):
             embed.set_title('Whoops! An alien error occured.')
 
         embed.set_description(str(error))
-        await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
     async def on_message_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
@@ -93,7 +96,7 @@ class ExceptionHandler(commands.Cog):
             embed.set_title('Whoops! An alien error occured.')
 
         embed.set_description(str(error))
-        await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
 
 # The setup() function for the cog.
