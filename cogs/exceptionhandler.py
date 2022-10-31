@@ -25,13 +25,10 @@ class ExceptionHandler(commands.Cog):
     async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
-        view = (
-            core.SmallView(inter)
-            .add_button(
-                label='Report Bug',
-                url=core.BOT_METADATA['REPOSITORY'] + '/issues/new?template=bug.yml',
-                style=disnake.ButtonStyle.red
-            )
+        view = core.SmallView(inter).add_button(
+            label='Report Bug',
+            url=core.BOT_METADATA['REPOSITORY'] + '/issues/new?template=bug.yml',
+            style=disnake.ButtonStyle.red,
         )
 
         # MissingPermissions
