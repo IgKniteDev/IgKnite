@@ -355,7 +355,7 @@ class Moderation(commands.Cog):
         await inter.channel.edit(slowmode_delay=seconds)
         await inter.send(f'Slowmode has been set to **{seconds}** seconds.')
 
-    # add keyword to automod rule
+    # banword
     @commands.slash_command(
         name='banword',
         description='Add keywords to ban.',
@@ -369,15 +369,14 @@ class Moderation(commands.Cog):
         ],
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    @commands.has_any_role(LockRoles.admin)
     async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
         keywords = keywords.split(',')
 
         try:
-            rules = await inter.guild.fetch_automod_rules()
-            for i in rules:
-                if i.name == 'IgKnite Banwords':
-                    rule = i
+            for item in await inter.guild.fetch_automod_rules():
+                if item.name == 'IgKnite Banwords':
+                    rule = item
                     break
             else:
                 rule = None
@@ -392,6 +391,7 @@ class Moderation(commands.Cog):
                 trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
                 actions=[disnake.AutoModBlockMessageAction()],
                 enabled=True,
+                reason=f'Banwords added by: {inter.author}',
             )
 
         meta = rule.trigger_metadata
@@ -406,7 +406,25 @@ class Moderation(commands.Cog):
             .set_title(value='Added these words to banned list:')
             .set_description(value=', '.join(keywords))
         )
-        await inter.send(embed=embed)
+        await inter.send(embed=embed, ephemeral=True)
+
+    @commands.slash_command(
+        name='clearbannedwords',
+        description='Clears the list of banned keywords added by me.',
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.admin)
+    async def _clearbannedwords(self, inter: disnake.CommandInteraction) -> None:
+        try:
+            for rule in await inter.guild.fetch_automod_rules():
+                if rule.name == 'IgKnite Banwords':
+                    await rule.delete(reason=f'Banwords removed by: {inter.author}')
+
+        except disnake.NotFound:
+            await inter.send('No AutoMod rules were detected.')
+
+        else:
+            await inter.send('Banwords removed!')
 
 
 # The setup() function for the cog.

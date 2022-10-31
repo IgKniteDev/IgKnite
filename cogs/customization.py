@@ -290,51 +290,51 @@ class Customization(commands.Cog):
         await inter.channel.delete()
         await resetted.send(f'Channel was reset by {inter.author.mention}.')
 
-    # setup afkvc
+    # afkvc
     @commands.slash_command(
         name='afkvc',
-        description='Configures AFK channel for the server.',
-        dm_permission=False,
+        description='Configures the inactive (AFK) channel for the server.',
         options=[
             Option(
                 'channel',
                 'Select AFK channel. Leave blank to create new.',
-                OptionType.channel
+                OptionType.channel,
+                channel_types=[ChannelType.voice],
             ),
             Option(
                 'timeout',
-                'Time after a user is set AFK.',
+                'Time after a user is set AFK. Default is 5 minutes (300s).',
                 OptionType.integer,
                 min_value=60,
                 max_value=3600,
                 choices=[
-                    OptionChoice('1 min', 60),
-                    OptionChoice('5 min', 300),
-                    OptionChoice('15 min', 900),
-                    OptionChoice('30 min', 1800),
-                    OptionChoice('1 hour', 3600)
-                ]
-            )
-        ]
+                    OptionChoice('1m', 60),
+                    OptionChoice('5m', 300),
+                    OptionChoice('15m', 900),
+                    OptionChoice('30m', 1800),
+                    OptionChoice('1h', 3600),
+                ],
+            ),
+        ],
+        dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
     async def _afkvc(
         self,
         inter: disnake.CommandInteraction,
         channel: disnake.VoiceChannel | None = None,
-        timeout: int | None = None
+        timeout: int = 300,
     ) -> None:
-        timeout = 300 if timeout is None else timeout
         if channel is None:
             channel = await inter.guild.create_voice_channel(name='afk-vc')
 
         await inter.guild.edit(
-            reason='Update AFK VC',
+            reason=f'Inactive channel updated by: {inter.author}',
             afk_channel=channel,
-            afk_timeout=timeout
+            afk_timeout=timeout,
         )
         await inter.send(
-            f'{channel.mention} has been set as AFK channel with timeout of {timeout} secs.'
+            f'{channel.mention} has been set as the AFK channel with timeout of `{timeout}s`.'
         )
 
 
