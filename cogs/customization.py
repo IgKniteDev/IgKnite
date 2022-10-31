@@ -11,7 +11,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import core
 import disnake
 from core.datacls import LockRoles
-from disnake import ChannelType, Option, OptionType
+from disnake import ChannelType, Option, OptionChoice, OptionType
 from disnake.ext import commands
 
 
@@ -289,6 +289,53 @@ class Customization(commands.Cog):
         )
         await inter.channel.delete()
         await resetted.send(f'Channel was reset by {inter.author.mention}.')
+
+    # setup afkvc
+    @commands.slash_command(
+        name='afkvc',
+        description='Configures AFK channel for the server.',
+        dm_permission=False,
+        options=[
+            Option(
+                'channel',
+                'Select AFK channel. Leave blank to create new.',
+                OptionType.channel
+            ),
+            Option(
+                'timeout',
+                'Time after a user is set AFK.',
+                OptionType.integer,
+                min_value=60,
+                max_value=3600,
+                choices=[
+                    OptionChoice('1 min', 60),
+                    OptionChoice('5 min', 300),
+                    OptionChoice('15 min', 900),
+                    OptionChoice('30 min', 1800),
+                    OptionChoice('1 hour', 3600)
+                ]
+            )
+        ]
+    )
+    @commands.has_role(LockRoles.admin)
+    async def _afkvc(
+        self,
+        inter: disnake.CommandInteraction,
+        channel: disnake.VoiceChannel | None = None,
+        timeout: int | None = None
+    ) -> None:
+        timeout = 300 if timeout is None else timeout
+        if channel is None:
+            channel = await inter.guild.create_voice_channel(name='afk-vc')
+
+        await inter.guild.edit(
+            reason='Update AFK VC',
+            afk_channel=channel,
+            afk_timeout=timeout
+        )
+        await inter.send(
+            f'{channel.mention} has been set as AFK channel with timeout of {timeout} secs.'
+        )
 
 
 # The setup() function for the cog.
