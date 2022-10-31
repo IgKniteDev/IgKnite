@@ -296,11 +296,7 @@ class Customization(commands.Cog):
         description='Configures AFK channel for the server.',
         dm_permission=False,
         options=[
-            Option(
-                'channel',
-                'Select AFK channel. Leave blank to create new.',
-                OptionType.channel
-            ),
+            Option('channel', 'Select AFK channel. Leave blank to create new.', OptionType.channel),
             Option(
                 'timeout',
                 'Time after a user is set AFK.',
@@ -312,27 +308,23 @@ class Customization(commands.Cog):
                     OptionChoice('5 min', 300),
                     OptionChoice('15 min', 900),
                     OptionChoice('30 min', 1800),
-                    OptionChoice('1 hour', 3600)
-                ]
-            )
-        ]
+                    OptionChoice('1 hour', 3600),
+                ],
+            ),
+        ],
     )
     @commands.has_role(LockRoles.admin)
     async def _afkvc(
         self,
         inter: disnake.CommandInteraction,
         channel: disnake.VoiceChannel | None = None,
-        timeout: int | None = None
+        timeout: int | None = None,
     ) -> None:
         timeout = 300 if timeout is None else timeout
         if channel is None:
             channel = await inter.guild.create_voice_channel(name='afk-vc')
 
-        await inter.guild.edit(
-            reason='Update AFK VC',
-            afk_channel=channel,
-            afk_timeout=timeout
-        )
+        await inter.guild.edit(reason='Update AFK VC', afk_channel=channel, afk_timeout=timeout)
         await inter.send(
             f'{channel.mention} has been set as AFK channel with timeout of {timeout} secs.'
         )
