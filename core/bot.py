@@ -12,7 +12,7 @@ import asyncio
 from typing import List
 
 import disnake
-from disnake.ext import commands, tasks
+from disnake.ext import commands
 
 from .chain import keychain
 
@@ -26,7 +26,6 @@ class IgKnite(commands.AutoShardedInteractionBot):
 
     def __init__(self, *args, initial_extensions: List[str], **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.task_update_presence.start()
 
         for extension in initial_extensions:
             self.load_extension(extension)
@@ -37,20 +36,6 @@ class IgKnite(commands.AutoShardedInteractionBot):
     async def on_ready(self) -> None:
         print(f'Inside {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.')
 
-    @tasks.loop(seconds=200)
-    async def task_update_presence(self) -> None:
-        await self.change_presence(
-            status=disnake.Status.dnd,
-            activity=disnake.Activity(
-                type=disnake.ActivityType.listening,
-                name=f'slashes inside {len(self.guilds)} server(s)!',
-            ),
-        )
-
-    @task_update_presence.before_loop
-    async def task_before_updating_presence(self) -> None:
-        await self.wait_until_ready()
-
     async def on_message(self, message: disnake.Message) -> None:
         if message.author == self.user:
             return
@@ -59,3 +44,12 @@ class IgKnite(commands.AutoShardedInteractionBot):
         keychain.snipeables.append(message)
         await asyncio.sleep(25)
         keychain.snipeables.remove(message)
+
+    async def on_guild_join(self, _: disnake.Guild) -> None:
+        await self.change_presence(
+            status=disnake.Status.dnd,
+            activity=disnake.Activity(
+                type=disnake.ActivityType.listening,
+                name=f'slashes inside {len(self.guilds)} server(s)!',
+            ),
+        )
