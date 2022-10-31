@@ -115,7 +115,10 @@ class General(commands.Cog):
             core.TypicalEmbed(inter=inter, disabled_footer=True)
             .set_title(value='Hey there! I\'m IgKnite.')
             .set_description(
-                value='I\'m a bot with no text commands (you heard that right) and I\'m here to help you manage and moderate your Discord server alongside having a midnight music party with your friends in a random voice channel. Looking forward to being friends with you!'
+                value='I\'m a bot with no text commands (you heard that right) '
+                + 'and I\'m here to help you manage and moderate your Discord server alongside'
+                + 'having a midnight music party with your friends in a random voice channel. '
+                + 'Looking forward to being friends with you!'
             )
         )
 
