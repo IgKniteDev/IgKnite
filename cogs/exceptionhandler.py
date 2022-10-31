@@ -25,6 +25,14 @@ class ExceptionHandler(commands.Cog):
     async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter, is_error=True)
+        view = (
+            core.SmallView(inter)
+            .add_button(
+                label='Report Bug',
+                url=core.BOT_METADATA['REPOSITORY'] + '/issues/new?template=bug.yml',
+                style=disnake.ButtonStyle.red
+            )
+        )
 
         # MissingPermissions
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
@@ -42,7 +50,7 @@ class ExceptionHandler(commands.Cog):
             embed.set_title('Whoops! An alien error occured.')
 
         embed.set_description(str(error))
-        await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed, view=view, ephemeral=True)
 
     @commands.Cog.listener()
     async def on_user_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
