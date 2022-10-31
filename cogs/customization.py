@@ -297,7 +297,7 @@ class Customization(commands.Cog):
         options=[
             Option(
                 'channel',
-                'Select AFK channel. Leave blank to create new.',
+                'Select the AFK channel. Leave blank to create new.',
                 OptionType.channel,
                 channel_types=[ChannelType.voice],
             ),
