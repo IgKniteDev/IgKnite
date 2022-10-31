@@ -426,6 +426,28 @@ class Moderation(commands.Cog):
         else:
             await inter.send('Banwords removed!')
 
+    @commands.slash_command(
+        name='showbannedwords',
+        description='Shows the list of banned keywords added by me.',
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.admin)
+    async def _showbannedwords(self, inter: disnake.CommandInteraction) -> None:
+        try:
+            words = ""
+            for rule in await inter.guild.fetch_automod_rules():
+                if rule.name == 'IgKnite Banwords':
+                    for item in rule.trigger_metadata.keyword_filter:
+                        words += f'{item} \n'
+                    embed = (
+                        core.TypicalEmbed(inter)
+                        .set_title(value='Here\'s the list of banned words:')
+                        .set_description(value=words)
+                    )
+                    await inter.send(embed=embed)
+        except disnake.NotFound:
+            await inter.send('No AutoMod rules were found.')
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
