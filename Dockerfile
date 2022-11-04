@@ -1,5 +1,5 @@
-# Initialize Python 3.10 and set current directory.
-FROM python:3.10
+# Initialize Python 3.11 and set current directory.
+FROM python:3.11
 
 # Copy project files and 
 COPY . /app/
