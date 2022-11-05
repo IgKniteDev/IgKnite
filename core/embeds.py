@@ -37,6 +37,8 @@ class TypicalEmbed(disnake.Embed):
                         'A perfect debugged life doesn\'t exist.',
                         'Haven\'t I made it obvious?',
                         'Hello World, from the other side!',
+                        'A computer is like air conditioning'
+                        + '- it becomes useless when you open Windows.',
                     ]
                 ),
                 icon_url=inter.author.avatar,
