@@ -6,14 +6,14 @@ License can be found here:
 https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
-
 # Imports.
-import core
 import disnake
-from core import keychain
-from core.datacls import LockRoles
 from disnake import Option, OptionChoice, OptionType
 from disnake.ext import commands
+
+import core
+from core import keychain
+from core.datacls import LockRoles
 
 
 # The actual cog.
@@ -421,7 +421,10 @@ class Moderation(commands.Cog):
                     await rule.delete(reason=f'Banwords removed by: {inter.author}')
 
         except disnake.NotFound:
-            await inter.send('No AutoMod rules were detected.')
+            embed = core.TypicalEmbed(inter, is_error=True).set_title(
+                "No AutoMod rules were found."
+            )
+            await inter.send(embed=embed)
 
         else:
             await inter.send('Banwords removed!')
@@ -446,7 +449,10 @@ class Moderation(commands.Cog):
                     )
                     await inter.send(embed=embed)
         except disnake.NotFound:
-            await inter.send('No AutoMod rules were found.')
+            embed = core.TypicalEmbed(inter, is_error=True).set_title(
+                "No AutoMod rules were found."
+            )
+            await inter.send(embed=embed)
 
 
 # The setup() function for the cog.
