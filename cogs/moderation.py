@@ -6,12 +6,11 @@ License can be found here:
 https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
-
+# Imports.
 import disnake
 from disnake import Option, OptionChoice, OptionType
 from disnake.ext import commands
 
-# Imports.
 import core
 from core import keychain
 from core.datacls import LockRoles
