@@ -23,7 +23,7 @@ from disnake.ext import commands
 from spotipy.oauth2 import SpotifyClientCredentials
 
 import core
-from core import keychain
+from core.chain import keychain
 
 # Bug reports message.
 youtube_dl.utils.bug_reports_message = lambda: ''

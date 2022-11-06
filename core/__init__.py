@@ -10,13 +10,13 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Initialize scripts.
 from datetime import datetime
 
+from . import chain as chain
 from . import datacls as datacls
 from .bot import *
-from .chain import *
 from .embeds import *
 
 # Set version number.
-__version_info__ = ('2022', '10', '30')  # Year.Month.Day
+__version_info__ = ('2022', '11', '06')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
 
 # Set bot metadata.
