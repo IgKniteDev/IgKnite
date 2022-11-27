@@ -16,6 +16,28 @@ from core import keychain
 from core.datacls import LockRoles
 
 
+# View for the `clearnicks` command.
+class ClearNickCommandView(disnake.ui.View):
+    def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
+        super().__init__(timeout=timeout)
+        self.inter = inter
+
+    @disnake.ui.button(label='Do it!', style=disnake.ButtonStyle.danger)
+    async def _confirm_action(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
+        await inter.response.defer()
+        if LockRoles.admin in [role.name for role in inter.author.roles]:
+            for member in inter.guild.members:
+                try:
+                    await member.edit(nick=None)
+                except disnake.errors.Forbidden:
+                    pass
+            await inter.edit_original_message(
+                "All nicknames have been cleared!", embed=None, view=None
+            )
+        else:
+            await inter.edit_original_message("You can't do that!", embed=None, view=None)
+
+
 # The actual cog.
 class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
@@ -408,6 +430,7 @@ class Moderation(commands.Cog):
         )
         await inter.send(embed=embed, ephemeral=True)
 
+    # clearbannedwords
     @commands.slash_command(
         name='clearbannedwords',
         description='Clears the list of banned keywords added by me.',
@@ -429,6 +452,7 @@ class Moderation(commands.Cog):
         else:
             await inter.send('Banwords removed!')
 
+    # showbannedwords
     @commands.slash_command(
         name='showbannedwords',
         description='Shows the list of banned keywords added by me.',
@@ -453,6 +477,22 @@ class Moderation(commands.Cog):
                 "No AutoMod rules were found."
             )
             await inter.send(embed=embed)
+
+    # clearnicks
+    @commands.slash_command(
+        name='clearnicks',
+        description='Clear everyone\'s nickname in the guild.',
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.admin)
+    async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
+        embed = (
+            core.TypicalEmbed(inter=inter, disabled_footer=True, is_error=True)
+            .set_title(value='Are you sure?')
+            .set_description(value='This action cannot be undone.')
+        )
+
+        await inter.send(embed=embed, view=ClearNickCommandView(inter), ephemeral=True)
 
 
 # The setup() function for the cog.
