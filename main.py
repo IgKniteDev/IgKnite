@@ -8,7 +8,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import disnake
 
 import core
-from core import keychain
+from core.chain import keychain
 
 # Set up an instance of IgKnite.
 bot = core.IgKnite(

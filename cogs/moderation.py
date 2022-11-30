@@ -12,7 +12,7 @@ from disnake import Option, OptionChoice, OptionType
 from disnake.ext import commands
 
 import core
-from core import keychain
+from core.chain import keychain
 from core.datacls import LockRoles
 
 

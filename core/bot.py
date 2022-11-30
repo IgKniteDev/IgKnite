@@ -14,7 +14,7 @@ from typing import List
 import disnake
 from disnake.ext import commands
 
-from .chain import keychain
+from core.chain import keychain
 
 
 # Set up a custom class for core functionality.

@@ -12,17 +12,18 @@ import asyncio
 import functools
 import itertools
 import random
-from typing import Any, Tuple
+from typing import Any, Self, Tuple
 
-import core
 import disnake
 import spotipy
 import youtube_dl
 from async_timeout import timeout
-from core import keychain
 from disnake import ChannelType, Option, OptionType
 from disnake.ext import commands
 from spotipy.oauth2 import SpotifyClientCredentials
+
+import core
+from core.chain import keychain
 
 # Bug reports message.
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -111,7 +112,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         search: str,
         *,
         loop: asyncio.BaseEventLoop,
-    ):
+    ) -> Self:
         loop = loop or asyncio.get_event_loop()
 
         partial = functools.partial(cls.ytdl.extract_info, search, download=False, process=False)
@@ -174,13 +175,13 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
 # Base class for interacting with the Spotify API.
 class Spotify:
-    @classmethod
-    def get_track_id(self, track: Any):
+    @staticmethod
+    def get_track_id(track: Any):
         track = spotify.track(track)
         return track['id']
 
-    @classmethod
-    def get_playlist_track_ids(self, playlist_id: Any):
+    @staticmethod
+    def get_playlist_track_ids(playlist_id: Any):
         ids = []
         playlist = spotify.playlist(playlist_id)
 
@@ -190,17 +191,17 @@ class Spotify:
 
         return ids
 
-    @classmethod
-    def get_album(self, album_id: Any):
+    @staticmethod
+    def get_album(album_id: Any):
         album = spotify.album_tracks(album_id)
         return [item['id'] for item in album['items']]
 
-    @classmethod
-    def get_album_id(self, id: Any):
+    @staticmethod
+    def get_album_id(id: Any):
         return spotify.album(id)
 
-    @classmethod
-    def get_track_features(self, id: Any) -> str:
+    @staticmethod
+    def get_track_features(id: Any) -> str:
         meta = spotify.track(id)
         name = meta['name']
         album = meta['album']['name']
