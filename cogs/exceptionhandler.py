@@ -10,10 +10,11 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 # Imports.
 from typing import Any
 
-import core
 import disnake
 from disnake import errors
 from disnake.ext import commands
+
+import core
 
 
 # The actual cog.
@@ -38,7 +39,7 @@ class ExceptionHandler(commands.Cog):
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
             error, errors.Forbidden
         ):
-            embed.set_title('Nice try! You don\'t have permission to do that.')
+            embed.set_title('Nice try! I don\'t have permission to do that.')
 
         # MissingRole
         elif isinstance(error, commands.errors.MissingRole) or isinstance(
@@ -61,7 +62,7 @@ class ExceptionHandler(commands.Cog):
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
             error, errors.Forbidden
         ):
-            embed.set_title('Nice try! You don\'t have permission to do that.')
+            embed.set_title('Nice try! I don\'t have permission to do that.')
 
         # MissingRole
         elif isinstance(error, commands.errors.MissingRole) or isinstance(
@@ -84,7 +85,7 @@ class ExceptionHandler(commands.Cog):
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
             error, errors.Forbidden
         ):
-            embed.set_title('Nice try! You don\'t have permission to do that.')
+            embed.set_title('Nice try! I don\'t have permission to do that.')
 
         # MissingRole
         elif isinstance(error, commands.errors.MissingRole) or isinstance(
