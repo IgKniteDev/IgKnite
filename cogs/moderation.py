@@ -203,7 +203,7 @@ class Moderation(commands.Cog):
 
         await inter.channel.delete_messages(messages)
         await inter.send(
-            f'Purged 10 messages that were sent by **{member.display_name}.**',
+            f'Purged {len(messages)} messages that were sent by **{member.display_name}.**',
             ephemeral=True,
         )
 
