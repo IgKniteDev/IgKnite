@@ -13,12 +13,13 @@ from datetime import datetime
 from time import mktime
 from typing import List, Tuple
 
-import core
 import disnake
-from core.datacls import LockRoles
 from disnake import Invite, Option, OptionType
 from disnake.ext import commands
 from disnake.utils import MISSING
+
+import core
+from core.datacls import LockRoles
 
 
 # View for the `invites` command.
@@ -260,6 +261,7 @@ class Inspection(commands.Cog):
         options=[Option('member', 'Mention the server member.', OptionType.user)],
         dm_permission=False,
     )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _revokeinvites(
         self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
     ) -> None:
