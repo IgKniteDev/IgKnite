@@ -272,9 +272,9 @@ class Moderation(commands.Cog):
                         username=snipeable.author.display_name,
                         avatar_url=snipeable.author.avatar,
                     )
+                    await webhook.delete()
                     sniped_count += 1
 
-            await webhook.delete()
             await inter.send(f'Sniped **{sniped_count}** messages.', ephemeral=True)
 
         else:
