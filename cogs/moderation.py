@@ -256,14 +256,14 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(self, inter: disnake.CommandInteraction) -> None:
         webhook: disnake.Webhook = None
+        snipeables = keychain.snipebles
         sniped_count: int = 0
 
-        if keychain.snipeables:
-            for snipeable in keychain.snipeables:
+        if snipeables:
+            for snipeable in snipeables:
                 if snipeable.guild == inter.guild:
-                    if webhook and webhook.name == snipeable.author.display_name:
+                    if webhook and webhook.name == snipeable.author:
                         pass
-
                     else:
                         webhook = await inter.channel.create_webhook(name=snipeable.author)
 
