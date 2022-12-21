@@ -265,6 +265,7 @@ class Moderation(commands.Cog):
                     if webhook and webhook.name == snipeable.author:
                         pass
                     else:
+                        await webhook.delete()
                         webhook = await inter.channel.create_webhook(name=snipeable.author)
 
                     await webhook.send(
@@ -272,9 +273,9 @@ class Moderation(commands.Cog):
                         username=snipeable.author.display_name,
                         avatar_url=snipeable.author.avatar,
                     )
-                    await webhook.delete()
                     sniped_count += 1
 
+            await webhook.delete()
             await inter.send(f'Sniped **{sniped_count}** messages.', ephemeral=True)
 
         else:
