@@ -265,7 +265,9 @@ class Moderation(commands.Cog):
                     if webhook and webhook.name == snipeable.author:
                         pass
                     else:
-                        await webhook.delete()
+                        if webhook:
+                            await webhook.delete()
+
                         webhook = await inter.channel.create_webhook(name=snipeable.author)
 
                     await webhook.send(
