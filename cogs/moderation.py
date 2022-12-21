@@ -256,7 +256,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(self, inter: disnake.CommandInteraction) -> None:
         webhook: disnake.Webhook = None
-        snipeables = keychain.snipebles
+        snipeables = keychain.snipeables
         sniped_count: int = 0
 
         if snipeables:
