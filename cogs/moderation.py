@@ -7,6 +7,8 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 # Imports.
+from typing import List
+
 import disnake
 from disnake import Option, OptionChoice, OptionType
 from disnake.ext import commands
@@ -255,20 +257,25 @@ class Moderation(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(self, inter: disnake.CommandInteraction) -> None:
-        webhook: disnake.Webhook = None
+        webhooks: List[disnake.Webhook] = []
         snipeables = keychain.snipeables
         sniped_count: int = 0
 
+        def find_hook(name: str) -> disnake.Webhook | None:
+            for webhook in webhooks:
+                if webhook.name == name:
+                    return webhook
+
         if snipeables:
             for snipeable in snipeables:
-                if snipeable.guild == inter.guild:
-                    if webhook and webhook.name == snipeable.author:
-                        pass
-                    else:
-                        if webhook:
-                            await webhook.delete()
+                if snipeable.guild == inter.guild and snipeable.channel == inter.channel:
+                    webhook = find_hook(snipeable.author.display_name)
 
-                        webhook = await inter.channel.create_webhook(name=snipeable.author)
+                    if not webhook:
+                        webhook = await inter.channel.create_webhook(
+                            name=snipeable.author.display_name
+                        )
+                        webhooks.append(webhook)
 
                     await webhook.send(
                         content=snipeable.content,
@@ -277,7 +284,9 @@ class Moderation(commands.Cog):
                     )
                     sniped_count += 1
 
-            await webhook.delete()
+            for webhook in webhooks:
+                await webhook.delete()
+
             await inter.send(f'Sniped **{sniped_count}** messages.', ephemeral=True)
 
         else:
