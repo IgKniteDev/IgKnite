@@ -178,14 +178,22 @@ class Moderation(commands.Cog):
                 'The amount of messages to purge. Defaults to 1.',
                 OptionType.integer,
                 min_value=1,
-            )
+            ),
+            Option('onlyme', 'Only deletes messages sent by me.', OptionType.boolean),
         ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _purge(self, inter: disnake.CommandInteraction, amount: int = 1) -> None:
-        await inter.channel.purge(limit=amount + 1)
-        await inter.send(f'Purged **{amount}** messages.', ephemeral=True)
+    async def _purge(
+        self, inter: disnake.CommandInteraction, amount: int = 1, onlyme: bool = False
+    ) -> None:
+        def is_me(message: disnake.Message) -> bool:
+            return message.author == self.bot.user
+
+        if onlyme:
+            await inter.channel.purge(limit=amount, check=is_me)
+        else:
+            await inter.channel.purge(limit=amount)
 
     # Backend for ripplepurge-labelled commands.
     # Do not use it within other commands unless really necessary.
