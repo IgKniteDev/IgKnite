@@ -1,4 +1,4 @@
-disnake[voice]==2.7.0
-python-decouple==3.6
-spotipy==2.22.0
+disnake[voice]==2.8.0
+python-decouple==3.7
+spotipy==2.22.1
 youtube-dl==2021.12.17
