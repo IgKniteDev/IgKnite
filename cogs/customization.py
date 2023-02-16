@@ -8,11 +8,14 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
-import core
+from typing import Optional, Union
+
 import disnake
-from core.datacls import LockRoles
 from disnake import ChannelType, Option, OptionChoice, OptionType
 from disnake.ext import commands
+
+import core
+from core.datacls import LockRoles
 
 
 # Hex to RGB converter.
@@ -196,8 +199,8 @@ class Customization(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         name: str,
-        category: disnake.CategoryChannel | None = None,
-        topic: str | None = None,
+        category: Optional[disnake.CategoryChannel] = None,
+        topic: Optional[str] = None,
     ) -> None:
         channel = await inter.guild.create_text_channel(name=name, topic=topic, category=category)
         await inter.send(f'Channel {channel.mention} has been created!')
@@ -222,7 +225,7 @@ class Customization(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         name: str,
-        category: disnake.CategoryChannel | None = None,
+        category: Optional[disnake.CategoryChannel] = None,
     ) -> None:
         vc = await inter.guild.create_voice_channel(name=name, category=category)
         await inter.send(f'VC {vc.mention} has been created!')
@@ -268,7 +271,7 @@ class Customization(commands.Cog):
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel,
+        channel: Union[disnake.TextChannel, disnake.VoiceChannel, disnake.StageChannel],
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
@@ -322,7 +325,7 @@ class Customization(commands.Cog):
     async def _afkvc(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.VoiceChannel | None = None,
+        channel: Optional[disnake.VoiceChannel] = None,
         timeout: int = 300,
     ) -> None:
         if channel is None:

@@ -11,7 +11,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import math
 from datetime import datetime
 from time import mktime
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import disnake
 from disnake import Invite, Option, OptionType
@@ -263,7 +263,7 @@ class Inspection(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _revokeinvites(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+        self, inter: disnake.CommandInteraction, member: Optional[disnake.Member] = None
     ) -> None:
         deletion_count = 0
 

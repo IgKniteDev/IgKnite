@@ -12,7 +12,7 @@ import asyncio
 import functools
 import itertools
 import random
-from typing import Any, Self, Tuple
+from typing import Any, Optional, Self, Tuple, Union
 
 import disnake
 import spotipy
@@ -366,7 +366,7 @@ class Song:
 
 # The SongQueue class, which represents the queue of songs for a particular Discord server.
 class SongQueue(asyncio.Queue):
-    def __getitem__(self, item: Any) -> Any | list:
+    def __getitem__(self, item: Any) -> Union[Any, list]:
         if isinstance(item, slice):
             return list(itertools.islice(self._queue, item.start, item.stop, item.step))
         else:
@@ -528,7 +528,7 @@ class Music(commands.Cog):
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
+        channel: Optional[Union[disnake.VoiceChannel, disnake.StageChannel]] = None,
     ) -> Any:
         '''
         A sub-method for commands requiring the bot to join a voice / stage channel.
@@ -568,7 +568,7 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         *,
-        channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
+        channel: Optional[Union[disnake.VoiceChannel, disnake.StageChannel]] = None,
     ) -> None:
         destination = await self._join_logic(inter, channel)
         await inter.send(
@@ -850,7 +850,7 @@ class Music(commands.Cog):
     # Backend for play-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _playrich_backend(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None
+        self, inter: disnake.CommandInteraction, member: Optional[disnake.Member] = None
     ) -> None:
         member = member or inter.author
 
@@ -869,7 +869,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _playrich(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+        self, inter: disnake.CommandInteraction, member: Optional[disnake.Member] = None
     ) -> None:
         await self._playrich_backend(inter, member)
 

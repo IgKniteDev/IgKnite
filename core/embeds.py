@@ -9,7 +9,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import random
-from typing import Self
+from typing import Optional
 
 import disnake
 
@@ -45,14 +45,14 @@ class TypicalEmbed(disnake.Embed):
                 icon_url=inter.author.avatar,
             )
 
-    def set_title(self, value: str) -> Self:
+    def set_title(self, value: str):
         '''
         Sets the title for the embed content.
         '''
         self.title = value
         return self
 
-    def set_description(self, value: str) -> Self:
+    def set_description(self, value: str):
         '''
         Sets the description for the embed content.
         '''
@@ -74,10 +74,10 @@ class SmallView(disnake.ui.View):
         self,
         *,
         label: str,
-        url: str | None = None,
+        url: Optional[str] = None,
         style=disnake.ButtonStyle.gray,
         disabled: bool = False
-    ) -> Self:
+    ):
         '''
         Adds a button to the view.
         '''
