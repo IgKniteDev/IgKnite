@@ -12,7 +12,7 @@ import asyncio
 import functools
 import itertools
 import random
-from typing import Any, Optional, Self, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
 import disnake
 import spotipy
@@ -112,7 +112,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         search: str,
         *,
         loop: asyncio.BaseEventLoop,
-    ) -> Self:
+    ):
         loop = loop or asyncio.get_event_loop()
 
         partial = functools.partial(cls.ytdl.extract_info, search, download=False, process=False)
