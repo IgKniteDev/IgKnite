@@ -10,7 +10,7 @@ on:
 
 jobs:
   linting:
-    name: flake8
+    name: flake8 (Python 3.9)
     runs-on: ubuntu-latest
     
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python environment
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.9'
 
       - name: Run flake8
         uses: py-actions/flake8@v2
