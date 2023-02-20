@@ -16,7 +16,7 @@ from typing import Any, Optional, Tuple, Union
 
 import disnake
 import spotipy
-import youtube_dl
+import yt_dlp
 from async_timeout import timeout
 from disnake import ChannelType, Option, OptionType
 from disnake.ext import commands
@@ -26,7 +26,7 @@ import core
 from core.chain import keychain
 
 # Bug reports message.
-youtube_dl.utils.bug_reports_message = lambda: ''
+yt_dlp.utils.bug_reports_message = lambda: ''
 
 # Creating a spotipy.Spotify instance.
 spotify = spotipy.Spotify(
@@ -68,7 +68,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         'options': '-vn',
     }
 
-    ytdl = youtube_dl.YoutubeDL(YTDL_OPTIONS)
+    ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)
     ytdl.cache.remove()
 
     def __init__(
