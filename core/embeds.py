@@ -9,7 +9,6 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import random
-from typing import Optional
 
 import disnake
 
@@ -74,7 +73,7 @@ class SmallView(disnake.ui.View):
         self,
         *,
         label: str,
-        url: Optional[str] = None,
+        url: str | None = None,
         style=disnake.ButtonStyle.gray,
         disabled: bool = False
     ):
