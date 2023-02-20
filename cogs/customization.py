@@ -8,8 +8,6 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
-from typing import Optional, Union
-
 import disnake
 from disnake import ChannelType, Option, OptionChoice, OptionType
 from disnake.ext import commands
@@ -199,8 +197,8 @@ class Customization(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         name: str,
-        category: Optional[disnake.CategoryChannel] = None,
-        topic: Optional[str] = None,
+        category: disnake.CategoryChannel | None = None,
+        topic: str | None = None,
     ) -> None:
         channel = await inter.guild.create_text_channel(name=name, topic=topic, category=category)
         await inter.send(f'Channel {channel.mention} has been created!')
@@ -225,7 +223,7 @@ class Customization(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         name: str,
-        category: Optional[disnake.CategoryChannel] = None,
+        category: disnake.CategoryChannel | None = None,
     ) -> None:
         vc = await inter.guild.create_voice_channel(name=name, category=category)
         await inter.send(f'VC {vc.mention} has been created!')
@@ -271,7 +269,7 @@ class Customization(commands.Cog):
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: Union[disnake.TextChannel, disnake.VoiceChannel, disnake.StageChannel],
+        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
@@ -325,7 +323,7 @@ class Customization(commands.Cog):
     async def _afkvc(
         self,
         inter: disnake.CommandInteraction,
-        channel: Optional[disnake.VoiceChannel] = None,
+        channel: disnake.VoiceChannel | None = None,
         timeout: int = 300,
     ) -> None:
         if channel is None:
