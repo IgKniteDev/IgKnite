@@ -7,7 +7,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 '''
 
 # Imports.
-from typing import List, Optional
+from typing import List
 
 import disnake
 from disnake import Option, OptionChoice, OptionType
@@ -270,7 +270,7 @@ class Moderation(commands.Cog):
         snipeables = keychain.snipeables
         sniped_count: int = 0
 
-        def find_hook(name: str) -> Optional[disnake.Webhook]:
+        def find_hook(name: str) -> disnake.Webhook | None:
             for webhook in webhooks:
                 if webhook.name == name:
                     return webhook
