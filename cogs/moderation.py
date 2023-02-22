@@ -19,7 +19,7 @@ from core.datacls import LockRoles
 
 
 # View for the `clearnicks` command.
-class ClearNickCommandView(disnake.ui.View):
+class ClearnickCommandView(disnake.ui.View):
     def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
@@ -33,6 +33,7 @@ class ClearNickCommandView(disnake.ui.View):
                     await member.edit(nick=None)
                 except disnake.errors.Forbidden:
                     pass
+
             await inter.edit_original_message(
                 "All nicknames have been cleared!", embed=None, view=None
             )
@@ -512,7 +513,7 @@ class Moderation(commands.Cog):
             .set_description(value='This action cannot be undone.')
         )
 
-        await inter.send(embed=embed, view=ClearNickCommandView(inter), ephemeral=True)
+        await inter.send(embed=embed, view=ClearnickCommandView(inter), ephemeral=True)
 
 
 # The setup() function for the cog.

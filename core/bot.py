@@ -31,6 +31,10 @@ class IgKnite(commands.AutoShardedInteractionBot):
             self.load_extension(extension)
 
     async def _update_presence(self) -> None:
+        '''
+        Updates the rich presence of IgKnite.
+        '''
+
         await self.change_presence(
             status=disnake.Status.dnd,
             activity=disnake.Activity(

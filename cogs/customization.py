@@ -8,11 +8,12 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 
 # Imports.
-import core
 import disnake
-from core.datacls import LockRoles
 from disnake import ChannelType, Option, OptionChoice, OptionType
 from disnake.ext import commands
+
+import core
+from core.datacls import LockRoles
 
 
 # Hex to RGB converter.
@@ -268,7 +269,7 @@ class Customization(commands.Cog):
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel,
+        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
