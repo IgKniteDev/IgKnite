@@ -269,7 +269,7 @@ class Customization(commands.Cog):
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel
+        channel: disnake.TextChannel | disnake.VoiceChannel | disnake.StageChannel,
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
