@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: testing
+  cancel-in-progress: true
+
 jobs:
   linting:
     name: flake8
