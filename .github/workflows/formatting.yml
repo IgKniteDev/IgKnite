@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: testing
+  cancel-in-progress: true
+
 jobs:
   format:
     name: black
