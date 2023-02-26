@@ -880,6 +880,21 @@ class Music(commands.Cog):
     ) -> None:
         await self._playrich_backend(inter, member)
 
+    # shuffle
+    @commands.slash_command(
+        name='shuffle', description='Shuffles the current queue.', dm_permission=False
+    )
+    async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
+        inter.voice_state.songs.shuffle()
+        await inter.send("Shuffled your queue!")
+
+    # loop
+    @commands.slash_command(name='loop', description='Toggles loop.', dm_permission=False)
+    async def _loop(self, inter: disnake.CommandInteraction) -> None:
+        inter.voice_state.loop = not inter.voice_state.loop
+        action_text = "enabled" if inter.voice_state.loop else "disabled"
+        await inter.send(f"Loop has been {action_text}!")
+
 
 # The setup() function for the cog.
 def setup(bot: core.IgKnite) -> None:
