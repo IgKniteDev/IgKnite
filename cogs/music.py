@@ -766,7 +766,9 @@ class Music(commands.Cog):
         await inter.send('Shuffled your queue!')
 
     # loop
-    @commands.slash_command(name='loop', description='Toggles loop.', dm_permission=False)
+    @commands.slash_command(
+        name='loop', description='Toggles loop for the current song.', dm_permission=False
+    )
     async def _loop(self, inter: disnake.CommandInteraction) -> None:
         inter.voice_state.loop = not inter.voice_state.loop
         await inter.send(f"Loop has been {'enabled' if inter.voice_state.loop else 'disabled'}!")
