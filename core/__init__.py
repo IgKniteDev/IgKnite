@@ -16,7 +16,7 @@ from .bot import *
 from .embeds import *
 
 # Set version number.
-__version_info__ = ('2023', '2', '22')  # Year.Month.Day
+__version_info__ = ('2023', '2', '26')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
 
 # Set bot metadata.
