@@ -763,14 +763,13 @@ class Music(commands.Cog):
     )
     async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
         inter.voice_state.songs.shuffle()
-        await inter.send("Shuffled your queue!")
+        await inter.send('Shuffled your queue!')
 
     # loop
     @commands.slash_command(name='loop', description='Toggles loop.', dm_permission=False)
     async def _loop(self, inter: disnake.CommandInteraction) -> None:
         inter.voice_state.loop = not inter.voice_state.loop
-        action_text = "enabled" if inter.voice_state.loop else "disabled"
-        await inter.send(f"Loop has been {action_text}!")
+        await inter.send(f"Loop has been {'enabled' if inter.voice_state.loop else 'disabled'}!")
 
     # Backend for play-labelled commands.
     # Do not use it within other commands unless really necessary.
