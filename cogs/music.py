@@ -757,6 +757,21 @@ class Music(commands.Cog):
         inter.voice_state.songs.remove(index - 1)
         await inter.send('Removed item from queue.')
 
+    # shuffle
+    @commands.slash_command(
+        name='shuffle', description='Shuffles the current queue.', dm_permission=False
+    )
+    async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
+        inter.voice_state.songs.shuffle()
+        await inter.send("Shuffled your queue!")
+
+    # loop
+    @commands.slash_command(name='loop', description='Toggles loop.', dm_permission=False)
+    async def _loop(self, inter: disnake.CommandInteraction) -> None:
+        inter.voice_state.loop = not inter.voice_state.loop
+        action_text = "enabled" if inter.voice_state.loop else "disabled"
+        await inter.send(f"Loop has been {action_text}!")
+
     # Backend for play-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _play_backend(
@@ -879,21 +894,6 @@ class Music(commands.Cog):
         self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
         await self._playrich_backend(inter, member)
-
-    # shuffle
-    @commands.slash_command(
-        name='shuffle', description='Shuffles the current queue.', dm_permission=False
-    )
-    async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
-        inter.voice_state.songs.shuffle()
-        await inter.send("Shuffled your queue!")
-
-    # loop
-    @commands.slash_command(name='loop', description='Toggles loop.', dm_permission=False)
-    async def _loop(self, inter: disnake.CommandInteraction) -> None:
-        inter.voice_state.loop = not inter.voice_state.loop
-        action_text = "enabled" if inter.voice_state.loop else "disabled"
-        await inter.send(f"Loop has been {action_text}!")
 
 
 # The setup() function for the cog.
