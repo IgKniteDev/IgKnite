@@ -336,7 +336,10 @@ class QueueCommandView(disnake.ui.View):
         await inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
-        await self.inter.delete_original_message()
+        for child in self.children:
+            child.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # The Song class which represents the instance of a song.
