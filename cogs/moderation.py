@@ -262,12 +262,22 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='snipe',
         description='Snipes messages within 25 seconds of their deletion.',
+        options=[Option('author', 'The author of the messages to snipe.', OptionType.user)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _snipe(self, inter: disnake.CommandInteraction) -> None:
+    async def _snipe(
+        self, inter: disnake.CommandInteraction, author: disnake.Member | None = None
+    ) -> None:
         webhooks: List[disnake.Webhook] = []
-        snipeables = sorted(keychain.snipeables, key=lambda x: x.created_at.timestamp())
+        snipeables = sorted(
+            [
+                snipeable
+                for snipeable in keychain.snipeables
+                if snipeable.guild.id == inter.guild.id
+            ],
+            key=lambda x: x.created_at.timestamp(),
+        )
         sniped_count: int = 0
 
         def find_hook(name: str) -> disnake.Webhook | None:
@@ -278,25 +288,35 @@ class Moderation(commands.Cog):
         if snipeables:
             for snipeable in snipeables:
                 if snipeable.guild == inter.guild and snipeable.channel == inter.channel:
-                    webhook = find_hook(snipeable.author.display_name)
+                    if (author and snipeable.author == author) or (not author):
+                        webhook = find_hook(snipeable.author.display_name)
 
-                    if not webhook:
-                        webhook = await inter.channel.create_webhook(
-                            name=snipeable.author.display_name
+                        if not webhook:
+                            webhook = await inter.channel.create_webhook(
+                                name=snipeable.author.display_name
+                            )
+                            webhooks.append(webhook)
+
+                        await webhook.send(
+                            content=snipeable.content,
+                            username=snipeable.author.display_name,
+                            avatar_url=snipeable.author.avatar,
                         )
-                        webhooks.append(webhook)
+                        sniped_count += 1
 
-                    await webhook.send(
-                        content=snipeable.content,
-                        username=snipeable.author.display_name,
-                        avatar_url=snipeable.author.avatar,
-                    )
-                    sniped_count += 1
+                    else:
+                        pass
 
             for webhook in webhooks:
                 await webhook.delete()
 
-            await inter.send(f'Sniped **{sniped_count}** messages.', ephemeral=True)
+            await inter.send(
+                (
+                    f'Sniped **{sniped_count}** messages'
+                    + ('.' if not author else f' sent by {author.mention}.')
+                ),
+                ephemeral=True,
+            )
 
         else:
             await inter.send('No messages were found in my list.', ephemeral=True)

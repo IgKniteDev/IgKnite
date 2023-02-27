@@ -336,7 +336,10 @@ class QueueCommandView(disnake.ui.View):
         await inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
-        await self.inter.delete_original_message()
+        for child in self.children:
+            child.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # The Song class which represents the instance of a song.
@@ -545,8 +548,7 @@ class Music(commands.Cog):
 
         except AttributeError:
             await inter.send(
-                'Please switch to a voice or stage channel to use this command.',
-                ephemeral=True,
+                'Please switch to a voice or stage channel to use this command.', ephemeral=True
             )
 
     # join
@@ -784,11 +786,14 @@ class Music(commands.Cog):
         try:
             source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
 
-        except YTDLError as e:
-            await inter.send(
-                f'An error occurred while processing this request: {str(e)}',
-                ephemeral=True,
-            )
+        except Exception as e:
+            if isinstance(e, YTDLError):
+                await inter.send(
+                    f'An error occurred while processing this request: {str(e)}',
+                    ephemeral=True,
+                )
+            else:
+                pass
 
         else:
             song = Song(source)
@@ -816,10 +821,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _play(self, inter: disnake.CommandInteraction, keyword: str) -> None:
-        if 'https://open.spotify.com/playlist/' in keyword or 'spotify:playlist:' in keyword:
-            ids = Spotify.get_playlist_track_ids(keyword)
-            tracks = []
-
+        async def process_spotify_tracks(ids, tracks) -> None:
             for i in range(len(ids)):
                 track = Spotify.get_track_features(ids[i])
                 tracks.append(track)
@@ -831,22 +833,18 @@ class Music(commands.Cog):
                 value=f'{len(tracks)} tracks have been queued!'
             )
             await inter.send(embed=embed)
+
+        if 'https://open.spotify.com/playlist/' in keyword or 'spotify:playlist:' in keyword:
+            ids = Spotify.get_playlist_track_ids(keyword)
+            tracks = []
+
+            await process_spotify_tracks(ids, tracks)
 
         elif 'https://open.spotify.com/album/' in keyword or 'spotify:album:' in keyword:
             ids = Spotify.get_album(keyword)
             tracks = []
 
-            for i in range(len(ids)):
-                track = Spotify.get_track_features(ids[i])
-                tracks.append(track)
-
-            for track in tracks:
-                await self._play_backend(inter, track, send_embed=False)
-
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f'{len(tracks)} tracks have been queued!'
-            )
-            await inter.send(embed=embed)
+            await process_spotify_tracks(ids, tracks)
 
         elif 'https://open.spotify.com/track/' in keyword or 'spotify:track:' in keyword:
             id = Spotify.get_track_id(keyword)
