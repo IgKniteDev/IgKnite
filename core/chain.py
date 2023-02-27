@@ -9,8 +9,10 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 
 # Imports.
 import logging
+from typing import List
 
 from decouple import UndefinedValueError, config
+from disnake import Message
 
 
 # Custom class for handling environment secrets and global variables..
@@ -31,7 +33,7 @@ class KeyChain:
             )
 
         else:
-            self.snipeables = []
+            self.snipeables: List[Message] = []
 
 
 # Initializing it.
