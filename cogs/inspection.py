@@ -266,8 +266,8 @@ class Inspection(commands.Cog):
         self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
     ) -> None:
         deletion_count = 0
-
         await inter.response.defer()
+
         for invite in await inter.guild.invites():
             if (member and invite.inviter == member) or (not member):
                 await invite.delete()
@@ -301,6 +301,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _audit(self, inter: disnake.CommandInteraction, limit: int = 5):
         embed = core.TypicalEmbed(inter).set_title(value=f'Audit Log ({limit} entries)')
+
         async for audit_entry in inter.guild.audit_logs(limit=limit):
             embed.add_field(
                 name=f'- {audit_entry.action}',

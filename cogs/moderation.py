@@ -35,10 +35,10 @@ class ClearnickCommandView(disnake.ui.View):
                     pass
 
             await inter.edit_original_message(
-                "All nicknames have been cleared!", embed=None, view=None
+                'All nicknames have been cleared!', embed=None, view=None
             )
         else:
-            await inter.edit_original_message("You can't do that!", embed=None, view=None)
+            await inter.edit_original_message('You can\'t do that!', embed=None, view=None)
 
 
 # The actual cog.
@@ -502,7 +502,8 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.admin)
     async def _showbannedwords(self, inter: disnake.CommandInteraction) -> None:
         try:
-            words = ""
+            words = ''
+
             for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
                     for item in rule.trigger_metadata.keyword_filter:
@@ -513,9 +514,10 @@ class Moderation(commands.Cog):
                         .set_description(value=words)
                     )
                     await inter.send(embed=embed)
+
         except disnake.NotFound:
             embed = core.TypicalEmbed(inter, is_error=True).set_title(
-                "No AutoMod rules were found."
+                'No AutoMod rules were found.'
             )
             await inter.send(embed=embed)
 

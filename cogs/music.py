@@ -25,7 +25,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import core
 from core.chain import keychain
 
-# Bug reports message.
+# Suppress noise about console usage from errors.
 yt_dlp.utils.bug_reports_message = lambda: ''
 
 # Creating a spotipy.Spotify instance.
@@ -329,7 +329,8 @@ class VoiceState:
         removed_songs = []
         songs = self.songs
         songs = list(songs)
-        for idx, song in enumerate(songs):
+
+        for idx, _ in enumerate(songs):
             if idx != song_index:
                 removed_songs.append(await self.songs.get())
             else:
