@@ -209,139 +209,6 @@ class Spotify:
         return f'{artist} - {name} ({album})'
 
 
-# View for the `now` command.
-class NowCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, url: str, timeout: float = 60) -> None:
-        super().__init__(timeout=timeout)
-
-        self.inter = inter
-        self.add_item(disnake.ui.Button(label='Redirect', url=url))
-        self.add_item(
-            disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True)
-        )
-
-    @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
-    async def _loop(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.loop = not self.inter.voice_state.loop
-
-        if not self.inter.voice_state.loop:
-            button.label = 'Loop Disabled'
-            button.style = disnake.ButtonStyle.red
-        else:
-            button.label = 'Loop Enabled'
-            button.style = disnake.ButtonStyle.green
-
-        await inter.response.edit_message(view=self)
-
-    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.gray)
-    async def _skip(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.skip()
-        button.disabled = True
-        button.label = 'Skipped'
-
-        await inter.response.edit_message(view=self)
-
-    async def on_timeout(self) -> None:
-        for children in self.children:
-            if 'Redirect' != children.label:
-                children.disabled = True
-
-        await self.inter.edit_original_message(view=self)
-
-
-# Selection menu for the `queue` command.
-class QueueCommandSelect(disnake.ui.Select):
-    def __init__(self, songs, inter: disnake.CommandInteraction) -> None:
-        self.songs = songs
-        self.inter = inter
-
-        options = self.options_from_songs(self.songs)
-
-        super().__init__(
-            placeholder='Choose your song.',
-            options=options,
-        )
-
-    def options_from_songs(self, songs) -> list:
-        options = [
-            disnake.SelectOption(value=i, label=song.source.title) for i, song in enumerate(songs)
-        ]
-        return options
-
-    def update_songs(self, songs) -> None:
-        self.songs = songs
-        self.options = self.options_from_songs(songs)
-
-    async def callback(self, inter: disnake.MessageInteraction) -> None:
-        song_index = int(self.values[0])
-        song = self.songs[song_index]
-        embed, _ = song.create_embed(self.inter)
-
-        play_button = disnake.ui.Button(label='Play', style=disnake.ButtonStyle.success)
-
-        async def play(inter: disnake.Interaction) -> None:
-            await self.inter.voice_state.play_song(song_index)
-            self.view.remove_item(play_button)
-
-            await inter.response.edit_message(
-                content='Force-playing selected song.', embed=None, view=None
-            )
-
-        play_button.callback = play
-        self.view.add_item(play_button)
-
-        remove_button = disnake.ui.Button(label='Remove Song', style=disnake.ButtonStyle.danger)
-
-        async def remove(inter: disnake.Interaction) -> None:
-            self.songs.remove(song_index)
-            self.view.remove_item(remove_button)
-
-            await inter.response.edit_message(
-                content='Removed song from queue.', embed=None, view=None
-            )
-
-        remove_button.callback = remove
-        self.view.add_item(remove_button)
-
-        await inter.response.edit_message(embed=embed, view=self.view)
-
-
-# View for the `queue` command.
-class QueueCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
-        super().__init__(timeout=timeout)
-        self.inter = inter
-
-        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
-        self.add_item(self.select)
-
-    @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
-    async def clear(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.songs.clear()
-
-        await inter.response.edit_message(content='Queue cleared!', embed=None, view=None)
-
-    @disnake.ui.button(label='Shuffle', style=disnake.ButtonStyle.gray)
-    async def shuffle(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.songs.shuffle()
-        self.select.update_songs(self.inter.voice_state.songs)
-
-        button.style = random.choice(
-            [
-                disnake.ButtonStyle.blurple,
-                disnake.ButtonStyle.gray,
-                disnake.ButtonStyle.green,
-            ]
-        )
-        await inter.response.edit_message(view=self)
-
-    async def on_timeout(self) -> None:
-        for child in self.children:
-            child.disabled = True
-
-        await self.inter.edit_original_message(view=self)
-
-
 # The Song class which represents the instance of a song.
 class Song:
     __slots__ = ('source', 'requester')
@@ -492,6 +359,139 @@ class VoiceState:
         if self.voice:
             await self.voice.disconnect()
             self.voice = None
+
+
+# View for the `now` command.
+class NowCommandView(disnake.ui.View):
+    def __init__(self, inter: disnake.CommandInteraction, url: str, timeout: float = 60) -> None:
+        super().__init__(timeout=timeout)
+
+        self.inter = inter
+        self.add_item(disnake.ui.Button(label='Redirect', url=url))
+        self.add_item(
+            disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True)
+        )
+
+    @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
+    async def _loop(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
+        self.inter.voice_state.loop = not self.inter.voice_state.loop
+
+        if not self.inter.voice_state.loop:
+            button.label = 'Loop Disabled'
+            button.style = disnake.ButtonStyle.red
+        else:
+            button.label = 'Loop Enabled'
+            button.style = disnake.ButtonStyle.green
+
+        await inter.response.edit_message(view=self)
+
+    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.gray)
+    async def _skip(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
+        self.inter.voice_state.skip()
+        button.disabled = True
+        button.label = 'Skipped'
+
+        await inter.response.edit_message(view=self)
+
+    async def on_timeout(self) -> None:
+        for children in self.children:
+            if 'Redirect' != children.label:
+                children.disabled = True
+
+        await self.inter.edit_original_message(view=self)
+
+
+# Selection menu for the `queue` command.
+class QueueCommandSelect(disnake.ui.Select):
+    def __init__(self, songs, inter: disnake.CommandInteraction) -> None:
+        self.songs = songs
+        self.inter = inter
+
+        options = self.options_from_songs(self.songs)
+
+        super().__init__(
+            placeholder='Choose your song.',
+            options=options,
+        )
+
+    def options_from_songs(self, songs) -> list:
+        options = [
+            disnake.SelectOption(value=i, label=song.source.title) for i, song in enumerate(songs)
+        ]
+        return options
+
+    def update_songs(self, songs) -> None:
+        self.songs = songs
+        self.options = self.options_from_songs(songs)
+
+    async def callback(self, inter: disnake.MessageInteraction) -> None:
+        song_index = int(self.values[0])
+        song = self.songs[song_index]
+        embed, _ = song.create_embed(self.inter)
+
+        play_button = disnake.ui.Button(label='Play', style=disnake.ButtonStyle.success)
+
+        async def play(inter: disnake.Interaction) -> None:
+            await self.inter.voice_state.play_song(song_index)
+            self.view.remove_item(play_button)
+
+            await inter.response.edit_message(
+                content='Force-playing selected song.', embed=None, view=None
+            )
+
+        play_button.callback = play
+        self.view.add_item(play_button)
+
+        remove_button = disnake.ui.Button(label='Remove Song', style=disnake.ButtonStyle.danger)
+
+        async def remove(inter: disnake.Interaction) -> None:
+            self.songs.remove(song_index)
+            self.view.remove_item(remove_button)
+
+            await inter.response.edit_message(
+                content='Removed song from queue.', embed=None, view=None
+            )
+
+        remove_button.callback = remove
+        self.view.add_item(remove_button)
+
+        await inter.response.edit_message(embed=embed, view=self.view)
+
+
+# View for the `queue` command.
+class QueueCommandView(disnake.ui.View):
+    def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
+        super().__init__(timeout=timeout)
+        self.inter = inter
+
+        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
+        self.add_item(self.select)
+
+    @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
+    async def clear(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
+        self.inter.voice_state.songs.clear()
+
+        await inter.response.edit_message(content='Queue cleared!', embed=None, view=None)
+
+    @disnake.ui.button(label='Shuffle', style=disnake.ButtonStyle.gray)
+    async def shuffle(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
+        self.inter.voice_state.songs.shuffle()
+        self.select.update_songs(self.inter.voice_state.songs)
+
+        button.style = random.choice(
+            [
+                disnake.ButtonStyle.blurple,
+                disnake.ButtonStyle.gray,
+                disnake.ButtonStyle.green,
+            ]
+        )
+        await inter.response.edit_message(view=self)
+
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # The actual cog.

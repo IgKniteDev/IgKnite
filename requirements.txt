@@ -1,4 +1,4 @@
 disnake[voice]==2.8.1
 python-decouple==3.8
-spotipy==22.2.1
+spotipy==2.22.1
 yt-dlp==2023.3.4
