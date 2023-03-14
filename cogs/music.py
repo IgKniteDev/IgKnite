@@ -853,6 +853,11 @@ class Music(commands.Cog):
             await self._play_backend(inter, track)
 
         else:
+            keyword = (
+                'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                if keyword.strip() == 'rick'
+                else keyword
+            )
             await self._play_backend(inter, keyword)
 
     # play (message)
