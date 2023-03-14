@@ -27,6 +27,7 @@ class ClearnickCommandView(disnake.ui.View):
     @disnake.ui.button(label='Do it!', style=disnake.ButtonStyle.danger)
     async def _confirm_action(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
         await inter.response.defer()
+
         if LockRoles.admin in [role.name for role in inter.author.roles]:
             for member in inter.guild.members:
                 try:
@@ -37,6 +38,7 @@ class ClearnickCommandView(disnake.ui.View):
             await inter.edit_original_message(
                 'All nicknames have been cleared!', embed=None, view=None
             )
+
         else:
             await inter.edit_original_message('You can\'t do that!', embed=None, view=None)
 
@@ -90,6 +92,20 @@ class Moderation(commands.Cog):
         options=[
             Option('member', 'Mention the server member.', OptionType.user, required=True),
             Option('reason', 'Give a reason for the softban.', OptionType.string),
+            Option(
+                'daycount',
+                'The amount of days to check for deleting messages.',
+                OptionType.integer,
+                choices=[
+                    OptionChoice('1d', 1),
+                    OptionChoice('2d', 2),
+                    OptionChoice('3d', 3),
+                    OptionChoice('4d', 4),
+                    OptionChoice('5d', 5),
+                    OptionChoice('6d', 6),
+                    OptionChoice('7d', 7),
+                ],
+            ),
         ],
         dm_permission=False,
     )
@@ -99,8 +115,10 @@ class Moderation(commands.Cog):
         inter: disnake.CommandInteraction,
         member: disnake.Member,
         reason: str = 'No reason provided.',
+        daycount: int = None,
     ):
-        await self._softban_backend(inter, member, reason=reason)
+        daycount = daycount or 7
+        await self._softban_backend(inter, member, days=daycount, reason=reason)
 
     # softban (user)
     @commands.user_command(name='Wipe (Softban)', dm_permission=False)
@@ -375,10 +393,12 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _clearpins(self, inter: disnake.CommandInteraction) -> None:
         pins = await inter.channel.pins()
+
         if pins:
             for pin in pins:
                 await pin.unpin()
             await inter.send('All pins have been cleared!', ephemeral=True)
+
         else:
             await inter.send('There are no pins to clear!', ephemeral=True)
 
