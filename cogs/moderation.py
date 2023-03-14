@@ -287,7 +287,7 @@ class Moderation(commands.Cog):
 
         if snipeables:
             for snipeable in snipeables:
-                if snipeable.guild == inter.guild and snipeable.channel == inter.channel:
+                if snipeable.channel == inter.channel:
                     if (author and snipeable.author == author) or (not author):
                         webhook = find_hook(snipeable.author.display_name)
 
