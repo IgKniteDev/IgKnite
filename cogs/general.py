@@ -11,11 +11,12 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import time
 from datetime import datetime
 
-import core
 import disnake
-from core.embeds import TypicalEmbed
 from disnake import Option, OptionType
 from disnake.ext import commands
+
+import core
+from core.embeds import TypicalEmbed
 
 
 # Backend for ping-labelled commands.
@@ -98,7 +99,7 @@ class General(commands.Cog):
         await self._avatar_backend(inter, member)
 
     # avatar (user)
-    @commands.user_command(name='Show Avatar')
+    @commands.user_command(name='Show Avatar', dm_permission=False)
     async def _avatar_user(self, inter: disnake.CommandInteraction, member: disnake.Member) -> None:
         await self._avatar_backend(inter, member)
 
