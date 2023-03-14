@@ -51,11 +51,7 @@ class InviteCommandView(disnake.ui.View):
         else:
             self.children[1].disabled = False
 
-    @disnake.ui.button(
-        label='Previous',
-        style=disnake.ButtonStyle.gray,
-        disabled=True,
-    )
+    @disnake.ui.button(label='Previous', style=disnake.ButtonStyle.gray, disabled=True)
     async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page -= 1
         self.paginator_logic()
@@ -160,6 +156,14 @@ class Inspection(commands.Cog):
         self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
         await self._userinfo_backend(inter, member)
+
+    # userinfo (message)
+    @commands.message_command(name='Show Author Information', dm_permission=False)
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _userinfo_message(
+        self, inter: disnake.CommandInteraction, message: disnake.Message
+    ) -> None:
+        await self._userinfo_backend(inter, message.author)
 
     # roleinfo
     @commands.slash_command(
