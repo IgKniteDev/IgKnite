@@ -451,7 +451,7 @@ class QueueCommandView(disnake.ui.View):
         self.inter.voice_state.songs.clear()
 
         await inter.response.edit_message(
-            "Your queue has been cleared!",
+            'Your queue has been cleared!',
             embed=None,
             view=None,
         )
