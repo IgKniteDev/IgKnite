@@ -40,6 +40,7 @@ class TypicalEmbed(disnake.Embed):
                         'Hello World, from the other side!',
                         'A computer is like air conditioning'
                         + '- it becomes useless when you open Windows.',
+                        'Life is like a sine wave.',
                     ]
                 ),
                 icon_url=inter.author.avatar,
