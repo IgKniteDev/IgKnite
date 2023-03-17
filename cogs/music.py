@@ -11,6 +11,7 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import asyncio
 import functools
 import itertools
+import math
 import random
 from typing import Any, Self, Tuple
 
@@ -20,6 +21,7 @@ import yt_dlp
 from async_timeout import timeout
 from disnake import ChannelType, Option, OptionType
 from disnake.ext import commands
+from disnake.utils import MISSING
 from spotipy.oauth2 import SpotifyClientCredentials
 
 import core
@@ -401,91 +403,56 @@ class NowCommandView(disnake.ui.View):
         await self.inter.edit_original_message(view=self)
 
 
-# Selection menu for the `queue` command.
-class QueueCommandSelect(disnake.ui.Select):
-    def __init__(self, songs, inter: disnake.CommandInteraction) -> None:
-        self.songs = songs
-        self.inter = inter
-
-        options = self.options_from_songs(self.songs)
-
-        super().__init__(
-            placeholder='Choose your song.',
-            options=options,
-        )
-
-    def options_from_songs(self, songs) -> list:
-        options = [
-            disnake.SelectOption(value=i, label=song.source.title) for i, song in enumerate(songs)
-        ]
-        return options
-
-    def update_songs(self, songs) -> None:
-        self.songs = songs
-        self.options = self.options_from_songs(songs)
-
-    async def callback(self, inter: disnake.MessageInteraction) -> None:
-        song_index = int(self.values[0])
-        song = self.songs[song_index]
-        embed, _ = song.create_embed(self.inter)
-
-        play_button = disnake.ui.Button(label='Play', style=disnake.ButtonStyle.success)
-
-        async def play(inter: disnake.Interaction) -> None:
-            await self.inter.voice_state.play_song(song_index)
-            self.view.remove_item(play_button)
-
-            await inter.response.edit_message(
-                content='Force-playing selected song.', embed=None, view=None
-            )
-
-        play_button.callback = play
-        self.view.add_item(play_button)
-
-        remove_button = disnake.ui.Button(label='Remove Song', style=disnake.ButtonStyle.danger)
-
-        async def remove(inter: disnake.Interaction) -> None:
-            self.songs.remove(song_index)
-            self.view.remove_item(remove_button)
-
-            await inter.response.edit_message(
-                content='Removed song from queue.', embed=None, view=None
-            )
-
-        remove_button.callback = remove
-        self.view.add_item(remove_button)
-
-        await inter.response.edit_message(embed=embed, view=self.view)
-
-
 # View for the `queue` command.
 class QueueCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
+    def __init__(
+        self,
+        page_loader,
+        top_page: int = 1,
+        page: int = 1,
+        timeout: float = 60,
+    ) -> None:
         super().__init__(timeout=timeout)
-        self.inter = inter
 
-        self.select = QueueCommandSelect(self.inter.voice_state.songs, self.inter)
-        self.add_item(self.select)
+        self.page_loader = page_loader
+        self.top_page = top_page
+        self.page = page
 
-    @disnake.ui.button(label='Clear Queue', style=disnake.ButtonStyle.danger)
-    async def clear(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.songs.clear()
+        if self.page + 1 > self.top_page:
+            self.children[1].disabled = True
 
-        await inter.response.edit_message(content='Queue cleared!', embed=None, view=None)
+    def paginator_logic(self) -> None:
+        if self.page == 1:
+            self.children[0].disabled = True
+        else:
+            self.children[0].disabled = False
 
-    @disnake.ui.button(label='Shuffle', style=disnake.ButtonStyle.gray)
-    async def shuffle(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.songs.shuffle()
-        self.select.update_songs(self.inter.voice_state.songs)
+        if self.page + 1 > self.top_page:
+            self.children[1].disabled = True
+        else:
+            self.children[1].disabled = False
 
-        button.style = random.choice(
-            [
-                disnake.ButtonStyle.blurple,
-                disnake.ButtonStyle.gray,
-                disnake.ButtonStyle.green,
-            ]
+    @disnake.ui.button(label='< Previous', style=disnake.ButtonStyle.gray, disabled=True)
+    async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
+        self.page -= 1
+        self.paginator_logic()
+
+        embed = await self.page_loader(self.page)
+        await inter.response.edit_message(
+            embed=embed,
+            view=self,
         )
-        await inter.response.edit_message(view=self)
+
+    @disnake.ui.button(label='Next >', style=disnake.ButtonStyle.gray)
+    async def next(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
+        self.page += 1
+        self.paginator_logic()
+
+        embed = await self.page_loader(self.page)
+        await inter.response.edit_message(
+            embed=embed,
+            view=self,
+        )
 
     async def on_timeout(self) -> None:
         for child in self.children:
@@ -727,11 +694,51 @@ class Music(commands.Cog):
         name='queue', description='Shows the player\'s queue.', dm_permission=False
     )
     async def _queue(self, inter: disnake.CommandInteraction) -> None:
-        if len(inter.voice_state.songs) == 0:
+        if len(songs := inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
 
-        view = QueueCommandView(inter=inter)
-        await inter.send(view=view)
+        page = 1
+
+        songs_per_page = 5
+        top_page = math.ceil(len(songs) / songs_per_page)
+
+        async def page_loader(page_num: int) -> core.TypicalEmbed:
+            page = page_num
+
+            embed = (
+                core.TypicalEmbed(inter)
+                .set_title(value='Queue')
+                .set_description(value='Currently enqueued songs:')
+            )
+            if songs:
+                embed.set_footer(text=f'{page}/{top_page}')
+            else:
+                embed.set_description('There are no invites to this server yet.')
+
+            for i in range(
+                (page_num * songs_per_page) - songs_per_page,
+                page_num * songs_per_page,
+            ):
+                if i < len(songs):
+                    embed.add_field(
+                        name=f'{i + 1} - `{songs[i].title}`',
+                        value=songs[i].uploader_url,
+                        inline=False,
+                    )
+
+            return embed
+
+        embed = await page_loader(page)
+        await inter.send(
+            embed=embed,
+            view=QueueCommandView(
+                page_loader=page_loader,
+                top_page=top_page,
+                page=page,
+            )
+            if songs
+            else MISSING,
+        )
 
     # rmqueue
     @commands.slash_command(
