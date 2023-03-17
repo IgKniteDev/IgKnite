@@ -164,13 +164,13 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
         duration = []
         if days > 0:
-            duration.append(f'{days} days')
+            duration.append(f'{days}d')
         if hours > 0:
-            duration.append(f'{hours} hours')
+            duration.append(f'{hours}:')
         if minutes > 0:
-            duration.append(f'{minutes} minutes')
+            duration.append(f'{minutes}:')
         if seconds > 0:
-            duration.append(f'{seconds} seconds')
+            duration.append(f'{seconds}')
 
         return ', '.join(duration)
 
@@ -709,20 +709,20 @@ class Music(commands.Cog):
                 core.TypicalEmbed(inter)
                 .set_title(value='Queue')
                 .set_description(value='Currently enqueued songs:')
+                .set_footer(text=f'{page}/{top_page}')
             )
-            if songs:
-                embed.set_footer(text=f'{page}/{top_page}')
-            else:
-                embed.set_description('There are no invites to this server yet.')
 
             for i in range(
                 (page_num * songs_per_page) - songs_per_page,
                 page_num * songs_per_page,
             ):
                 if i < len(songs):
+                    source = songs[i].source
+
                     embed.add_field(
-                        name=f'{i + 1} - `{songs[i].source.title}`',
-                        value=songs[i].source.uploader_url,
+                        name=f'{i + 1} - `{source.title}`',
+                        value=f'🔗 [Redirect]({songs[i].source.url}) '
+                        f' **|** 🕑 {source.duration} \n\n',
                         inline=False,
                     )
 

@@ -242,8 +242,8 @@ class Inspection(commands.Cog):
 
                     embed.add_field(
                         name=f'{i + 1} - `{invites[i].code}`',
-                        value=f'🧍{invites[i].inviter.name}'
-                        f' **|** 🚪 {invites[i].uses}'
+                        value=f'🧍{invites[i].inviter.name} '
+                        f' **|** 🚪 {invites[i].uses} '
                         f' **|** 🕑 {max_age} \n\n',
                         inline=False,
                     )
