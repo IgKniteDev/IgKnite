@@ -25,6 +25,8 @@ from core.datacls import LockRoles
 class InviteCommandView(disnake.ui.View):
     def __init__(
         self,
+        inter: disnake.CommandInteraction,
+        *,
         page_loader,
         top_page: int = 1,
         page: int = 1,
@@ -250,6 +252,7 @@ class Inspection(commands.Cog):
         await inter.send(
             embed=embed,
             view=InviteCommandView(
+                inter,
                 page_loader=page_loader,
                 top_page=top_page,
                 page=page,

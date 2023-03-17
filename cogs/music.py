@@ -231,7 +231,7 @@ class Song:
             .add_field(name='Requester', value=self.requester.mention)
             .set_image(url=self.source.thumbnail)
         )
-        view = NowCommandView(inter=inter, url=self.source.url)
+        view = NowCommandView(inter, url=self.source.url)
 
         return embed, view
 
@@ -365,7 +365,7 @@ class VoiceState:
 
 # View for the `now` command.
 class NowCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, url: str, timeout: float = 60) -> None:
+    def __init__(self, inter: disnake.CommandInteraction, *, url: str, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
 
         self.inter = inter
@@ -407,12 +407,15 @@ class NowCommandView(disnake.ui.View):
 class QueueCommandView(disnake.ui.View):
     def __init__(
         self,
+        inter: disnake.CommandInteraction,
+        *,
         page_loader,
         top_page: int = 1,
         page: int = 1,
         timeout: float = 60,
     ) -> None:
         super().__init__(timeout=timeout)
+        self.inter = inter
 
         self.page_loader = page_loader
         self.top_page = top_page
@@ -730,6 +733,7 @@ class Music(commands.Cog):
         await inter.send(
             embed=embed,
             view=QueueCommandView(
+                inter,
                 page_loader=page_loader,
                 top_page=top_page,
                 page=page,
