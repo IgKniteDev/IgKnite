@@ -721,8 +721,8 @@ class Music(commands.Cog):
             ):
                 if i < len(songs):
                     embed.add_field(
-                        name=f'{i + 1} - `{songs[i].title}`',
-                        value=songs[i].uploader_url,
+                        name=f'{i + 1} - `{songs[i].source.title}`',
+                        value=songs[i].source.uploader_url,
                         inline=False,
                     )
 
