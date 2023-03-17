@@ -208,24 +208,20 @@ class Inspection(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
     ) -> None:
-        invites = await inter.guild.invites()
-        page = 1
+        if len(invites := await inter.guild.invites()) == 0:
+            return await inter.send('There are no invites to this server yet.')
 
+        page = 1
         invites_per_page = 5
         top_page = math.ceil(len(invites) / invites_per_page)
 
         async def page_loader(page_num: int) -> core.TypicalEmbed:
             page = page_num
-
             embed = (
                 core.TypicalEmbed(inter)
-                .set_title(value='Invites')
-                .set_description(value='List of all invites within the server:')
+                .set_title(value='Active Invites')
+                .set_footer(text=f'{page}/{top_page}')
             )
-            if invites:
-                embed.set_footer(text=f'{page}/{top_page}')
-            else:
-                embed.set_description('There are no invites to this server yet.')
 
             for i in range(
                 (page_num * invites_per_page) - invites_per_page,

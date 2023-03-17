@@ -698,7 +698,6 @@ class Music(commands.Cog):
             return await inter.send('The queue is empty.')
 
         page = 1
-
         songs_per_page = 5
         top_page = math.ceil(len(songs) / songs_per_page)
 
@@ -707,8 +706,7 @@ class Music(commands.Cog):
 
             embed = (
                 core.TypicalEmbed(inter)
-                .set_title(value='Queue')
-                .set_description(value='Currently enqueued songs:')
+                .set_title(value='Current Queue')
                 .set_footer(text=f'{page}/{top_page}')
             )
 
