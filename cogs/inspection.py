@@ -11,10 +11,9 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import math
 from datetime import datetime
 from time import mktime
-from typing import List, Tuple
 
 import disnake
-from disnake import Invite, Option, OptionType
+from disnake import Option, OptionType
 from disnake.ext import commands
 from disnake.utils import MISSING
 
@@ -51,7 +50,7 @@ class InviteCommandView(disnake.ui.View):
         else:
             self.children[1].disabled = False
 
-    @disnake.ui.button(label='Previous', style=disnake.ButtonStyle.gray, disabled=True)
+    @disnake.ui.button(label='< Previous', style=disnake.ButtonStyle.gray, disabled=True)
     async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page -= 1
         self.paginator_logic()
@@ -62,7 +61,7 @@ class InviteCommandView(disnake.ui.View):
             view=self,
         )
 
-    @disnake.ui.button(label='Next', style=disnake.ButtonStyle.gray)
+    @disnake.ui.button(label='Next >', style=disnake.ButtonStyle.gray)
     async def next(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page += 1
         self.paginator_logic()
@@ -72,6 +71,12 @@ class InviteCommandView(disnake.ui.View):
             embed=embed,
             view=self,
         )
+
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # The actual cog.
@@ -209,7 +214,7 @@ class Inspection(commands.Cog):
         invites_per_page = 5
         top_page = math.ceil(len(invites) / invites_per_page)
 
-        async def page_loader(page_num: int) -> Tuple[core.TypicalEmbed, List[Invite]]:
+        async def page_loader(page_num: int) -> core.TypicalEmbed:
             page = page_num
 
             embed = (
