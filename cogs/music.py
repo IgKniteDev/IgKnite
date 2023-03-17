@@ -164,7 +164,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
         duration = []
         if days > 0:
-            duration.append(f'{days}d')
+            duration.append(f'{days}d ')
         if hours > 0:
             duration.append(f'{hours}:')
         if minutes > 0:
@@ -172,7 +172,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         if seconds > 0:
             duration.append(f'{seconds}')
 
-        return ', '.join(duration)
+        return ''.join(duration)
 
 
 # Base class for interacting with the Spotify API.
