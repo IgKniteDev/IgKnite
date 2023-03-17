@@ -422,7 +422,7 @@ class QueueCommandView(disnake.ui.View):
         self.page = page
 
         if self.page + 1 > self.top_page:
-            self.children[1].disabled = True
+            self.children[2].disabled = True
 
     def paginator_logic(self) -> None:
         if self.page == 1:
@@ -431,9 +431,9 @@ class QueueCommandView(disnake.ui.View):
             self.children[0].disabled = False
 
         if self.page + 1 > self.top_page:
-            self.children[1].disabled = True
+            self.children[2].disabled = True
         else:
-            self.children[1].disabled = False
+            self.children[2].disabled = False
 
     @disnake.ui.button(label='< Previous', style=disnake.ButtonStyle.gray, disabled=True)
     async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
@@ -444,6 +444,16 @@ class QueueCommandView(disnake.ui.View):
         await inter.response.edit_message(
             embed=embed,
             view=self,
+        )
+
+    @disnake.ui.button(label='Clear Queue!', style=disnake.ButtonStyle.danger)
+    async def clear_queue(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
+        self.inter.voice_state.songs.clear()
+
+        await inter.response.edit_message(
+            "Your queue has been cleared!",
+            embed=None,
+            view=None,
         )
 
     @disnake.ui.button(label='Next >', style=disnake.ButtonStyle.gray)
