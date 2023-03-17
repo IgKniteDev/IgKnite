@@ -33,6 +33,7 @@ class InviteCommandView(disnake.ui.View):
         timeout: float = 60,
     ) -> None:
         super().__init__(timeout=timeout)
+        self.inter = inter
 
         self.page_loader = page_loader
         self.top_page = top_page
