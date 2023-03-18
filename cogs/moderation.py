@@ -20,7 +20,7 @@ from core.datacls import LockRoles
 
 # View for the `clearnicks` command.
 class ClearnickCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
+    def __init__(self, inter: disnake.CommandInteraction, *, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
 
@@ -41,6 +41,13 @@ class ClearnickCommandView(disnake.ui.View):
 
         else:
             await inter.edit_original_message('You can\'t do that!', embed=None, view=None)
+
+    async def on_timeout(self) -> None:
+        for children in self.children:
+            if 'Redirect' != children.label:
+                children.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # The actual cog.
@@ -550,7 +557,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.admin)
     async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
         embed = (
-            core.TypicalEmbed(inter=inter, disabled_footer=True, is_error=True)
+            core.TypicalEmbed(inter, disabled_footer=True, is_error=True)
             .set_title(value='Are you sure?')
             .set_description(value='This action cannot be undone.')
         )

@@ -11,10 +11,9 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 import math
 from datetime import datetime
 from time import mktime
-from typing import List, Tuple
 
 import disnake
-from disnake import Invite, Option, OptionType
+from disnake import Option, OptionType
 from disnake.ext import commands
 from disnake.utils import MISSING
 
@@ -26,12 +25,15 @@ from core.datacls import LockRoles
 class InviteCommandView(disnake.ui.View):
     def __init__(
         self,
+        inter: disnake.CommandInteraction,
+        *,
         page_loader,
         top_page: int = 1,
         page: int = 1,
         timeout: float = 60,
     ) -> None:
         super().__init__(timeout=timeout)
+        self.inter = inter
 
         self.page_loader = page_loader
         self.top_page = top_page
@@ -51,7 +53,7 @@ class InviteCommandView(disnake.ui.View):
         else:
             self.children[1].disabled = False
 
-    @disnake.ui.button(label='Previous', style=disnake.ButtonStyle.gray, disabled=True)
+    @disnake.ui.button(label='< Previous', style=disnake.ButtonStyle.gray, disabled=True)
     async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page -= 1
         self.paginator_logic()
@@ -62,7 +64,7 @@ class InviteCommandView(disnake.ui.View):
             view=self,
         )
 
-    @disnake.ui.button(label='Next', style=disnake.ButtonStyle.gray)
+    @disnake.ui.button(label='Next >', style=disnake.ButtonStyle.gray)
     async def next(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.page += 1
         self.paginator_logic()
@@ -72,6 +74,12 @@ class InviteCommandView(disnake.ui.View):
             embed=embed,
             view=self,
         )
+
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+
+        await self.inter.edit_original_message(view=self)
 
 
 # The actual cog.
@@ -203,24 +211,20 @@ class Inspection(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
     ) -> None:
-        invites = await inter.guild.invites()
-        page = 1
+        if len(invites := await inter.guild.invites()) == 0:
+            return await inter.send('There are no invites to this server yet.')
 
+        page = 1
         invites_per_page = 5
         top_page = math.ceil(len(invites) / invites_per_page)
 
-        async def page_loader(page_num: int) -> Tuple[core.TypicalEmbed, List[Invite]]:
+        async def page_loader(page_num: int) -> core.TypicalEmbed:
             page = page_num
-
             embed = (
                 core.TypicalEmbed(inter)
-                .set_title(value='Invites')
-                .set_description(value='List of all invites within the server:')
+                .set_title(value='Active Invites')
+                .set_footer(text=f'{page}/{top_page}')
             )
-            if invites:
-                embed.set_footer(text=f'{page}/{top_page}')
-            else:
-                embed.set_description('There are no invites to this server yet.')
 
             for i in range(
                 (page_num * invites_per_page) - invites_per_page,
@@ -237,8 +241,8 @@ class Inspection(commands.Cog):
 
                     embed.add_field(
                         name=f'{i + 1} - `{invites[i].code}`',
-                        value=f'🧍{invites[i].inviter.name}'
-                        f' **|** 🚪 {invites[i].uses}'
+                        value=f'🧍{invites[i].inviter.name} '
+                        f' **|** 🚪 {invites[i].uses} '
                         f' **|** 🕑 {max_age} \n\n',
                         inline=False,
                     )
@@ -249,6 +253,7 @@ class Inspection(commands.Cog):
         await inter.send(
             embed=embed,
             view=InviteCommandView(
+                inter,
                 page_loader=page_loader,
                 top_page=top_page,
                 page=page,

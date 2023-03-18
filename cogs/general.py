@@ -34,7 +34,7 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
     h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
 
     embed = (
-        core.TypicalEmbed(inter=inter, disabled_footer=True)
+        core.TypicalEmbed(inter, disabled_footer=True)
         .add_field(
             name='System Latency',
             value=f'{system_latency}ms [{inter.bot.shard_count} shard(s)]',
@@ -50,7 +50,7 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
 
 # View for the `ping` command.
 class PingCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, timeout: float = 60) -> None:
+    def __init__(self, inter: disnake.CommandInteraction, *, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
 
@@ -107,13 +107,13 @@ class General(commands.Cog):
     @commands.slash_command(name='ping', description='Shows my current response time.')
     async def _ping(self, inter: disnake.CommandInteraction) -> None:
         embed = await _ping_backend(inter)
-        await inter.send(embed=embed, view=PingCommandView(inter=inter))
+        await inter.send(embed=embed, view=PingCommandView(inter))
 
     # help
     @commands.slash_command(name='help', description='Get to know IgKnite!')
     async def help(inter):
         embed = (
-            core.TypicalEmbed(inter=inter, disabled_footer=True)
+            core.TypicalEmbed(inter, disabled_footer=True)
             .set_title(value='Hey there! I\'m IgKnite.')
             .set_description(
                 value='I\'m a bot with no text commands (you heard that right) '
