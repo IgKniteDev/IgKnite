@@ -519,6 +519,7 @@ class Music(commands.Cog):
         '''
 
         destination = channel or (inter.author.voice and inter.author.voice.channel)
+
         try:
             if inter.voice_state.voice:
                 await inter.voice_state.voice.move_to(destination)
@@ -568,10 +569,10 @@ class Music(commands.Cog):
     )
     async def _leave(self, inter: disnake.CommandInteraction) -> None:
         if not inter.voice_state.voice:
-            return await inter.followup.send('I\'m not inside any voice channel.')
+            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
         if not inter.author.voice:
-            return await inter.followup.send('You\'re not in my voice channel.')
+            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
 
         await inter.voice_state.stop()
         del self.voice_states[inter.guild.id]
@@ -625,14 +626,16 @@ class Music(commands.Cog):
     )
     async def _pause(self, inter: disnake.CommandInteraction) -> None:
         if not inter.voice_state.voice:
-            return await inter.send('I am not connected to any voice channel.')
+            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
         if not inter.author.voice:
-            return await inter.send('You are not in the same voice channel as mine.')
+            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
 
         if inter.voice_state.is_playing:
             inter.voice_state.voice.pause()
             await inter.send('Paused voice state.')
+        else:
+            await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
     # resume
     @commands.slash_command(
@@ -642,14 +645,18 @@ class Music(commands.Cog):
     )
     async def _resume(self, inter: disnake.CommandInteraction) -> None:
         if not inter.voice_state.voice:
-            return await inter.send('I am not connected to any voice channel.')
+            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
         if not inter.author.voice:
-            return await inter.send('You are not in the same voice channel as mine.')
+            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
 
         if inter.voice_state.voice.is_paused():
             inter.voice_state.voice.resume()
             await inter.send('Resumed voice state.')
+        else:
+            await inter.send(
+                'Playback isn\'t paused to be resumed in the first place.', ephemeral=True
+            )
 
     # stop
     @commands.slash_command(
@@ -659,10 +666,10 @@ class Music(commands.Cog):
     )
     async def _stop(self, inter: disnake.CommandInteraction) -> None:
         if not inter.voice_state.voice:
-            return await inter.send('I am not connected to any voice channel.')
+            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
         if not inter.author.voice:
-            return await inter.send('You are not in the same voice channel as mine.')
+            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
 
         inter.voice_state.songs.clear()
 
@@ -681,7 +688,7 @@ class Music(commands.Cog):
     )
     async def _skip(self, inter: disnake.CommandInteraction) -> None:
         if not inter.voice_state.is_playing:
-            return await inter.send('Not playing anything right now.')
+            return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
         if inter.voice_state.loop:
             inter.voice_state.loop = not inter.voice_state.loop
@@ -703,7 +710,7 @@ class Music(commands.Cog):
                 await inter.send(f'Skip vote added, currently at **{total_votes}/3** votes.')
 
         else:
-            await inter.send('You have already voted to skip this song.')
+            await inter.send('You have already voted to skip this song.', ephemeral=True)
 
     # queue
     @commands.slash_command(
@@ -711,7 +718,7 @@ class Music(commands.Cog):
     )
     async def _queue(self, inter: disnake.CommandInteraction) -> None:
         if len(songs := inter.voice_state.songs) == 0:
-            return await inter.send('The queue is empty.')
+            return await inter.send('The queue is empty.', ephemeral=True)
 
         page = 1
         songs_per_page = 5
@@ -771,13 +778,13 @@ class Music(commands.Cog):
     )
     async def _rmqueue(self, inter: disnake.CommandInteraction, index: int):
         if not inter.voice_state.voice:
-            return await inter.send('I am not connected to any voice channel.')
+            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
         if not inter.author.voice:
-            return await inter.send('You are not in the same voice channel as mine.')
+            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
 
         if len(inter.voice_state.songs) == 0:
-            return await inter.send('The queue is empty, so nothing to be removed.')
+            return await inter.send('The queue is empty, so nothing to be removed.', ephemeral=True)
 
         inter.voice_state.songs.remove(index - 1)
         await inter.send('Removed item from queue.')
@@ -901,7 +908,7 @@ class Music(commands.Cog):
                 track = Spotify.get_track_features(activity.track_id)
                 return await self._play_backend(inter, track)
 
-        await inter.send('Nothing is being played on Spotify!')
+        await inter.send('Nothing is being played on Spotify!', ephemeral=True)
 
     # playrich (slash)
     @commands.slash_command(
