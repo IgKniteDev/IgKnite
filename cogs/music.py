@@ -598,7 +598,10 @@ class Music(commands.Cog):
         if not inter.voice_state.is_playing:
             return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
-        inter.voice_state.current.source.volume = volume / 100
+        volume = volume / 100
+        inter.voice_state.current.source.volume = volume
+        inter.voice_state.volume = volume
+
         await inter.send(f'Volume of the player is now set to **{volume}%**')
 
     # now
