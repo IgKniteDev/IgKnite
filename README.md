@@ -9,7 +9,7 @@
 ### The Swiss Army Knife for Moderation 🔪 Music on Discord
 
 <img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
-<a aria-label="Join the community on Discord" href="https://discord.gg/ftVPgrw54A" target="_blank">
+<a aria-label="Join the community on Discord" href="https://discord.gg/XF9ATvUjgs" target="_blank">
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
 </a>
 <a aria-label="Inject to your Discord server" href="https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands" target="_blank">
