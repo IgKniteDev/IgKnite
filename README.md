@@ -8,8 +8,6 @@
 
 ### The Swiss Army Knife for Moderation 🔪 Music on Discord
 
----
-
 <img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
 <a aria-label="Join the community on Discord" href="https://discord.gg/XF9ATvUjgs" target="_blank">
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
