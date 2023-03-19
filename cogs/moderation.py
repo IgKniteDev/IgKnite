@@ -296,11 +296,7 @@ class Moderation(commands.Cog):
     ) -> None:
         webhooks: List[disnake.Webhook] = []
         snipeables = sorted(
-            [
-                snipeable
-                for snipeable in keychain.snipeables
-                if snipeable.guild.id == inter.guild.id
-            ],
+            [snipeable for snipeable in keychain.snipeables if snipeable.guild == inter.guild],
             key=lambda x: x.created_at.timestamp(),
         )
         sniped_count: int = 0

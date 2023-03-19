@@ -48,14 +48,14 @@ class TypicalEmbed(disnake.Embed):
 
     def set_title(self, value: str) -> Self:
         '''
-        Sets the title for the embed content.
+        Sets the title for the embed.
         '''
         self.title = value
         return self
 
     def set_description(self, value: str) -> Self:
         '''
-        Sets the description for the embed content.
+        Sets the description for the embed.
         '''
         self.description = value
         return self

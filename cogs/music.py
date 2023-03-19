@@ -576,7 +576,7 @@ class Music(commands.Cog):
 
         await inter.voice_state.stop()
         del self.voice_states[inter.guild.id]
-        await inter.followup.send('Left voice state.')
+        await inter.send('Left voice state.')
 
     # volume
     @commands.slash_command(
@@ -906,7 +906,16 @@ class Music(commands.Cog):
         for activity in member.activities:
             if isinstance(activity, disnake.Spotify):
                 track = Spotify.get_track_features(activity.track_id)
-                return await self._play_backend(inter, track)
+                await self._play_backend(inter, track, send_embed=False)
+
+                embed = disnake.Embed(
+                    title='Fetched from Spotify!',
+                    description=f'Now attempting to search for **"{track}"** on YouTube'
+                    + ' and enqueue it.',
+                    color=1824608,
+                ).set_image(url=activity.album_cover_url)
+
+                return await inter.send(embed=embed)
 
         await inter.send('Nothing is being played on Spotify!', ephemeral=True)
 
