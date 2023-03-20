@@ -22,14 +22,14 @@ class TypicalEmbed(disnake.Embed):
 
     def __init__(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInteraction | None = None,
         *,
         disabled_footer: bool = False,
         is_error: bool = False
     ) -> None:
-        super().__init__(color=(3158326 if not is_error else 16608388))
+        super().__init__(color=(2764081 if not is_error else 16608388))
 
-        if not disabled_footer:
+        if not disabled_footer and inter:
             self.set_footer(
                 text=random.choice(
                     [
@@ -67,7 +67,9 @@ class SmallView(disnake.ui.View):
     Can be used for simple views with buttons.
     '''
 
-    def __init__(self, inter: disnake.CommandInteraction, *, timeout: float = 60) -> None:
+    def __init__(
+        self, inter: disnake.CommandInteraction | None = None, *, timeout: float = 60
+    ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
 
@@ -76,7 +78,7 @@ class SmallView(disnake.ui.View):
         *,
         label: str,
         url: str | None = None,
-        style=disnake.ButtonStyle.gray,
+        style: disnake.ButtonStyle = disnake.ButtonStyle.gray,
         disabled: bool = False
     ) -> Self:
         '''
@@ -87,8 +89,9 @@ class SmallView(disnake.ui.View):
         return self
 
     async def on_timeout(self) -> None:
-        for children in self.children:
-            if children.style != disnake.ButtonStyle.link:
-                children.disabled = True
+        if self.inter:
+            for children in self.children:
+                if children.style != disnake.ButtonStyle.link:
+                    children.disabled = True
 
-        await self.inter.edit_original_message(view=self)
+            await self.inter.edit_original_message(view=self)
