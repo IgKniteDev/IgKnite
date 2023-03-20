@@ -74,7 +74,7 @@ class General(commands.Cog):
     # Listener for the bookmark feature.
     @commands.Cog.listener()
     async def on_reaction_add(
-        self, reaction: disnake.Reaction, user: disnake.Member | disnake.User
+        self, reaction: disnake.Reaction, user: disnake.Member
     ) -> None:
         if reaction.emoji == '🔖':
             embed = disnake.Embed(
