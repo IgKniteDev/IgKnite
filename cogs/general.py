@@ -81,7 +81,7 @@ class General(commands.Cog):
                 color=3158326,
                 description=reaction.message.content,
             ).set_author(name=f'{user.name}#{user.discriminator}', icon_url=user.avatar)
-            await user.send(embed=embed)
+            await user.send(content=reaction.message.jump_url, embed=embed)
 
     # Backend for avatar-labelled commands.
     # Do not use it within other commands unless really necessary.
