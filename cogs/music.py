@@ -932,7 +932,7 @@ class Music(commands.Cog):
         await self._playrich_backend(inter, member)
 
     # playrich (user)
-    @commands.user_command(name='Rich Play', dm_permisision=False)
+    @commands.user_command(name='Rich Play', dm_permission=False)
     async def _playrich_user(
         self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
