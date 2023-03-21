@@ -73,13 +73,19 @@ class General(commands.Cog):
 
     # Listener for the bookmark feature.
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: disnake.Reaction, user: disnake.Member) -> None:
+    async def on_reaction_add(self, reaction: disnake.Reaction, member: disnake.Member) -> None:
         if reaction.emoji == '🔖':
-            embed = disnake.Embed(
-                color=3158326,
-                description=reaction.message.content,
-            ).set_author(name=f'{user.name}#{user.discriminator}', icon_url=user.avatar)
-            await user.send(content=reaction.message.jump_url, embed=embed)
+            embed = (
+                core.TypicalEmbed()
+                .set_title('You\'ve bookmarked a message.')
+                .set_description(
+                    reaction.message.content + f'\n\nSent by {member} on {member.guild.name}'
+                )
+            )
+            view = core.SmallView().add_button(
+                label='Original Message', url=reaction.message.jump_url
+            )
+            await member.send(embed=embed, view=view)
 
     # Backend for avatar-labelled commands.
     # Do not use it within other commands unless really necessary.
