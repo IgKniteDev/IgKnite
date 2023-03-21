@@ -79,7 +79,8 @@ class General(commands.Cog):
                 core.TypicalEmbed()
                 .set_title('You\'ve bookmarked a message.')
                 .set_description(
-                    reaction.message.content + f'\n\nSent by {member} on {member.guild.name}'
+                    reaction.message.content + f'\n\nSent by {reaction.message.author.name} '
+                    + f'on {member.guild.name}'
                 )
             )
             view = core.SmallView().add_button(
