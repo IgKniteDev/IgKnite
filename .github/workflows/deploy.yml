@@ -1,12 +1,9 @@
-name: Fly Deploy
+name: Deploy
 
 on:
   workflow_dispatch:
   release:
     types: [published]
-
-env:
-  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,15 +15,17 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: production
-      url: https://igknite.fly.dev
+      name: Production
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup flyctl
-        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Setup hop.io CLI
+        run: |
+          curl -fsSL https://download.hop.sh/install | sh
+          hop auth login --token ${{ secrets.HOP_TOKEN }}
 
-      - name: Deploy to fly
-        run: flyctl deploy --remote-only --no-cache --strategy immediate
+      - name: Deploy to hop
+        run: |
+          hop deploy
