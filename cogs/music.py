@@ -717,6 +717,9 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _skip(self, inter: disnake.CommandInteraction) -> None:
+        if not await self._ensure_voice_safety(inter):
+            return
+
         if not inter.voice_state.is_playing:
             return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
@@ -725,19 +728,25 @@ class Music(commands.Cog):
 
         voter = inter.author
 
-        if voter == inter.voice_state.current.requester:
+        if (
+            voter == inter.voice_state.current.requester
+            or len(inter.voice_state.voice.channel.members) == 2
+        ):
             await inter.send('Skipped!')
             inter.voice_state.skip()
 
         elif voter.id not in inter.voice_state.skip_votes:
             inter.voice_state.skip_votes.add(voter.id)
             total_votes = len(inter.voice_state.skip_votes)
+            required_votes = round(len(inter.voice_state.voice.channel.members) / 2)
 
-            if total_votes >= 3:
+            if total_votes >= required_votes:
                 await inter.send('Skipped!')
                 inter.voice_state.skip()
             else:
-                await inter.send(f'Skip vote added, currently at **{total_votes}/3** votes.')
+                await inter.send(
+                    f'Skip vote added, currently at **{total_votes}/{required_votes}** votes.'
+                )
 
         else:
             await inter.send('You have already voted to skip this song.', ephemeral=True)
