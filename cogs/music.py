@@ -509,6 +509,15 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
+    async def _ensure_voice_safety(self, inter: disnake.CommandInteraction) -> Any | None:
+        if not inter.voice_state.voice:
+            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
+
+        if not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel:
+            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+
+        return True
+
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
@@ -568,11 +577,8 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _leave(self, inter: disnake.CommandInteraction) -> None:
-        if not inter.voice_state.voice:
-            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice:
-            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        if not await self._ensure_voice_safety(inter):
+            return
 
         await inter.voice_state.stop()
         del self.voice_states[inter.guild.id]
@@ -625,11 +631,8 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _pause(self, inter: disnake.CommandInteraction) -> None:
-        if not inter.voice_state.voice:
-            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice:
-            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        if not await self._ensure_voice_safety(inter):
+            return
 
         if inter.voice_state.is_playing:
             inter.voice_state.voice.pause()
@@ -644,11 +647,8 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _resume(self, inter: disnake.CommandInteraction) -> None:
-        if not inter.voice_state.voice:
-            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice:
-            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        if not await self._ensure_voice_safety(inter):
+            return
 
         if inter.voice_state.voice.is_paused():
             inter.voice_state.voice.resume()
@@ -665,11 +665,8 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _stop(self, inter: disnake.CommandInteraction) -> None:
-        if not inter.voice_state.voice:
-            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice:
-            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        if not await self._ensure_voice_safety(inter):
+            return
 
         inter.voice_state.songs.clear()
 
@@ -777,11 +774,8 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _rmqueue(self, inter: disnake.CommandInteraction, index: int):
-        if not inter.voice_state.voice:
-            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice:
-            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        if not await self._ensure_voice_safety(inter):
+            return
 
         if len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty, so nothing to be removed.', ephemeral=True)
