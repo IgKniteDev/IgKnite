@@ -267,7 +267,7 @@ class VoiceState:
         self._inter = inter
 
         self.current = None
-        self.voice = None
+        self.voice: disnake.VoiceProtocol | None = None
         self.exists = True
         self.next = asyncio.Event()
         self.songs = SongQueue()
@@ -484,9 +484,9 @@ class Music(commands.Cog):
         for state in self.voice_states.values():
             self.bot.loop.create_task(state.stop())
 
-    def get_voice_state(self, inter: disnake.CommandInteraction) -> VoiceState:
+    def init_voice_state(self, inter: disnake.CommandInteraction) -> VoiceState:
         '''
-        A method that returns the `VoiceState` instance for a specific guild.
+        A method that initializes the `VoiceState` object for a specific guild.
         '''
 
         state = self.voice_states.get(inter.guild.id)
@@ -497,16 +497,50 @@ class Music(commands.Cog):
 
         return state
 
+    def get_voice_state(self, guild_id: int) -> VoiceState | None:
+        '''
+        A method that returns the `VoiceState` object for the given guild ID (if any).
+        '''
+
+        try:
+            return self.voice_states[guild_id]
+        except KeyError:
+            pass
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(
+        self, member: disnake.Member, before: disnake.VoiceState, after: disnake.VoiceState
+    ) -> None:
+        if not (state := self.get_voice_state(member.guild.id)):
+            return
+
+        if not before.self_deaf and after.self_deaf:
+            if len(after.channel.members) == 2:
+                return state.voice.pause()
+
+        elif before.self_deaf and not after.self_deaf:
+            if len(after.channel.members) == 2:
+                return state.voice.resume()
+
+        elif before.channel and not after.channel:
+            if member == self.bot.user:
+                state.voice.cleanup()
+                await state.stop()
+                del self.voice_states[member.guild.id]
+
+        else:
+            pass
+
     async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
-        inter.voice_state = self.get_voice_state(inter)
+        inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
     async def cog_before_message_command_invoke(self, inter: disnake.CommandInteraction) -> None:
-        inter.voice_state = self.get_voice_state(inter)
+        inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
     async def cog_before_user_command_invoke(self, inter: disnake.CommandInteraction) -> None:
-        inter.voice_state = self.get_voice_state(inter)
+        inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
     async def _ensure_voice_safety(self, inter: disnake.CommandInteraction) -> Any | None:
