@@ -509,7 +509,7 @@ class Music(commands.Cog):
         inter.voice_state = self.get_voice_state(inter)
         return await inter.response.defer()
 
-    async def _ensure_voice_safety(self, inter: disnake.CommandInteraction) -> True | None:
+    async def _ensure_voice_safety(self, inter: disnake.CommandInteraction) -> Any | None:
         if not inter.voice_state.voice:
             return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
@@ -577,7 +577,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _leave(self, inter: disnake.CommandInteraction) -> None:
-        if not self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter):
             return
 
         await inter.voice_state.stop()
@@ -631,7 +631,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _pause(self, inter: disnake.CommandInteraction) -> None:
-        if not self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter):
             return
 
         if inter.voice_state.is_playing:
@@ -647,7 +647,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _resume(self, inter: disnake.CommandInteraction) -> None:
-        if not self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter):
             return
 
         if inter.voice_state.voice.is_paused():
@@ -665,7 +665,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _stop(self, inter: disnake.CommandInteraction) -> None:
-        if not self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter):
             return
 
         inter.voice_state.songs.clear()
@@ -774,7 +774,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _rmqueue(self, inter: disnake.CommandInteraction, index: int):
-        if not self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter):
             return
 
         if len(inter.voice_state.songs) == 0:
