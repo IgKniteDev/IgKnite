@@ -515,15 +515,18 @@ class Music(commands.Cog):
             return
 
         if not before.self_deaf and after.self_deaf:
-            return state.voice.pause()
+            if len(after.channel.members) == 2:
+                return state.voice.pause()
 
         elif before.self_deaf and not after.self_deaf:
-            return state.voice.resume()
+            if len(after.channel.members) == 2:
+                return state.voice.resume()
 
         elif before.channel and not after.channel:
-            state.voice.cleanup()
-            await state.stop()
-            del self.voice_states[member.guild.id]
+            if member == self.bot.user:
+                state.voice.cleanup()
+                await state.stop()
+                del self.voice_states[member.guild.id]
 
         else:
             pass
