@@ -13,7 +13,7 @@ from datetime import datetime
 from . import chain as chain
 from . import datacls as datacls
 from .bot import *
-from .embeds import *
+from .ui import *
 
 # Set version number.
 __version_info__ = ('2023', '3', '24')  # Year.Month.Day

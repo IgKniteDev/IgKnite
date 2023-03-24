@@ -359,7 +359,7 @@ class Moderation(commands.Cog):
         embed = (
             core.TypicalEmbed(inter)
             .add_field('Message: ', msg)
-            .set_title(value=f'{inter.author.display_name} has sent you a message!')
+            .set_title(f'{inter.author.display_name} has sent you a message!')
             .set_thumbnail(url=inter.author.avatar.url)
         )
 
@@ -373,7 +373,7 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     async def _pins(self, inter: disnake.CommandInteraction) -> None:
-        embed = core.TypicalEmbed(inter).set_title(value='Pinned Messages  📌')
+        embed = core.TypicalEmbed(inter).set_title('Pinned Messages  📌')
         pins = await inter.channel.pins()
         if pins:
             for count, pin in enumerate(pins):
@@ -383,7 +383,7 @@ class Moderation(commands.Cog):
                     inline=False,
                 )
         else:
-            embed.set_description(value='There are no pinned messages in this channel.')
+            embed.set_description('There are no pinned messages in this channel.')
 
         await inter.send(embed=embed)
 
@@ -489,8 +489,8 @@ class Moderation(commands.Cog):
 
         embed = (
             core.TypicalEmbed(inter)
-            .set_title(value='Added these words to banned list:')
-            .set_description(value=', '.join(keywords))
+            .set_title('Added these words to banned list:')
+            .set_description(', '.join(keywords))
         )
         await inter.send(embed=embed, ephemeral=True)
 
@@ -533,8 +533,8 @@ class Moderation(commands.Cog):
                         words += f'{item} \n'
                     embed = (
                         core.TypicalEmbed(inter)
-                        .set_title(value='Here\'s the list of banned words:')
-                        .set_description(value=words)
+                        .set_title('Here\'s the list of banned words:')
+                        .set_description(words)
                     )
                     await inter.send(embed=embed)
 
@@ -554,8 +554,8 @@ class Moderation(commands.Cog):
     async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
         embed = (
             core.TypicalEmbed(inter, disabled_footer=True, is_error=True)
-            .set_title(value='Are you sure?')
-            .set_description(value='This action cannot be undone.')
+            .set_title('Are you sure?')
+            .set_description('This action cannot be undone.')
         )
 
         await inter.send(embed=embed, view=ClearnickCommandView(inter), ephemeral=True)
