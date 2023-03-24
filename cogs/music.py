@@ -226,7 +226,7 @@ class Song:
 
         embed = (
             core.TypicalEmbed(inter)
-            .set_title(value=self.source.title)
+            .set_title(self.source.title)
             .add_field(name='Duration', value=duration)
             .add_field(name='Requester', value=self.requester.mention)
             .set_image(url=self.source.thumbnail)
@@ -768,7 +768,7 @@ class Music(commands.Cog):
 
             embed = (
                 core.TypicalEmbed(inter)
-                .set_title(value='Current Queue')
+                .set_title('Current Queue')
                 .set_footer(text=f'{page}/{top_page}')
             )
 
