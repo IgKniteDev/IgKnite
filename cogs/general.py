@@ -16,12 +16,11 @@ from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
-from core.embeds import TypicalEmbed
 
 
 # Backend for ping-labelled commands.
 # Do not use it within other commands unless really necessary.
-async def _ping_backend(inter: disnake.CommandInteraction) -> TypicalEmbed:
+async def _ping_backend(inter: disnake.CommandInteraction) -> core.TypicalEmbed:
     system_latency = round(inter.bot.latency * 1000)
 
     start_time = time.time()
@@ -97,9 +96,7 @@ class General(commands.Cog):
         member = member or inter.author
 
         embed = (
-            core.TypicalEmbed(inter)
-            .set_title(value='Here\'s what I found!')
-            .set_image(url=member.avatar)
+            core.TypicalEmbed(inter).set_title('Here\'s what I found!').set_image(url=member.avatar)
         )
 
         await inter.send(embed=embed)
@@ -132,9 +129,9 @@ class General(commands.Cog):
     async def help(inter):
         embed = (
             core.TypicalEmbed(inter, disabled_footer=True)
-            .set_title(value='Hey there! I\'m IgKnite.')
+            .set_title('Hey there! I\'m IgKnite.')
             .set_description(
-                value='I\'m a bot with no text commands (you heard that right) '
+                'I\'m a bot with no text commands (you heard that right) '
                 + 'and I\'m here to help you manage and moderate your Discord server alongside'
                 + 'having a midnight music party with your friends in a random voice channel. '
                 + 'Looking forward to being friends with you!'
