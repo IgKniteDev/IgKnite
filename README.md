@@ -30,10 +30,11 @@ IgKnite is a Discord bot built for the community, by the community. Written for 
 ## Table of Contents
 
 - [Motive](#⚔️-motive)
+- [Mission](#📦-mission)
 - [Features](#🗡-features)
-- [Usage](#🪶-how-to-use)
-
-<br>
+- [Usage](#📝-usage)
+- [Contributing](#🔨-contributing)
+- [License](#🔖-license)
 
 ## ⚔️ Motive
 
@@ -41,7 +42,7 @@ Most Discord bots require a prefix (textual commands) and a clear head to use th
 
 IgKnite, a Discord moderation and music bot built entirely on interactions such as slashes, buttons, views, selects, colors, and a slew of unique instructions, was created specifically for this purpose! <br>
 
-## Mission
+## 📦 Mission
 
 Our mission is to create a Discord bot which promotes ease-of-access for everyone with high-quality commands. Let it be the general members of a Discord server or the sole moderators, we aim to create an experience equally fluid for everyone. We also want to do it without never having to think about making IgKnite closed-source. Which means, this project will remain **open-source and free forever.** <br>
 
