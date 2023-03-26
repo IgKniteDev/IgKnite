@@ -14,9 +14,14 @@
     <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
 </a>
 
-</div>
+<br> <img src="static/banner.png">
 
-<img src="static/banner.png">
+[![CodeQL](https://github.com/IgKniteDev/IgKnite/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/github-code-scanning/codeql)
+[![CodeSee](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml)
+[![Format](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
+[![Lint](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
+
+</div>
 
 IgKnite is a Discord bot built for the community, by the community. Written for stability and user-friendliness, IgKnite focuses on interaction-based commands rather than prefix-based commands (no `!play` anymore) to make moderating your server (and playing music) a breeze!
 
