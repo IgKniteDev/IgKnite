@@ -6,8 +6,6 @@
 
 # IgKnite
 
-### The Swiss Army Knife for Moderation 🔪 Music on Discord
-
 <img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
 <a aria-label="Join the community on Discord" href="https://discord.gg/XF9ATvUjgs" target="_blank">
     <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
@@ -16,11 +14,19 @@
     <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
 </a>
 
-<br><br>
-<img src="static/play_command_demo.png" width="600">
-<br><br>
-
 </div>
+
+<img src="static/banner.png">
+
+IgKnite is a Discord bot built for the community, by the community. Written for stability and user-friendliness, IgKnite focuses on interaction-based commands rather than prefix-based commands (no `!play` anymore) to make moderating your server (and playing music) a breeze!
+
+---
+
+## Table of Contents
+
+- [Motive](#⚔️-motive)
+- [Features](#🗡-features)
+- [Usage](#🪶-how-to-use)
 
 ## ⚔️ Motive
 
@@ -28,32 +34,24 @@ Most Discord bots require a prefix (textual commands) and a clear head to use th
 
 IgKnite, a Discord moderation and music bot built entirely on interactions such as slashes, buttons, views, selects, colors, and a slew of unique instructions, was created specifically for this purpose!
 
-Despite its youth, IgKnite intends to grow alongside the community, focusing on the needs of the user base and adding anything that brings the user experience one step closer to being as fluid as possible. It also aims to reduce the overhead of using commands, allowing you to accomplish much more with a single interaction. 
+Despite its age, we intend to grow alongside the community, focusing on the needs of the user base and adding anything that brings the user experience one step closer to being as fluid as possible. It also aims to reduce the overhead of using commands, allowing you to accomplish much more with a single interaction. 
 
-<br><br>
-<div align="center">
-  <img src="static/now_command_demo.png" width="600">
-</div>
-<br><br>
-
-## 🗡 Features
+## Features
 
 - Application-first command handler with slash, user and message commands.
 - Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
 - A playground all by itself for creative commands.
 - Fully open-source (including assets).
-- No buzz, all buff! 
+- No buzz, all buff!
 
-<br>
-
-## 🪶 How to use?
+## Usage
 
 In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! <br>
 
-## 📓 Contributing
+## Contributing
 
-If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./.github/CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
+If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./.github/CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D
 
-## Written with ❤️ in pure <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/python/python.png" height="50px"/> Python!
+## License
 
-This project has been licensed under the [MIT License](LICENSE).
+Licensed under the [MIT License](LICENSE).
