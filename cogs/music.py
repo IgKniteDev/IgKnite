@@ -515,11 +515,11 @@ class Music(commands.Cog):
             return
 
         if not before.self_deaf and after.self_deaf:
-            if len(after.channel.members) == 2:
+            if len(after.channel.members) == 2 and state.is_playing:
                 return state.voice.pause()
 
         elif before.self_deaf and not after.self_deaf:
-            if len(after.channel.members) == 2:
+            if len(after.channel.members) == 2 and state.voice.is_paused():
                 return state.voice.resume()
 
         elif member == self.bot.user and not member.voice:
