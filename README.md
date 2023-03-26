@@ -33,30 +33,35 @@ IgKnite is a Discord bot built for the community, by the community. Written for 
 - [Features](#🗡-features)
 - [Usage](#🪶-how-to-use)
 
+<br>
+
 ## ⚔️ Motive
 
 Most Discord bots require a prefix (textual commands) and a clear head to use their commands. This can be intimidating at times, especially if you embarrass yourself in front of your friends by entering a command that isn't perfect. 
 
-IgKnite, a Discord moderation and music bot built entirely on interactions such as slashes, buttons, views, selects, colors, and a slew of unique instructions, was created specifically for this purpose!
+IgKnite, a Discord moderation and music bot built entirely on interactions such as slashes, buttons, views, selects, colors, and a slew of unique instructions, was created specifically for this purpose! <br>
 
-Despite its age, we intend to grow alongside the community, focusing on the needs of the user base and adding anything that brings the user experience one step closer to being as fluid as possible. It also aims to reduce the overhead of using commands, allowing you to accomplish much more with a single interaction. 
+## Mission
 
-## Features
+Our mission is to create a Discord bot which promotes ease-of-access for everyone with high-quality commands. Let it be the general members of a Discord server or the sole moderators, we aim to create an experience equally fluid for everyone. We also want to do it without never having to think about making IgKnite closed-source. Which means, this project will remain **open-source and free forever.** <br>
 
-- Application-first command handler with slash, user and message commands.
+## ⚡ Features
+
+- Moderation commands, made creative and easy.
+- State-of-the-art music system (YouTube).
 - Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
 - A playground all by itself for creative commands.
 - Fully open-source (including assets).
-- No buzz, all buff!
+- No buzz, all buff! <br>
 
-## Usage
+## 📝 Usage
 
-In order to learn about everything; from adding IgKnite to your Discord server to using its commands to even self-hosting it on your machine, kindly visit [the official documentation page](https://igknitedev.github.io/docs) and have a go-through! <br>
+IgKnite has its own [documentation webpage](https://igknitedev.github.io/docs) where you can learn about everything, starting from the commands to even self-hosting the bot on your local computer. <br>
 
-## Contributing
+## 🔨 Contributing
 
-If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./.github/CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D
+If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./.github/CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
 
-## License
+## 🔖 License
 
 Licensed under the [MIT License](LICENSE).
