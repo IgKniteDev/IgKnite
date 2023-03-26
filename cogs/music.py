@@ -522,10 +522,7 @@ class Music(commands.Cog):
             if len(after.channel.members) == 2:
                 return state.voice.resume()
 
-        elif (
-            member == self.bot.user
-            and not member.voice
-        ):
+        elif member == self.bot.user and not member.voice:
             state.voice.cleanup()
             await state.stop()
             del self.voice_states[member.guild.id]
