@@ -183,7 +183,7 @@ class YTDLSourceBoosted(YTDLSource):
 
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-        'options': '-vn -af "bass=gain=10"',
+        'options': '-vn -af "bass=g=10"',
     }
 
 
@@ -345,7 +345,7 @@ class VoiceState:
                     self.current.source.stream_url,
                     **(
                         YTDLSource.FFMPEG_OPTIONS
-                        if self._boosted
+                        if not self._boosted
                         else YTDLSourceBoosted.FFMPEG_OPTIONS
                     ),
                 )
@@ -880,7 +880,7 @@ class Music(commands.Cog):
             await self._join_logic(inter)
 
         try:
-            source = await (YTDLSource if boosted else YTDLSourceBoosted).create_source(
+            source = await (YTDLSource if not boosted else YTDLSourceBoosted).create_source(
                 inter, keyword, loop=self.bot.loop
             )
 
