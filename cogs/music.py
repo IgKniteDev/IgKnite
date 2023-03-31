@@ -540,21 +540,39 @@ class Music(commands.Cog):
         if not (state := self.get_voice_state(member.guild.id)):
             return
 
-        if not before.self_deaf and after.self_deaf:
-            if len(after.channel.members) == 2 and state.is_playing:
-                return state.voice.pause()
+        if self.bot.user in after.channel.members:
+            if len(after.channel.members) == 2:
+                if not before.self_deaf and after.self_deaf and state.is_playing:
+                    state.voice.pause()
 
-        elif before.self_deaf and not after.self_deaf:
-            if len(after.channel.members) == 2 and state.voice.is_paused():
-                return state.voice.resume()
+                elif before.self_deaf and not after.self_deaf and state.voice.is_paused():
+                    state.voice.resume()
 
-        elif member == self.bot.user and not member.voice:
-            state.voice.cleanup()
-            await state.stop()
-            del self.voice_states[member.guild.id]
+            elif len(after.channel.members) == 1 and state.is_playing:
+                state.voice.pause()
+                await member.send(
+                    'The playback has been paused since nobody is in the voice channel.'
+                )
 
-        else:
-            pass
+            elif (
+                len(before.channel.members) == 1
+                and len(after.channel.members) > 1
+                and state.voice.is_paused()
+            ):
+                state.voice.resume()
+                await member.send('Playback from a previous session has been resumed.')
+
+        elif member == self.bot.user:
+            if not member.voice:
+                state.voice.cleanup()
+                await state.stop()
+                del self.voice_states[member.guild.id]
+
+            elif not before.mute and after.mute and state.is_playing:
+                state.voice.pause()
+
+            elif before.mute and not after.mute and state.voice.is_paused():
+                state.voice.resume()
 
     async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
         inter.voice_state = self.init_voice_state(inter)
