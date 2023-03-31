@@ -175,6 +175,18 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         return ''.join(duration)
 
 
+# YTDLSource class with equalized playback.
+class YTDLSourceBoosted(YTDLSource):
+    '''
+    A child class of `YTDLSource` for serving equalized playback.
+    '''
+
+    FFMPEG_OPTIONS = {
+        'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+        'options': '-vn -af "bass=gain=10"',
+    }
+
+
 # Base class for interacting with the Spotify API.
 class Spotify:
     @staticmethod
@@ -274,6 +286,7 @@ class VoiceState:
 
         self._loop = False
         self._volume = 0.5
+        self._boosted = False
         self.skip_votes = set()
 
         self.audio_player = bot.loop.create_task(self.audio_player_task())
@@ -296,6 +309,14 @@ class VoiceState:
     @volume.setter
     def volume(self, value: float) -> None:
         self._volume = value
+
+    @property
+    def boosted(self) -> bool:
+        return self._boosted
+
+    @boosted.setter
+    def boosted(self, value: bool) -> None:
+        self._boosted = value
 
     @property
     def is_playing(self) -> Any:
@@ -321,7 +342,12 @@ class VoiceState:
 
             elif self.loop:
                 self.now = disnake.FFmpegPCMAudio(
-                    self.current.source.stream_url, **YTDLSource.FFMPEG_OPTIONS
+                    self.current.source.stream_url,
+                    **(
+                        YTDLSource.FFMPEG_OPTIONS
+                        if self._boosted
+                        else YTDLSourceBoosted.FFMPEG_OPTIONS
+                    ),
                 )
                 self.voice.play(self.now, after=self.play_next_song)
 
@@ -843,13 +869,20 @@ class Music(commands.Cog):
     # Backend for play-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _play_backend(
-        self, inter: disnake.CommandInteraction, keyword: str, send_embed: bool = True
+        self,
+        inter: disnake.CommandInteraction,
+        keyword: str,
+        *,
+        send_embed: bool = True,
+        boosted: bool = False,
     ) -> None:
         if not inter.voice_state.voice:
             await self._join_logic(inter)
 
         try:
-            source = await YTDLSource.create_source(inter, keyword, loop=self.bot.loop)
+            source = await (YTDLSource if boosted else YTDLSourceBoosted).create_source(
+                inter, keyword, loop=self.bot.loop
+            )
 
         except Exception as e:
             if isinstance(e, YTDLError):
@@ -881,18 +914,27 @@ class Music(commands.Cog):
                 'The link / keyword to search for. Supports YouTube and Spotify links.',
                 OptionType.string,
                 required=True,
-            )
+            ),
+            Option(
+                'boosted',
+                'Boosts the playback with some bass and other filters.',
+                OptionType.boolean,
+            ),
         ],
         dm_permission=False,
     )
-    async def _play(self, inter: disnake.CommandInteraction, keyword: str) -> None:
+    async def _play(
+        self, inter: disnake.CommandInteraction, keyword: str, boosted: bool = False
+    ) -> None:
+        inter.voice_state.boosted = boosted
+
         async def process_spotify_tracks(ids, tracks) -> None:
             for i in range(len(ids)):
                 track = Spotify.get_track_features(ids[i])
                 tracks.append(track)
 
             for track in tracks:
-                await self._play_backend(inter, track, send_embed=False)
+                await self._play_backend(inter, track, send_embed=False, boosted=boosted)
 
             embed = core.TypicalEmbed(inter).set_title(
                 value=f'{len(tracks)} tracks have been queued!'
@@ -914,7 +956,7 @@ class Music(commands.Cog):
         elif 'https://open.spotify.com/track/' in keyword or 'spotify:track:' in keyword:
             id = Spotify.get_track_id(keyword)
             track = Spotify.get_track_features(id)
-            await self._play_backend(inter, track)
+            await self._play_backend(inter, track, boosted=boosted)
 
         else:
             keyword = (
@@ -922,7 +964,7 @@ class Music(commands.Cog):
                 if keyword.strip() == 'rick'
                 else keyword
             )
-            await self._play_backend(inter, keyword)
+            await self._play_backend(inter, keyword, boosted=boosted)
 
     # play (message)
     @commands.message_command(name='Search & Play', dm_permission=False)
