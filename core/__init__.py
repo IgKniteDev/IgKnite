@@ -16,7 +16,7 @@ from .bot import *
 from .ui import *
 
 # Set version number.
-__version_info__ = ('2023', '3', '31')  # Year.Month.Day
+__version_info__ = ('2023', '4', '1')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
 
 # Set bot metadata.
