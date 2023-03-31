@@ -540,7 +540,7 @@ class Music(commands.Cog):
         if not (state := self.get_voice_state(member.guild.id)):
             return
 
-        if self.bot.user in after.channel.members:
+        if self.bot.user in before.channel.members:
             if len(after.channel.members) == 2:
                 if not before.self_deaf and after.self_deaf and state.is_playing:
                     state.voice.pause()
