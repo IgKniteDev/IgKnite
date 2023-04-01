@@ -540,29 +540,26 @@ class Music(commands.Cog):
         if not (state := self.get_voice_state(member.guild.id)):
             return
 
-        if self.bot.user in before.channel.members:
-            if len(after.channel.members) == 2:
-                if not before.self_deaf and after.self_deaf and state.is_playing:
-                    state.voice.pause()
-
-                elif before.self_deaf and not after.self_deaf and state.voice.is_paused():
-                    state.voice.resume()
-
-            elif len(after.channel.members) == 1 and state.is_playing:
+        if member != self.bot.user:
+            if (
+                before.channel
+                and not after.channel
+                and self.bot.user in before.channel.members
+                and state.is_playing
+            ):
                 state.voice.pause()
-                await member.send(
-                    'The playback has been paused since nobody is in the voice channel.'
-                )
+                await member.send('Playback has been paused since nobody\'s in the voice channel.')
 
             elif (
-                len(before.channel.members) == 1
-                and len(after.channel.members) > 1
+                not before.channel
+                and after.channel
+                and self.bot.user in after.channel.members
                 and state.voice.is_paused()
             ):
                 state.voice.resume()
-                await member.send('Playback from a previous session has been resumed.')
+                await member.send('Playback from a previous listening session has been resumed.')
 
-        elif member == self.bot.user:
+        else:
             if not member.voice:
                 state.voice.cleanup()
                 await state.stop()
