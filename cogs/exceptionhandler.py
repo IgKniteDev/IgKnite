@@ -25,7 +25,7 @@ class ExceptionHandler(commands.Cog):
     def get_view(self, inter: disnake.CommandInteraction) -> core.SmallView:
         view = core.SmallView(inter).add_button(
             label='It\'s a bug?',
-            url=core.BOT_METADATA['REPOSITORY'] + '/issues/new?template=bug.yml',
+            url=core.BotMeta.repo + '/issues/new?template=bug.yml',
             style=disnake.ButtonStyle.red,
         )
         return view
