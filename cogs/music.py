@@ -79,7 +79,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         source: disnake.FFmpegPCMAudio,
         *,
         data: dict,
-        volume: float = 0.75,
+        volume: float = 0.5,
     ) -> None:
         super().__init__(source, volume)
 
@@ -285,7 +285,7 @@ class VoiceState:
         self.songs = SongQueue()
 
         self._loop = False
-        self._volume = 0.75
+        self._volume = 0.5
         self._boosted = False
         self.skip_votes = set()
 
