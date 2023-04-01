@@ -79,7 +79,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         source: disnake.FFmpegPCMAudio,
         *,
         data: dict,
-        volume: float = 0.5,
+        volume: float = 0.75,
     ) -> None:
         super().__init__(source, volume)
 
@@ -285,7 +285,7 @@ class VoiceState:
         self.songs = SongQueue()
 
         self._loop = False
-        self._volume = 0.5
+        self._volume = 0.75
         self._boosted = False
         self.skip_votes = set()
 
@@ -545,6 +545,7 @@ class Music(commands.Cog):
                 before.channel
                 and not after.channel
                 and self.bot.user in before.channel.members
+                and len(before.channel.members) == 1
                 and state.is_playing
             ):
                 state.voice.pause()
@@ -554,6 +555,7 @@ class Music(commands.Cog):
                 not before.channel
                 and after.channel
                 and self.bot.user in after.channel.members
+                and len(after.channel.members) == 2
                 and state.voice.is_paused()
             ):
                 state.voice.resume()
@@ -682,7 +684,10 @@ class Music(commands.Cog):
         inter.voice_state.current.source.volume = (vol_mod := volume / 100)
         inter.voice_state.volume = vol_mod
 
-        await inter.send(f'Volume of the player is now set to **{volume}%**')
+        await inter.send(
+            f'Volume of the player is now set to **{volume}%**'
+            + ('(⚠️ reduced quality) ' if volume > 100 else '')
+        )
 
     # now
     @commands.slash_command(
