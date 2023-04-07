@@ -274,9 +274,8 @@ class SongQueue(asyncio.Queue):
 
 # The VoiceState class, which represents the playback status of songs.
 class VoiceState:
-    def __init__(self, bot: core.IgKnite, inter: disnake.CommandInteraction) -> None:
+    def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
-        self._inter = inter
 
         self.current = None
         self.voice: disnake.VoiceProtocol | None = None
@@ -518,7 +517,7 @@ class Music(commands.Cog):
         state = self.voice_states.get(inter.guild.id)
 
         if not state or not state.exists:
-            state = VoiceState(self.bot, inter)
+            state = VoiceState(self.bot)
             self.voice_states[inter.guild.id] = state
 
         return state
