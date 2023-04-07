@@ -43,9 +43,9 @@ class ClearnickCommandView(disnake.ui.View):
             await inter.edit_original_message('You can\'t do that!', embed=None, view=None)
 
     async def on_timeout(self) -> None:
-        for children in self.children:
-            if 'Redirect' != children.label:
-                children.disabled = True
+        for child in self.children:
+            if 'Redirect' != child.label:
+                child.disabled = True
 
         await self.inter.edit_original_message(view=self)
 
