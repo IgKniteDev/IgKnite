@@ -59,8 +59,8 @@ class PingCommandView(disnake.ui.View):
         await inter.edit_original_message(embed=embed, view=self)
 
     async def on_timeout(self) -> None:
-        for children in self.children:
-            children.disabled = True
+        for child in self.children:
+            child.disabled = True
 
         await self.inter.edit_original_message(view=self)
 

@@ -422,9 +422,9 @@ class NowCommandView(disnake.ui.View):
         await inter.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:
-        for children in self.children:
-            if 'Redirect' != children.label:
-                children.disabled = True
+        for child in self.children:
+            if 'Redirect' != child.label:
+                child.disabled = True
 
         await self.inter.edit_original_message(view=self)
 

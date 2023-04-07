@@ -90,8 +90,8 @@ class SmallView(disnake.ui.View):
 
     async def on_timeout(self) -> None:
         if self.inter:
-            for children in self.children:
-                if children.style != disnake.ButtonStyle.link:
-                    children.disabled = True
+            for child in self.children:
+                if child.style != disnake.ButtonStyle.link:
+                    child.disabled = True
 
             await self.inter.edit_original_message(view=self)
