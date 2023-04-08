@@ -23,21 +23,21 @@ jobs:
         uses: psf/black@stable
         with:
           options: "--check --verbose"
-          version: "~= 22.0"
+          version: "~= 23.0"
         continue-on-error: true
 
       - name: Format
         uses: psf/black@stable
         with:
           options: "--verbose"
-          version: "~= 22.0"
+          version: "~= 23.0"
 
       - name: Create pull request
         if: steps.checkifneeded.outcome != 'success'
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Resolved formatting errors"
+          title: "🎨 [tuning] Resolved formatting errors"
           commit-message: "format code using psf/black"
           body: |
             Formatter errors found in: ${{ github.sha }}.
