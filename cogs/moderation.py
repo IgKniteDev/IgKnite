@@ -171,7 +171,7 @@ class Moderation(commands.Cog):
                 'amount',
                 'The amount of messages to purge. Defaults to 1.',
                 OptionType.integer,
-                min_value=2,
+                min_value=1,
             ),
             Option('onlyme', 'Only deletes messages sent by me.', OptionType.boolean),
         ],
@@ -179,10 +179,12 @@ class Moderation(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _purge(
-        self, inter: disnake.CommandInteraction, amount: int = 2, onlyme: bool = False
+        self, inter: disnake.CommandInteraction, amount: int = 1, onlyme: bool = False
     ) -> None:
         def is_me(message: disnake.Message) -> bool:
             return message.author == self.bot.user
+
+        amount += 1
 
         if onlyme:
             await inter.channel.purge(limit=amount, check=is_me)
