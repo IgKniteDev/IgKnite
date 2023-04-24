@@ -426,7 +426,7 @@ class Moderation(commands.Cog):
         ],
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
         keywords = keywords.split(',')
 
@@ -471,7 +471,7 @@ class Moderation(commands.Cog):
         description='Clears the list of banned keywords added by me.',
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _clearbannedwords(self, inter: disnake.CommandInteraction) -> None:
         try:
             for rule in await inter.guild.fetch_automod_rules():
@@ -493,7 +493,7 @@ class Moderation(commands.Cog):
         description='Shows the list of banned keywords added by me.',
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _showbannedwords(self, inter: disnake.CommandInteraction) -> None:
         try:
             words = ''
@@ -521,7 +521,7 @@ class Moderation(commands.Cog):
         description='Clear everyone\'s nickname in the guild.',
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
         deletion_count = 0
 
