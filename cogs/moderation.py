@@ -381,7 +381,7 @@ class Moderation(commands.Cog):
         description='Sets slowmode for the current channel.',
         options=[
             Option(
-                'seconds',
+                'duration',
                 'The amount of seconds to set the slowmode to. Set 0 to disable.',
                 OptionType.integer,
                 min_value=0,
@@ -408,9 +408,13 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _slowmode(self, inter: disnake.CommandInteraction, seconds: int) -> None:
-        await inter.channel.edit(slowmode_delay=seconds)
-        await inter.send(f'Slowmode has been set to **{seconds}** seconds.')
+    async def _slowmode(self, inter: disnake.CommandInteraction, duration: int) -> None:
+        await inter.channel.edit(slowmode_delay=duration)
+
+        if duration == 0:
+            await inter.send('Slowmode has been disabled!')
+        else:
+            await inter.send(f'Slowmode has been set to **{duration}** seconds.')
 
     # banword
     @commands.slash_command(
