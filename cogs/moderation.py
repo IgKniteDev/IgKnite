@@ -18,38 +18,6 @@ from core.chain import keychain
 from core.datacls import LockRoles
 
 
-# View for the `clearnicks` command.
-class ClearnickCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, *, timeout: float = 60) -> None:
-        super().__init__(timeout=timeout)
-        self.inter = inter
-
-    @disnake.ui.button(label='Do it!', style=disnake.ButtonStyle.danger)
-    async def _confirm_action(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        await inter.response.defer()
-
-        if LockRoles.admin in [role.name for role in inter.author.roles]:
-            for member in inter.guild.members:
-                try:
-                    await member.edit(nick=None)
-                except disnake.errors.Forbidden:
-                    pass
-
-            await inter.edit_original_message(
-                'All nicknames have been cleared!', embed=None, view=None
-            )
-
-        else:
-            await inter.edit_original_message('You can\'t do that!', embed=None, view=None)
-
-    async def on_timeout(self) -> None:
-        for child in self.children:
-            if 'Redirect' != child.label:
-                child.disabled = True
-
-        await self.inter.edit_original_message(view=self)
-
-
 # The actual cog.
 class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
@@ -215,6 +183,8 @@ class Moderation(commands.Cog):
     ) -> None:
         def is_me(message: disnake.Message) -> bool:
             return message.author == self.bot.user
+
+        amount += 1
 
         if onlyme:
             await inter.channel.purge(limit=amount, check=is_me)
@@ -417,6 +387,7 @@ class Moderation(commands.Cog):
                 min_value=0,
                 max_value=21600,
                 choices=[
+                    OptionChoice('Remove Slowmode', 0),
                     OptionChoice('5s', 5),
                     OptionChoice('10s', 10),
                     OptionChoice('15s', 15),
@@ -455,7 +426,7 @@ class Moderation(commands.Cog):
         ],
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
         keywords = keywords.split(',')
 
@@ -500,7 +471,7 @@ class Moderation(commands.Cog):
         description='Clears the list of banned keywords added by me.',
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _clearbannedwords(self, inter: disnake.CommandInteraction) -> None:
         try:
             for rule in await inter.guild.fetch_automod_rules():
@@ -522,7 +493,7 @@ class Moderation(commands.Cog):
         description='Shows the list of banned keywords added by me.',
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _showbannedwords(self, inter: disnake.CommandInteraction) -> None:
         try:
             words = ''
@@ -550,15 +521,18 @@ class Moderation(commands.Cog):
         description='Clear everyone\'s nickname in the guild.',
         dm_permission=False,
     )
-    @commands.has_any_role(LockRoles.admin)
+    @commands.has_role(LockRoles.admin)
     async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
-        embed = (
-            core.TypicalEmbed(inter, disabled_footer=True, is_error=True)
-            .set_title('Are you sure?')
-            .set_description('This action cannot be undone.')
-        )
+        deletion_count = 0
 
-        await inter.send(embed=embed, view=ClearnickCommandView(inter), ephemeral=True)
+        for member in inter.guild.members:
+            try:
+                await member.edit(nick=None)
+                deletion_count += 1
+            except disnake.errors.Forbidden:
+                pass
+
+        await inter.send(f'Cleared the nicknames for **{deletion_count}** users.')
 
 
 # The setup() function for the cog.

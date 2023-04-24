@@ -176,6 +176,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
 
 # YTDLSource class with equalized playback.
+# Note: This feature is still work-in-progress and the audio filters need to be improved.
 class YTDLSourceBoosted(YTDLSource):
     '''
     A child class of `YTDLSource` for serving equalized playback.
@@ -441,6 +442,7 @@ class QueueCommandView(disnake.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
+        self.cleared = False
 
         self.page_loader = page_loader
         self.top_page = top_page
@@ -474,6 +476,7 @@ class QueueCommandView(disnake.ui.View):
     @disnake.ui.button(label='Clear Queue!', style=disnake.ButtonStyle.danger)
     async def clear_queue(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
         self.inter.voice_state.songs.clear()
+        self.cleared = True
 
         await inter.response.edit_message(
             'Your queue has been cleared!',
@@ -493,10 +496,11 @@ class QueueCommandView(disnake.ui.View):
         )
 
     async def on_timeout(self) -> None:
-        for child in self.children:
-            child.disabled = True
+        if not self.cleared:
+            for child in self.children:
+                child.disabled = True
 
-        await self.inter.edit_original_message(view=self)
+            await self.inter.edit_original_message(view=self)
 
 
 # The actual cog.
