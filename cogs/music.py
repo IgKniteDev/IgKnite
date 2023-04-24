@@ -176,6 +176,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
 
 # YTDLSource class with equalized playback.
+# Note: This feature is still work-in-progress and the audio filters need to be improved.
 class YTDLSourceBoosted(YTDLSource):
     '''
     A child class of `YTDLSource` for serving equalized playback.
