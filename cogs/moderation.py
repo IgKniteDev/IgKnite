@@ -298,8 +298,9 @@ class Moderation(commands.Cog):
                     else:
                         pass
 
-            for webhook in webhooks:
-                await webhook.delete()
+            for webhook in await inter.channel.webhooks():
+                if webhook.user == self.bot.user:
+                    await webhook.delete()
 
             await inter.send(
                 (
@@ -345,6 +346,7 @@ class Moderation(commands.Cog):
     async def _pins(self, inter: disnake.CommandInteraction) -> None:
         embed = core.TypicalEmbed(inter).set_title('Pinned Messages  📌')
         pins = await inter.channel.pins()
+
         if pins:
             for count, pin in enumerate(pins):
                 embed.add_field(
@@ -370,8 +372,8 @@ class Moderation(commands.Cog):
         if pins:
             for pin in pins:
                 await pin.unpin()
-            await inter.send('All pins have been cleared!', ephemeral=True)
 
+            await inter.send('All pins have been cleared!', ephemeral=True)
         else:
             await inter.send('There are no pins to clear!', ephemeral=True)
 
@@ -441,10 +443,11 @@ class Moderation(commands.Cog):
                     break
             else:
                 rule = None
+
         except disnake.NotFound:
             rule = None
 
-        if rule is None:
+        if not rule:
             rule = await inter.guild.create_automod_rule(
                 name='IgKnite Banwords',
                 event_type=disnake.AutoModEventType.message_send,
