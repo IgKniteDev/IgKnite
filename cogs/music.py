@@ -244,7 +244,7 @@ class Song:
             .add_field(name='Requester', value=self.requester.mention)
             .set_image(url=self.source.thumbnail)
         )
-        view = NowCommandView(inter, url=self.source.url)
+        view = NowCommandView(url=self.source.url, volume=inter.voice_state.volume)
 
         return embed, view
 
@@ -391,42 +391,11 @@ class VoiceState:
 
 # View for the `now` command.
 class NowCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, *, url: str, timeout: float = 60) -> None:
+    def __init__(self, *, url: str, volume: float, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
 
-        self.inter = inter
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
-        self.add_item(
-            disnake.ui.Button(label=f'Volume: {int(inter.voice_state.volume*100)}', disabled=True)
-        )
-
-    @disnake.ui.button(label='Toggle Loop', style=disnake.ButtonStyle.gray)
-    async def _loop(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.loop = not self.inter.voice_state.loop
-
-        if not self.inter.voice_state.loop:
-            button.label = 'Loop Disabled'
-            button.style = disnake.ButtonStyle.red
-        else:
-            button.label = 'Loop Enabled'
-            button.style = disnake.ButtonStyle.green
-
-        await inter.response.edit_message(view=self)
-
-    @disnake.ui.button(label='Skip', style=disnake.ButtonStyle.gray)
-    async def _skip(self, button: disnake.ui.Button, inter: disnake.Interaction) -> None:
-        self.inter.voice_state.skip()
-        button.disabled = True
-        button.label = 'Skipped'
-
-        await inter.response.edit_message(view=self)
-
-    async def on_timeout(self) -> None:
-        for child in self.children:
-            if 'Redirect' != child.label:
-                child.disabled = True
-
-        await self.inter.edit_original_message(view=self)
+        self.add_item(disnake.ui.Button(label=f'Volume: {int(volume*100)}'))
 
 
 # View for the `queue` command.
