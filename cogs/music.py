@@ -559,7 +559,9 @@ class Music(commands.Cog):
         inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
-    async def _ensure_voice_safety(self, inter: disnake.CommandInteraction, *, skip_self: bool = False) -> Any | None:
+    async def _ensure_voice_safety(
+        self, inter: disnake.CommandInteraction, *, skip_self: bool = False
+    ) -> Any | None:
         '''
         This coroutine ensures that the voice safety of the bot is ensured.
         Thus, allowing for restricted access to users depending on the bot's voice state.
