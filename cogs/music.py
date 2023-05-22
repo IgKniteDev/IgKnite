@@ -557,26 +557,26 @@ class Music(commands.Cog):
         inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
+    # A coroutine for ensuring proper voice safety during playback.
     async def _ensure_voice_safety(
         self, inter: disnake.CommandInteraction, skip_self: bool = False
     ) -> Any | None:
         if (not skip_self) and (not inter.voice_state.voice):
             return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel:
+        elif (
+            not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel
+        ):
             return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        else:
+            return True
 
-        return True
-
+    # A coroutine for commands which sets the destination voice channel of the bot
+    # as needed. Commonly used in play-labelled commands.
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
         channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
-    ) -> Any:
-        '''
-        A sub-method for commands requiring the bot to join a voice / stage channel.
-        '''
-
+    ) -> Any | None:
         destination = channel or (inter.author.voice and inter.author.voice.channel)
 
         try:
@@ -904,6 +904,16 @@ class Music(commands.Cog):
                 view = core.SmallView(inter).add_button(label='Redirect', url=song.source.url)
                 await inter.send(embed=embed, view=view)
 
+    # Separate coroutine for ensuring voice safety especially for play-labelled commands.
+    # Note: This coroutine is used in conjunction with _ensure_voice_safety() and _join_logic().
+    async def _ensure_play_safety(self, inter: disnake.CommandInteraction) -> True | False:
+        if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
+            return False
+        elif not await self._ensure_voice_safety(inter):
+            return False
+        else:
+            return True
+
     # play (slash)
     @commands.slash_command(
         name='play',
@@ -926,9 +936,7 @@ class Music(commands.Cog):
     async def _play(
         self, inter: disnake.CommandInteraction, keyword: str, boosted: bool = False
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-        elif not await self._ensure_voice_safety(inter):
+        if not await self._ensure_play_safety(inter):
             return
 
         inter.voice_state.boosted = boosted
@@ -976,21 +984,18 @@ class Music(commands.Cog):
     async def _play_message(
         self, inter: disnake.CommandInteraction, message: disnake.Message
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-        elif not await self._ensure_voice_safety(inter):
+        if not await self._ensure_play_safety(inter):
             return
 
         await self._play_backend(inter, message.content)
 
     # Common backend for playrich-labelled commands.
     # Do not use it within other commands unless really necessary.
+    # Note: This backend is used in conjunction with _play_backend().
     async def _playrich_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-        elif not await self._ensure_voice_safety(inter):
+        if not await self._ensure_play_safety(inter):
             return
 
         member = member or inter.author
