@@ -16,7 +16,6 @@
 
 <br> <img src="static/banner.png">
 
-[![CodeQL](https://github.com/IgKniteDev/IgKnite/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/github-code-scanning/codeql)
 [![CodeSee](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml)
 [![Format](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
 [![Lint](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
