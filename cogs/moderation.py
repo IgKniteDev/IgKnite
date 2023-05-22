@@ -46,7 +46,7 @@ class Moderation(commands.Cog):
         await inter.guild.ban(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
 
-    # Backend for softban-labelled commands.
+    # Common backend for softban-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _softban_backend(
         self,
@@ -191,7 +191,7 @@ class Moderation(commands.Cog):
         else:
             await inter.channel.purge(limit=amount)
 
-    # Backend for ripplepurge-labelled commands.
+    # Common backend for ripplepurge-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _ripplepurge_backend(
         self,

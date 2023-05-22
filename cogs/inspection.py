@@ -118,7 +118,7 @@ class Inspection(commands.Cog):
 
         await inter.send(embed=embed)
 
-    # Backend for userinfo-labelled commands.
+    # Common backend for userinfo-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _userinfo_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member = None

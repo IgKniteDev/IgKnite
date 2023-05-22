@@ -18,7 +18,7 @@ from disnake.ext import commands
 import core
 
 
-# Backend for ping-labelled commands.
+# Common backend for ping-labelled commands.
 # Do not use it within other commands unless really necessary.
 async def _ping_backend(inter: disnake.CommandInteraction) -> core.TypicalEmbed:
     system_latency = round(inter.bot.latency * 1000)
@@ -88,7 +88,7 @@ class General(commands.Cog):
             )
             await member.send(embed=embed, view=view)
 
-    # Backend for avatar-labelled commands.
+    # Common backend for avatar-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _avatar_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member = None
