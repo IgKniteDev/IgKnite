@@ -535,7 +535,11 @@ class Music(commands.Cog):
 
         else:
             if not member.voice:
-                state.voice.cleanup()
+                try:
+                    state.voice.cleanup()
+                except AttributeError:
+                    pass
+
                 await state.stop()
                 del self.voice_states[member.guild.id]
 
@@ -909,7 +913,7 @@ class Music(commands.Cog):
     async def _ensure_play_safety(self, inter: disnake.CommandInteraction) -> True | False:
         if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
             return False
-        elif not await self._ensure_voice_safety(inter):
+        elif not await self._ensure_voice_safety(inter, skip_self=True):
             return False
         else:
             return True
