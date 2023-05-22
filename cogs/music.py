@@ -509,11 +509,9 @@ class Music(commands.Cog):
     async def on_voice_state_update(
         self, member: disnake.Member, before: disnake.VoiceState, after: disnake.VoiceState
     ) -> None:
-        # Stops the code if there isn't an active voice state assigned to the guild.
         if not (state := self.get_voice_state(member.guild.id)):
             return
 
-        # Ensures fail-safe future playbacks and pause-resume functionality for sudden voice state updates.
         if member != self.bot.user:
             if (
                 before.channel
@@ -559,25 +557,10 @@ class Music(commands.Cog):
         inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
-    async def _ensure_voice_safety(
-        self, inter: disnake.CommandInteraction, *, skip_self: bool = False
-    ) -> Any | None:
-        '''
-        This coroutine ensures that the voice safety of the bot is ensured.
-        Thus, allowing for restricted access to users depending on the bot's voice state.
-
-        Required Parameters:
-        - `inter` (disnake.CommandInteraction): The reference Discord interaction to deal with.
-
-        Optional Parameters:
-        - `skip_self` (bool): Stops the bot from checking its own voice state.
-        '''
-
-        # Checks if the bot is in a voice channel.
-        if (not skip_self) and (not inter.voice_state.voice):
+    async def _ensure_voice_safety(self, inter: disnake.CommandInteraction) -> Any | None:
+        if not inter.voice_state.voice:
             return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
 
-        # Checks if the author of the interaction is in a voice channel / in the bot's voice channel.
         if not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel:
             return await inter.send('You\'re not in my voice channel.', ephemeral=True)
 
@@ -587,24 +570,25 @@ class Music(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
-    ) -> Any | None:
+    ) -> Any:
         '''
         A sub-method for commands requiring the bot to join a voice / stage channel.
         '''
 
-        # Stops the code if improper voice safety is found.
-        if not await self._ensure_voice_safety(inter):
-            return
-
-        # Switches to a proper destination (vocal channel).
         destination = channel or (inter.author.voice and inter.author.voice.channel)
 
-        if inter.voice_state.voice:
-            await inter.voice_state.voice.move_to(destination)
-        else:
-            inter.voice_state.voice = await destination.connect()
+        try:
+            if inter.voice_state.voice:
+                await inter.voice_state.voice.move_to(destination)
+            else:
+                inter.voice_state.voice = await destination.connect()
 
-        return destination
+            return destination
+
+        except AttributeError:
+            await inter.send(
+                'Please switch to a voice or stage channel to use this command.', ephemeral=True
+            )
 
     # join
     @commands.slash_command(
@@ -627,9 +611,7 @@ class Music(commands.Cog):
         *,
         channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
     ) -> None:
-        if not (destination := await self._join_logic(inter, channel)):
-            return
-
+        destination = await self._join_logic(inter, channel)
         await inter.send(
             f'Joined **{destination}.**'
             if destination is not channel
@@ -668,9 +650,6 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _volume(self, inter: disnake.CommandInteraction, volume: float) -> None:
-        if not await self._ensure_voice_safety(inter):
-            return
-
         if not inter.voice_state.is_playing:
             return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
@@ -794,9 +773,6 @@ class Music(commands.Cog):
         name='queue', description='Shows the player\'s queue.', dm_permission=False
     )
     async def _queue(self, inter: disnake.CommandInteraction) -> None:
-        if not await self._ensure_voice_safety(inter):
-            return
-
         if len(songs := inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.', ephemeral=True)
 
@@ -871,9 +847,6 @@ class Music(commands.Cog):
         name='shuffle', description='Shuffles the current queue.', dm_permission=False
     )
     async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
-        if not await self._ensure_voice_safety(inter):
-            return
-
         inter.voice_state.songs.shuffle()
         await inter.send('Shuffled your queue!')
 
@@ -882,9 +855,6 @@ class Music(commands.Cog):
         name='loop', description='Toggles loop for the current song.', dm_permission=False
     )
     async def _loop(self, inter: disnake.CommandInteraction) -> None:
-        if not await self._ensure_voice_safety(inter):
-            return
-
         inter.voice_state.loop = not inter.voice_state.loop
         await inter.send(f"Loop has been {'enabled' if inter.voice_state.loop else 'disabled'}!")
 
@@ -898,8 +868,8 @@ class Music(commands.Cog):
         send_embed: bool = True,
         boosted: bool = False,
     ) -> None:
-        if not await self._join_logic(inter):
-            return
+        if not inter.voice_state.voice:
+            await self._join_logic(inter)
 
         try:
             source = await (YTDLSource if not boosted else YTDLSourceBoosted).create_source(
