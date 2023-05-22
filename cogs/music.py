@@ -164,15 +164,15 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
         duration = []
         if days > 0:
-            duration.append(f'{days}d ')
+            duration.append(f'{days}')
         if hours > 0:
-            duration.append(f'{hours}:')
+            duration.append(f'{hours}')
         if minutes > 0:
-            duration.append(f'{minutes}:')
+            duration.append(f'{minutes}')
         if seconds > 0:
             duration.append(f'{seconds}')
 
-        return ''.join(duration)
+        return ':'.join(duration)
 
 
 # YTDLSource class with equalized playback.
@@ -535,7 +535,11 @@ class Music(commands.Cog):
 
         else:
             if not member.voice:
-                state.voice.cleanup()
+                try:
+                    state.voice.cleanup()
+                except AttributeError:
+                    pass
+
                 await state.stop()
                 del self.voice_states[member.guild.id]
 
@@ -557,24 +561,26 @@ class Music(commands.Cog):
         inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
 
-    async def _ensure_voice_safety(self, inter: disnake.CommandInteraction) -> Any | None:
-        if not inter.voice_state.voice:
+    # A coroutine for ensuring proper voice safety during playback.
+    async def _ensure_voice_safety(
+        self, inter: disnake.CommandInteraction, skip_self: bool = False
+    ) -> Any | None:
+        if (not skip_self) and (not inter.voice_state.voice):
             return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
-
-        if not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel:
+        elif (
+            not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel
+        ):
             return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+        else:
+            return True
 
-        return True
-
+    # A coroutine for commands which sets the destination voice channel of the bot
+    # as needed. Commonly used in play-labelled commands.
     async def _join_logic(
         self,
         inter: disnake.CommandInteraction,
         channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
-    ) -> Any:
-        '''
-        A sub-method for commands requiring the bot to join a voice / stage channel.
-        '''
-
+    ) -> Any | None:
         destination = channel or (inter.author.voice and inter.author.voice.channel)
 
         try:
@@ -650,7 +656,9 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _volume(self, inter: disnake.CommandInteraction, volume: float) -> None:
-        if not inter.voice_state.is_playing:
+        if not await self._ensure_voice_safety(inter):
+            return
+        elif not inter.voice_state.is_playing:
             return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
         inter.voice_state.current.source.volume = (vol_mod := volume / 100)
@@ -658,7 +666,7 @@ class Music(commands.Cog):
 
         await inter.send(
             f'Volume of the player is now set to **{volume}%**'
-            + ('(⚠️ reduced quality) ' if volume > 100 else '')
+            + (' (⚠️ reduced quality) ' if volume > 100 else '')
         )
 
     # now
@@ -671,6 +679,7 @@ class Music(commands.Cog):
         if inter.voice_state.is_playing:
             embed, view = inter.voice_state.current.create_embed(inter)
             await inter.send(embed=embed, view=view)
+
         else:
             await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
@@ -736,8 +745,7 @@ class Music(commands.Cog):
     async def _skip(self, inter: disnake.CommandInteraction) -> None:
         if not await self._ensure_voice_safety(inter):
             return
-
-        if not inter.voice_state.is_playing:
+        elif not inter.voice_state.is_playing:
             return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
 
         if inter.voice_state.loop:
@@ -773,7 +781,9 @@ class Music(commands.Cog):
         name='queue', description='Shows the player\'s queue.', dm_permission=False
     )
     async def _queue(self, inter: disnake.CommandInteraction) -> None:
-        if len(songs := inter.voice_state.songs) == 0:
+        if not await self._ensure_voice_safety(inter):
+            return
+        elif len(songs := inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.', ephemeral=True)
 
         page = 1
@@ -835,8 +845,7 @@ class Music(commands.Cog):
     async def _rmqueue(self, inter: disnake.CommandInteraction, index: int):
         if not await self._ensure_voice_safety(inter):
             return
-
-        if len(inter.voice_state.songs) == 0:
+        elif len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty, so nothing to be removed.', ephemeral=True)
 
         inter.voice_state.songs.remove(index - 1)
@@ -847,6 +856,9 @@ class Music(commands.Cog):
         name='shuffle', description='Shuffles the current queue.', dm_permission=False
     )
     async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
+        if not await self._ensure_voice_safety(inter):
+            return
+
         inter.voice_state.songs.shuffle()
         await inter.send('Shuffled your queue!')
 
@@ -855,10 +867,13 @@ class Music(commands.Cog):
         name='loop', description='Toggles loop for the current song.', dm_permission=False
     )
     async def _loop(self, inter: disnake.CommandInteraction) -> None:
+        if not await self._ensure_voice_safety(inter):
+            return
+
         inter.voice_state.loop = not inter.voice_state.loop
         await inter.send(f"Loop has been {'enabled' if inter.voice_state.loop else 'disabled'}!")
 
-    # Backend for play-labelled commands.
+    # Common backend for play-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _play_backend(
         self,
@@ -868,9 +883,6 @@ class Music(commands.Cog):
         send_embed: bool = True,
         boosted: bool = False,
     ) -> None:
-        if not inter.voice_state.voice:
-            await self._join_logic(inter)
-
         try:
             source = await (YTDLSource if not boosted else YTDLSourceBoosted).create_source(
                 inter, keyword, loop=self.bot.loop
@@ -896,6 +908,16 @@ class Music(commands.Cog):
                 view = core.SmallView(inter).add_button(label='Redirect', url=song.source.url)
                 await inter.send(embed=embed, view=view)
 
+    # Separate coroutine for ensuring voice safety especially for play-labelled commands.
+    # Note: This coroutine is used in conjunction with _ensure_voice_safety() and _join_logic().
+    async def _ensure_play_safety(self, inter: disnake.CommandInteraction) -> True | False:
+        if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
+            return False
+        elif not await self._ensure_voice_safety(inter, skip_self=True):
+            return False
+        else:
+            return True
+
     # play (slash)
     @commands.slash_command(
         name='play',
@@ -918,6 +940,9 @@ class Music(commands.Cog):
     async def _play(
         self, inter: disnake.CommandInteraction, keyword: str, boosted: bool = False
     ) -> None:
+        if not await self._ensure_play_safety(inter):
+            return
+
         inter.voice_state.boosted = boosted
 
         async def process_spotify_tracks(ids, tracks) -> None:
@@ -963,13 +988,20 @@ class Music(commands.Cog):
     async def _play_message(
         self, inter: disnake.CommandInteraction, message: disnake.Message
     ) -> None:
+        if not await self._ensure_play_safety(inter):
+            return
+
         await self._play_backend(inter, message.content)
 
-    # Backend for play-labelled commands.
+    # Common backend for playrich-labelled commands.
     # Do not use it within other commands unless really necessary.
+    # Note: This backend is used in conjunction with _play_backend().
     async def _playrich_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
     ) -> None:
+        if not await self._ensure_play_safety(inter):
+            return
+
         member = member or inter.author
 
         for activity in member.activities:
