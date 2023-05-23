@@ -184,7 +184,7 @@ class YTDLSourceBoosted(YTDLSource):
 
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-        'options': '-vn -af "bass=g=10"',
+        'options': '-vn -af "bass=g=10:f=120, treble=g=-2:f=400"',
     }
 
 
