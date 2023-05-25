@@ -154,13 +154,13 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='unban',
         description='Unbans a member from the server.',
-        options=[Option('member', 'Mention the server member.', OptionType.user, required=True)],
+        options=[Option('user', 'Mention the user.', OptionType.string, required=True)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _unban(self, inter: disnake.CommandInteraction, member: disnake.Member) -> None:
-        await inter.guild.unban(member)
-        await inter.send(f'Member **{member.display_name}** has been unbanned!')
+    async def _unban(self, inter: disnake.CommandInteraction, user: str) -> None:
+        await inter.guild.unban(user)
+        await inter.send(f'User **{user}** has been unbanned!')
 
     # purge
     @commands.slash_command(
