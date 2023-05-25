@@ -184,7 +184,8 @@ class YTDLSourceBoosted(YTDLSource):
 
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-        'options': '-vn -af "bass=g=10:f=120, treble=g=-2:f=400"',
+        'options': '-vn -af "equalizer=f=60:g=2,bass=f=120:g=9.5,equalizer=f=150:g=1,'
+        + 'treble=f=400:t=q:w=4:g=-2"',
     }
 
 
@@ -931,7 +932,7 @@ class Music(commands.Cog):
             ),
             Option(
                 'boosted',
-                'Boosts the playback with some bass and other filters.',
+                'Increases bass and slightly reduces the volume for higher-frequency sounds.',
                 OptionType.boolean,
             ),
         ],
