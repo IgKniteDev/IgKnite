@@ -12,8 +12,8 @@ import time
 from datetime import datetime
 
 import disnake
-from disnake import Option, OptionType
 from disnake.ext import commands
+from disnake.ext.commands import Param
 
 import core
 
@@ -93,8 +93,6 @@ class General(commands.Cog):
     async def _avatar_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member = None
     ) -> None:
-        member = member or inter.author
-
         embed = (
             core.TypicalEmbed(inter).set_title('Here\'s what I found!').set_image(url=member.avatar)
         )
@@ -104,12 +102,16 @@ class General(commands.Cog):
     # avatar (slash)
     @commands.slash_command(
         name='avatar',
-        description='Displays your avatar / the avatar of a server member.',
-        options=[Option('member', 'Mention the server member.', OptionType.user)],
+        description='Displays the avatar of a server member.',
         dm_permission=False,
     )
     async def _avatar(
-        self, inter: disnake.CommandInteraction, member: disnake.Member = None
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = Param(
+            description='Mention the server member. Defaults to you.',
+            default=lambda inter: inter.author,
+        ),
     ) -> None:
         await self._avatar_backend(inter, member)
 
@@ -126,7 +128,7 @@ class General(commands.Cog):
 
     # help
     @commands.slash_command(name='help', description='Get to know IgKnite!')
-    async def help(inter):
+    async def help(inter: disnake.CommandInteraction):
         embed = (
             core.TypicalEmbed(inter, disabled_footer=True)
             .set_title('Hey there! I\'m IgKnite.')

@@ -19,8 +19,9 @@ import disnake
 import spotipy
 import yt_dlp
 from async_timeout import timeout
-from disnake import ChannelType, Option, OptionType
+from disnake import ChannelType
 from disnake.ext import commands
+from disnake.ext.commands import Param
 from disnake.utils import MISSING
 from spotipy.oauth2 import SpotifyClientCredentials
 
@@ -184,7 +185,8 @@ class YTDLSourceBoosted(YTDLSource):
 
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-        'options': '-vn -af "bass=g=10:f=120, treble=g=-2:f=400"',
+        'options': '-vn -af "equalizer=f=60:g=2,bass=f=120:g=9.5,equalizer=f=150:g=1,'
+        + 'treble=f=400:t=q:w=4:g=-2"',
     }
 
 
@@ -601,21 +603,17 @@ class Music(commands.Cog):
         name='join',
         description='Joins the voice channel you\'re in. '
         + 'You can also specify which channel to join.',
-        options=[
-            Option(
-                'channel',
-                'Specify a channel to join.',
-                OptionType.channel,
-                channel_types=[ChannelType.voice, ChannelType.stage_voice],
-            )
-        ],
         dm_permission=False,
     )
     async def _join(
         self,
         inter: disnake.CommandInteraction,
-        *,
-        channel: disnake.VoiceChannel | disnake.StageChannel | None = None,
+        channel: disnake.VoiceChannel
+        | disnake.StageChannel = Param(
+            description='Specify a channel to join.',
+            default=None,
+            channel_types=[ChannelType.voice, ChannelType.stage_voice],
+        ),
     ) -> None:
         destination = await self._join_logic(inter, channel)
         await inter.send(
@@ -642,20 +640,15 @@ class Music(commands.Cog):
     @commands.slash_command(
         name='volume',
         description='Sets the volume of the current track.',
-        options=[
-            Option(
-                'volume',
-                'Specify a new volume to set. '
-                + 'Has to be within 1 and 100 (it can go a li\'l further btw).',
-                OptionType.integer,
-                min_value=1,
-                max_value=200,
-                required=True,
-            )
-        ],
         dm_permission=False,
     )
-    async def _volume(self, inter: disnake.CommandInteraction, volume: float) -> None:
+    async def _volume(
+        self,
+        inter: disnake.CommandInteraction,
+        volume: float = Param(
+            description='The amount of volume to set in percentage.', min_value=1, max_value=200
+        ),
+    ) -> None:
         if not await self._ensure_voice_safety(inter):
             return
         elif not inter.voice_state.is_playing:
@@ -832,17 +825,16 @@ class Music(commands.Cog):
     @commands.slash_command(
         name='rmqueue',
         description='Removes a song from the queue at a given index.',
-        options=[
-            Option(
-                'index',
-                'Specify the index of the item to remove.',
-                OptionType.integer,
-                required=True,
-            )
-        ],
         dm_permission=False,
     )
-    async def _rmqueue(self, inter: disnake.CommandInteraction, index: int):
+    async def _rmqueue(
+        self,
+        inter: disnake.CommandInteraction,
+        index: int = Param(
+            description='Specify the index of the song to remove. Defaults to the first song.',
+            default=1,
+        ),
+    ):
         if not await self._ensure_voice_safety(inter):
             return
         elif len(inter.voice_state.songs) == 0:
@@ -922,23 +914,18 @@ class Music(commands.Cog):
     @commands.slash_command(
         name='play',
         description='Enqueues playable stuff (basically sings you songs).',
-        options=[
-            Option(
-                'keyword',
-                'The link / keyword to search for. Supports YouTube and Spotify links.',
-                OptionType.string,
-                required=True,
-            ),
-            Option(
-                'boosted',
-                'Boosts the playback with some bass and other filters.',
-                OptionType.boolean,
-            ),
-        ],
         dm_permission=False,
     )
     async def _play(
-        self, inter: disnake.CommandInteraction, keyword: str, boosted: bool = False
+        self,
+        inter: disnake.CommandInteraction,
+        keyword: str = Param(
+            description='The link / keyword to search for. Supports YouTube and Spotify links.'
+        ),
+        boosted: bool = Param(
+            description='Increases bass and slightly reduces the volume for high-frequency sounds.',
+            default=False,
+        ),
     ) -> None:
         if not await self._ensure_play_safety(inter):
             return
@@ -997,12 +984,10 @@ class Music(commands.Cog):
     # Do not use it within other commands unless really necessary.
     # Note: This backend is used in conjunction with _play_backend().
     async def _playrich_backend(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+        self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
         if not await self._ensure_play_safety(inter):
             return
-
-        member = member or inter.author
 
         for activity in member.activities:
             if isinstance(activity, disnake.Spotify):
@@ -1024,11 +1009,14 @@ class Music(commands.Cog):
     @commands.slash_command(
         name='playrich',
         description='Tries to enqueue a song from one\'s Spotify rich presence.',
-        options=[Option('member', 'Mention the server member.', OptionType.user)],
         dm_permission=False,
     )
     async def _playrich(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = Param(
+            description='Mention the server member.', default=lambda inter: inter.author
+        ),
     ) -> None:
         await self._playrich_backend(inter, member)
 
