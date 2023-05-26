@@ -185,7 +185,7 @@ class YTDLSourceBoosted(YTDLSource):
 
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-        'options': '-vn -af "equalizer=f=60:g=2,bass=f=120:g=9.5,equalizer=f=150:g=1,'
+        'options': '-vn -af "equalizer=f=60:g=2,bass=f=120:g=11.5,equalizer=f=150:g=1,'
         + 'treble=f=400:t=q:w=4:g=-2"',
     }
 
