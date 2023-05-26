@@ -14,6 +14,7 @@ from time import mktime
 
 import disnake
 from disnake.ext import commands
+from disnake.ext.commands import Param
 from disnake.utils import MISSING
 
 import core
@@ -153,7 +154,7 @@ class Inspection(commands.Cog):
     async def _userinfo(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member = commands.Param(
+        member: disnake.Member = Param(
             description='Mention the server member. Defaults to you.', default=None
         ),
     ) -> None:
@@ -185,7 +186,7 @@ class Inspection(commands.Cog):
     async def _roleinfo(
         self,
         inter: disnake.CommandInteraction,
-        role: disnake.Role = commands.Param(description='Mention the role.', default=None),
+        role: disnake.Role = Param(description='Mention the role.', default=None),
     ) -> None:
         embed = (
             core.TypicalEmbed(inter)
@@ -278,7 +279,7 @@ class Inspection(commands.Cog):
     async def _revokeinvites(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member = commands.Param(
+        member: disnake.Member = Param(
             description='Mention the server member. Defaults to all.', default=None
         ),
     ) -> None:
@@ -310,7 +311,7 @@ class Inspection(commands.Cog):
     async def _audit(
         self,
         inter: disnake.CommandInteraction,
-        limit: int = commands.Param(
+        limit: int = Param(
             description='The limit for showing audit log entries.',
             default=5,
             min_value=1,

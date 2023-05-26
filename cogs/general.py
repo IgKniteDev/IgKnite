@@ -13,6 +13,7 @@ from datetime import datetime
 
 import disnake
 from disnake.ext import commands
+from disnake.ext.commands import Param
 
 import core
 
@@ -109,7 +110,7 @@ class General(commands.Cog):
     async def _avatar(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member = commands.Param(
+        member: disnake.Member = Param(
             description='Mention the server member. Defaults to you.', default=None
         ),
     ) -> None:
