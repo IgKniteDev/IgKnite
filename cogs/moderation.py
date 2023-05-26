@@ -10,8 +10,9 @@ https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
 from typing import List
 
 import disnake
-from disnake import Option, OptionChoice, OptionType
+from disnake import OptionChoice
 from disnake.ext import commands
+from disnake.ext.commands import Param
 
 import core
 from core.chain import keychain
@@ -30,18 +31,16 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='ban',
         description='Bans a member from the server.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('reason', 'Give a reason for the ban.', OptionType.string),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _ban(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member,
-        reason: str = 'No reason provided.',
+        member: disnake.Member = Param(description='Mention the server member.'),
+        reason: str = Param(
+            description='Give a reason for the ban.', default='No reason provided.'
+        ),
     ) -> None:
         await inter.guild.ban(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
@@ -64,35 +63,30 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='softban',
         description='Temporarily bans members to delete their messages.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('reason', 'Give a reason for the softban.', OptionType.string),
-            Option(
-                'daycount',
-                'The amount of days to check for deleting messages.',
-                OptionType.integer,
-                choices=[
-                    OptionChoice('1d', 1),
-                    OptionChoice('2d', 2),
-                    OptionChoice('3d', 3),
-                    OptionChoice('4d', 4),
-                    OptionChoice('5d', 5),
-                    OptionChoice('6d', 6),
-                    OptionChoice('7d', 7),
-                ],
-            ),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _softban(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member,
-        reason: str = 'No reason provided.',
-        daycount: int = None,
+        member: disnake.Member = Param(description='Mention the server member.'),
+        reason: str = Param(
+            description='Give a reason for the softban.', default='No reason provided.'
+        ),
+        daycount: int = Param(
+            description='The amount of days to check for deleting messages. Defaults to 7.',
+            default=7,
+            choices=[
+                OptionChoice('1d', 1),
+                OptionChoice('2d', 2),
+                OptionChoice('3d', 3),
+                OptionChoice('4d', 4),
+                OptionChoice('5d', 5),
+                OptionChoice('6d', 6),
+                OptionChoice('7d', 7),
+            ],
+        ),
     ):
-        daycount = daycount or 7
         await self._softban_backend(inter, member, days=daycount, reason=reason)
 
     # softban (user)
@@ -107,18 +101,16 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='kick',
         description='Kicks a member from the server.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('reason', 'Give a reason for the kick.', OptionType.string),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _kick(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member,
-        reason: str = 'No reason provided.',
+        member: disnake.Member = Param(description='Mention the server member.'),
+        reason: str = Param(
+            description='Give a reason for the kick.', default='No reason provided.'
+        ),
     ) -> None:
         await inter.guild.kick(member, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
@@ -127,25 +119,21 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='timeout',
         description='Timeouts a member.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option(
-                'duration',
-                'Give a duration for the timeout in seconds. Defaults to 30 seconds.',
-                OptionType.integer,
-                min_value=1,
-            ),
-            Option('reason', 'Give a reason for the timeout.', OptionType.string),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _timeout(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member,
-        duration: int = 30,
-        reason: str = 'No reason provided.',
+        member: disnake.Member = Param(description='Mention the server member.'),
+        duration: int = Param(
+            description='Give a duration for the timeout in seconds. Defaults to 30.',
+            default=30,
+            min_value=1,
+        ),
+        reason: str = Param(
+            description='Give a reason for the timeout.', default='No reason provided.'
+        ),
     ) -> None:
         await member.timeout(duration=duration, reason=reason)
         await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
@@ -154,32 +142,36 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='unban',
         description='Unbans a member from the server.',
-        options=[Option('user', 'Mention the user.', OptionType.string, required=True)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _unban(self, inter: disnake.CommandInteraction, user: str) -> None:
-        await inter.guild.unban(user)
+    async def _unban(
+        self,
+        inter: disnake.CommandInteraction,
+        user: str = Param(description='Mention the user.'),
+        reason: str = Param(
+            description='Give a reason for the unban.', default='No reason provided.'
+        ),
+    ) -> None:
+        await inter.guild.unban(user, reason=reason)
         await inter.send(f'User **{user}** has been unbanned!')
 
     # purge
     @commands.slash_command(
         name='purge',
         description='Clears messages within the given index.',
-        options=[
-            Option(
-                'amount',
-                'The amount of messages to purge. Defaults to 1.',
-                OptionType.integer,
-                min_value=1,
-            ),
-            Option('onlyme', 'Only deletes messages sent by me.', OptionType.boolean),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _purge(
-        self, inter: disnake.CommandInteraction, amount: int = 1, onlyme: bool = False
+        self,
+        inter: disnake.CommandInteraction,
+        amount: int = Param(
+            description='The amount of messages to purge. Defaults to 1.', default=1, min_value=1
+        ),
+        onlyme: bool = Param(
+            description='Only deletes messages sent by me. Defaults to false.', default=False
+        ),
     ) -> None:
         def is_me(message: disnake.Message) -> bool:
             return message.author == self.bot.user
@@ -217,23 +209,16 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='ripplepurge',
         description='Clears messages that are sent by a specific user within the given index.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option(
-                'amount',
-                'The amount of messages to purge. Defaults to 10.',
-                OptionType.integer,
-                min_value=1,
-            ),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _ripplepurge(
         self,
         inter: disnake.CommandInteraction,
-        member: disnake.Member,
-        amount: int = 10,
+        member: disnake.Member = Param(description='Mention the server member.'),
+        amount: int = Param(
+            description='The amount of messages to purge. Defaults to 10.', default=10, min_value=1
+        ),
     ) -> None:
         await self._ripplepurge_backend(inter, member, amount)
 
@@ -257,12 +242,16 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='snipe',
         description='Snipes messages within 25 seconds of their deletion.',
-        options=[Option('author', 'The author of the messages to snipe.', OptionType.user)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(
-        self, inter: disnake.CommandInteraction, author: disnake.Member | None = None
+        self,
+        inter: disnake.CommandInteraction,
+        author: disnake.Member = Param(
+            description='Mention the author of the messages to snipe. Defaults to none.',
+            default=None,
+        ),
     ) -> None:
         sniped_count: int = 0
         snipeables = sorted(
@@ -318,15 +307,14 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='senddm',
         description='Send DM to specific users.',
-        options=[
-            Option('member', 'Mention the server member.', OptionType.user, required=True),
-            Option('msg', 'Message you want to send.', OptionType.string, required=True),
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def senddm(
-        self, inter: disnake.CommandInteraction, member: disnake.Member, msg: str
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = Param(description='Mention the server member.'),
+        msg: str = Param(description='The message you want to send.'),
     ) -> None:
         embed = (
             core.TypicalEmbed(inter)
@@ -382,36 +370,34 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='slowmode',
         description='Sets slowmode for the current channel.',
-        options=[
-            Option(
-                'duration',
-                'The amount of seconds to set the slowmode to. Set 0 to disable.',
-                OptionType.integer,
-                min_value=0,
-                max_value=21600,
-                choices=[
-                    OptionChoice('Remove Slowmode', 0),
-                    OptionChoice('5s', 5),
-                    OptionChoice('10s', 10),
-                    OptionChoice('15s', 15),
-                    OptionChoice('30s', 30),
-                    OptionChoice('1m', 60),
-                    OptionChoice('2m', 120),
-                    OptionChoice('5m', 300),
-                    OptionChoice('10m', 600),
-                    OptionChoice('15m', 900),
-                    OptionChoice('30m', 1800),
-                    OptionChoice('1h', 3600),
-                    OptionChoice('2h', 7200),
-                    OptionChoice('6h', 21600),
-                ],
-                required=True,
-            )
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _slowmode(self, inter: disnake.CommandInteraction, duration: int) -> None:
+    async def _slowmode(
+        self,
+        inter: disnake.CommandInteraction,
+        duration: int = Param(
+            description='The amount of seconds to set the slowmode to. Set 0 to disable.',
+            min_value=0,
+            max_value=21600,
+            choices=[
+                OptionChoice('Remove Slowmode', 0),
+                OptionChoice('5s', 5),
+                OptionChoice('10s', 10),
+                OptionChoice('15s', 15),
+                OptionChoice('30s', 30),
+                OptionChoice('1m', 60),
+                OptionChoice('2m', 120),
+                OptionChoice('5m', 300),
+                OptionChoice('10m', 600),
+                OptionChoice('15m', 900),
+                OptionChoice('30m', 1800),
+                OptionChoice('1h', 3600),
+                OptionChoice('2h', 7200),
+                OptionChoice('6h', 21600),
+            ],
+        ),
+    ) -> None:
         await inter.channel.edit(slowmode_delay=duration)
 
         if duration == 0:
@@ -423,18 +409,14 @@ class Moderation(commands.Cog):
     @commands.slash_command(
         name='banword',
         description='Add keywords to ban.',
-        options=[
-            Option(
-                'keywords',
-                'The keywords you want to add to the AutoMod rule, separated by comma.',
-                OptionType.string,
-                required=True,
-            )
-        ],
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _banword(self, inter: disnake.CommandInteraction, keywords: str) -> None:
+    async def _banword(
+        self,
+        inter: disnake.CommandInteraction,
+        keywords: str = Param(description='The keywords you want to ban, separated by commas.'),
+    ) -> None:
         keywords = keywords.split(',')
 
         try:
@@ -525,8 +507,8 @@ class Moderation(commands.Cog):
 
     # clearnicks
     @commands.slash_command(
-        name='clearnicks',
-        description='Clear everyone\'s nickname in the guild.',
+        name='resetnicks',
+        description='Clear every nickname on the server.',
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
