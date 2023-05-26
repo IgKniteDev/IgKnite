@@ -110,7 +110,7 @@ class General(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         member: disnake.Member = commands.Param(
-            default=None, description='Mention the server member. Defaults to you.'
+            description='Mention the server member. Defaults to you.', default=None
         ),
     ) -> None:
         await self._avatar_backend(inter, member)

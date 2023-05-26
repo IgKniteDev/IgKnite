@@ -13,7 +13,6 @@ from datetime import datetime
 from time import mktime
 
 import disnake
-from disnake import Option, OptionType
 from disnake.ext import commands
 from disnake.utils import MISSING
 
@@ -148,12 +147,15 @@ class Inspection(commands.Cog):
     @commands.slash_command(
         name='userinfo',
         description='Shows all important information on a user.',
-        options=[Option('member', 'Mention the server member.', OptionType.user)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _userinfo(
-        self, inter: disnake.CommandInteraction, member: disnake.Member = None
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = commands.Param(
+            description='Mention the server member. Defaults to you.', default=None
+        ),
     ) -> None:
         await self._userinfo_backend(inter, member)
 
@@ -177,11 +179,14 @@ class Inspection(commands.Cog):
     @commands.slash_command(
         name='roleinfo',
         description='Shows all important information related to a specific role.',
-        options=[Option('role', 'Mention the role.', OptionType.role, required=True)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _roleinfo(self, inter: disnake.CommandInteraction, role: disnake.Role) -> None:
+    async def _roleinfo(
+        self,
+        inter: disnake.CommandInteraction,
+        role: disnake.Role = commands.Param(description='Mention the role.', default=None),
+    ) -> None:
         embed = (
             core.TypicalEmbed(inter)
             .set_title(f'Role information: @{role.name}')
@@ -267,12 +272,15 @@ class Inspection(commands.Cog):
         name='revokeinvites',
         description='Revokes invites. '
         + 'By default this removes all invites but you can choose a server member.',
-        options=[Option('member', 'Mention the server member.', OptionType.user)],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _revokeinvites(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = commands.Param(
+            description='Mention the server member. Defaults to all.', default=None
+        ),
     ) -> None:
         deletion_count = 0
         await inter.response.defer()
@@ -296,19 +304,19 @@ class Inspection(commands.Cog):
     @commands.slash_command(
         name='audit',
         description='Views the latest entries of the audit log in detail.',
-        options=[
-            Option(
-                'limit',
-                'The limit for showing entries. Must be within 1 and 100.',
-                OptionType.integer,
-                min_value=1,
-                max_value=100,
-            )
-        ],
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _audit(self, inter: disnake.CommandInteraction, limit: int = 5):
+    async def _audit(
+        self,
+        inter: disnake.CommandInteraction,
+        limit: int = commands.Param(
+            description='The limit for showing audit log entries.',
+            default=5,
+            min_value=1,
+            max_value=100,
+        ),
+    ):
         embed = core.TypicalEmbed(inter).set_title(f'Audit Log ({limit} entries)')
 
         async for audit_entry in inter.guild.audit_logs(limit=limit):
