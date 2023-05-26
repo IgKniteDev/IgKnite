@@ -12,7 +12,6 @@ import time
 from datetime import datetime
 
 import disnake
-from disnake import Option, OptionType
 from disnake.ext import commands
 
 import core
@@ -104,12 +103,15 @@ class General(commands.Cog):
     # avatar (slash)
     @commands.slash_command(
         name='avatar',
-        description='Displays your avatar / the avatar of a server member.',
-        options=[Option('member', 'Mention the server member.', OptionType.user)],
+        description='Displays the avatar of a server member.',
         dm_permission=False,
     )
     async def _avatar(
-        self, inter: disnake.CommandInteraction, member: disnake.Member = None
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = commands.Param(
+            default=None, description='Mention the server member. Defaults to you.'
+        ),
     ) -> None:
         await self._avatar_backend(inter, member)
 
@@ -126,7 +128,7 @@ class General(commands.Cog):
 
     # help
     @commands.slash_command(name='help', description='Get to know IgKnite!')
-    async def help(inter):
+    async def help(inter: disnake.CommandInteraction):
         embed = (
             core.TypicalEmbed(inter, disabled_footer=True)
             .set_title('Hey there! I\'m IgKnite.')
