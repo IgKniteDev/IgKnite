@@ -121,10 +121,8 @@ class Inspection(commands.Cog):
     # Common backend for userinfo-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _userinfo_backend(
-        self, inter: disnake.CommandInteraction, member: disnake.Member = None
+        self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
-        member = member or inter.author
-
         embed = (
             core.TypicalEmbed(inter)
             .set_title(str(member))
@@ -155,7 +153,8 @@ class Inspection(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         member: disnake.Member = Param(
-            description='Mention the server member. Defaults to you.', default=None
+            description='Mention the server member. Defaults to you.',
+            default=lambda inter: inter.author,
         ),
     ) -> None:
         await self._userinfo_backend(inter, member)

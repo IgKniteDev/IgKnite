@@ -93,8 +93,6 @@ class General(commands.Cog):
     async def _avatar_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member = None
     ) -> None:
-        member = member or inter.author
-
         embed = (
             core.TypicalEmbed(inter).set_title('Here\'s what I found!').set_image(url=member.avatar)
         )
@@ -111,7 +109,8 @@ class General(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
         member: disnake.Member = Param(
-            description='Mention the server member. Defaults to you.', default=None
+            description='Mention the server member. Defaults to you.',
+            default=lambda inter: inter.author,
         ),
     ) -> None:
         await self._avatar_backend(inter, member)

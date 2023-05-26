@@ -984,7 +984,7 @@ class Music(commands.Cog):
     # Do not use it within other commands unless really necessary.
     # Note: This backend is used in conjunction with _play_backend().
     async def _playrich_backend(
-        self, inter: disnake.CommandInteraction, member: disnake.Member | None = None
+        self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
         if not await self._ensure_play_safety(inter):
             return
