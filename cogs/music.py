@@ -568,11 +568,11 @@ class Music(commands.Cog):
         self, inter: disnake.CommandInteraction, skip_self: bool = False
     ) -> Any | None:
         if (not skip_self) and (not inter.voice_state.voice):
-            return await inter.send('I\'m not inside any voice channel.', ephemeral=True)
+            return await inter.send('I\'m not inside any voice channel.')
         elif (
             not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel
         ):
-            return await inter.send('You\'re not in my voice channel.', ephemeral=True)
+            return await inter.send('You\'re not in my voice channel.')
         else:
             return True
 
@@ -594,9 +594,7 @@ class Music(commands.Cog):
             return destination
 
         except AttributeError:
-            await inter.send(
-                'Please switch to a voice or stage channel to use this command.', ephemeral=True
-            )
+            await inter.send('Please switch to a voice or stage channel to use this command.')
 
     # join
     @commands.slash_command(
@@ -652,7 +650,7 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter):
             return
         elif not inter.voice_state.is_playing:
-            return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
+            return await inter.send('There\'s nothing being played at the moment.')
 
         inter.voice_state.current.source.volume = (vol_mod := volume / 100)
         inter.voice_state.volume = vol_mod
@@ -674,7 +672,7 @@ class Music(commands.Cog):
             await inter.send(embed=embed, view=view)
 
         else:
-            await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
+            await inter.send('There\'s nothing being played at the moment.')
 
     # pause
     @commands.slash_command(
@@ -690,7 +688,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.pause()
             await inter.send('Paused voice state.')
         else:
-            await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
+            await inter.send('There\'s nothing being played at the moment.')
 
     # resume
     @commands.slash_command(
@@ -706,9 +704,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.resume()
             await inter.send('Resumed voice state.')
         else:
-            await inter.send(
-                'Playback isn\'t paused to be resumed in the first place.', ephemeral=True
-            )
+            await inter.send('Playback isn\'t paused to be resumed in the first place.')
 
     # stop
     @commands.slash_command(
@@ -739,7 +735,7 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter):
             return
         elif not inter.voice_state.is_playing:
-            return await inter.send('There\'s nothing being played at the moment.', ephemeral=True)
+            return await inter.send('There\'s nothing being played at the moment.')
 
         if inter.voice_state.loop:
             inter.voice_state.loop = not inter.voice_state.loop
@@ -767,7 +763,7 @@ class Music(commands.Cog):
                 )
 
         else:
-            await inter.send('You have already voted to skip this song.', ephemeral=True)
+            await inter.send('You have already voted to skip this song.')
 
     # queue
     @commands.slash_command(
@@ -777,7 +773,7 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter):
             return
         elif len(songs := inter.voice_state.songs) == 0:
-            return await inter.send('The queue is empty.', ephemeral=True)
+            return await inter.send('The queue is empty.')
 
         page = 1
         songs_per_page = 5
@@ -838,7 +834,7 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter):
             return
         elif len(inter.voice_state.songs) == 0:
-            return await inter.send('The queue is empty, so nothing to be removed.', ephemeral=True)
+            return await inter.send('The queue is empty, so nothing to be removed.')
 
         inter.voice_state.songs.remove(index - 1)
         await inter.send('Removed item from queue.')
@@ -882,10 +878,7 @@ class Music(commands.Cog):
 
         except Exception as e:
             if isinstance(e, YTDLError):
-                await inter.send(
-                    f'An error occurred while processing this request: {str(e)}',
-                    ephemeral=True,
-                )
+                await inter.send(f'An error occurred while processing this request: {str(e)}')
             else:
                 pass
 
@@ -1003,7 +996,7 @@ class Music(commands.Cog):
 
                 return await inter.send(embed=embed)
 
-        await inter.send('Nothing is being played on Spotify!', ephemeral=True)
+        await inter.send('Nothing is being played on Spotify!')
 
     # playrich (slash)
     @commands.slash_command(
