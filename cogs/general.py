@@ -29,7 +29,7 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> core.TypicalEmbed:
 
     api_latency = round((end_time - start_time) * 1000)
 
-    uptime = round(datetime.timestamp(datetime.now())) - core.running_since
+    uptime = round(datetime.timestamp(datetime.now())) - core.BotData.running_since
     h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
 
     embed = (
@@ -41,7 +41,7 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> core.TypicalEmbed:
         )
         .add_field(name='API Latency', value=f'{api_latency}ms', inline=False)
         .add_field(name='Uptime', value=f'{h}h {m}m {s}s')
-        .add_field(name='Patch Version', value=core.BotMeta.version, inline=False)
+        .add_field(name='Patch Version', value=core.BotData.version, inline=False)
     )
 
     return embed
@@ -142,8 +142,8 @@ class General(commands.Cog):
 
         view = (
             core.SmallView(inter)
-            .add_button(label='GitHub', url=core.BotMeta.repo)
-            .add_button(label='Documentation', url=core.BotMeta.documentation)
+            .add_button(label='GitHub', url=core.BotData.repo)
+            .add_button(label='Documentation', url=core.BotData.documentation)
         )
 
         await inter.send(embed=embed, view=view)
