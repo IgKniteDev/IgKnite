@@ -17,13 +17,13 @@ from .bot import *
 from .ui import *
 
 # Set version number.
-__version_info__ = ('2023', '5', '26')  # Year.Month.Day
+__version_info__ = ('2023', '6', '1')  # Year.Month.Day
 __version__ = '.'.join(__version_info__)
 
 
 # Set bot metadata.
 @dataclass(frozen=True)
-class BotMeta:
+class BotData:
     '''
     A dataclass used for storing bot metadata.
     '''
@@ -31,7 +31,4 @@ class BotMeta:
     repo: str = 'https://github.com/IgKniteDev/IgKnite'
     documentation: str = 'https://igknitedev.github.io/docs'
     version: str = __version__
-
-
-# Track uptime.
-running_since = round(datetime.timestamp(datetime.now()))
+    running_since: int = round(datetime.timestamp(datetime.now()))

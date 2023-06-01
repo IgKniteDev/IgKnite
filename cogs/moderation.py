@@ -24,9 +24,6 @@ class Moderation(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
-        return await inter.response.defer()
-
     # ban
     @commands.slash_command(
         name='ban',
@@ -173,6 +170,8 @@ class Moderation(commands.Cog):
             description='Only deletes messages sent by me. Defaults to false.', default=False
         ),
     ) -> None:
+        await inter.response.defer(ephemeral=True)
+
         def is_me(message: disnake.Message) -> bool:
             return message.author == self.bot.user
 
@@ -191,6 +190,8 @@ class Moderation(commands.Cog):
         member: disnake.Member,
         amount: int = 10,
     ) -> None:
+        await inter.response.defer(ephemeral=True)
+
         messages = []
         async for msg in inter.channel.history():
             if len(messages) == amount:
@@ -202,7 +203,6 @@ class Moderation(commands.Cog):
         await inter.channel.delete_messages(messages)
         await inter.send(
             f'Purged {len(messages)} messages that were sent by **{member.display_name}.**',
-            ephemeral=True,
         )
 
     # ripplepurge (slash)
@@ -253,6 +253,8 @@ class Moderation(commands.Cog):
             default=None,
         ),
     ) -> None:
+        await inter.response.defer(ephemeral=True)
+
         sniped_count: int = 0
         snipeables = sorted(
             [
@@ -264,7 +266,7 @@ class Moderation(commands.Cog):
         )
 
         if not snipeables:
-            return await inter.send('No messages were found in my list.', ephemeral=True)
+            return await inter.send('No messages were found in my list.')
 
         webhooks: List[disnake.Webhook] = []
 
@@ -300,7 +302,6 @@ class Moderation(commands.Cog):
                 f'Sniped **{sniped_count}** messages'
                 + ('.' if not author else f' sent by {author.mention}.')
             ),
-            ephemeral=True,
         )
 
     # senddm
@@ -316,6 +317,8 @@ class Moderation(commands.Cog):
         member: disnake.Member = Param(description='Mention the server member.'),
         msg: str = Param(description='The message you want to send.'),
     ) -> None:
+        await inter.response.defer(ephemeral=True)
+
         embed = (
             core.TypicalEmbed(inter)
             .add_field('Message: ', msg)
@@ -324,7 +327,7 @@ class Moderation(commands.Cog):
         )
 
         await member.send(embed=embed)
-        await inter.send('Your message has been delivered!', ephemeral=True)
+        await inter.send('Your message has been delivered!')
 
     # pins
     @commands.slash_command(
@@ -333,20 +336,22 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     async def _pins(self, inter: disnake.CommandInteraction) -> None:
-        embed = core.TypicalEmbed(inter).set_title('Pinned Messages  📌')
-        pins = await inter.channel.pins()
+        await inter.response.defer()
 
-        if pins:
+        pins = await inter.channel.pins()
+        if not pins:
+            await inter.send('There are no pinned messages in this channel.', ephemeral=True)
+        else:
+            embed = core.TypicalEmbed(inter).set_title('Pinned Messages  📌')
+
             for count, pin in enumerate(pins):
                 embed.add_field(
                     name=f'{count}. {pin.author.name}',
                     value=f'{pin.content} \n\n',
                     inline=False,
                 )
-        else:
-            embed.set_description('There are no pinned messages in this channel.')
 
-        await inter.send(embed=embed)
+            await inter.send(embed=embed)
 
     # clearpins
     @commands.slash_command(
@@ -356,15 +361,17 @@ class Moderation(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _clearpins(self, inter: disnake.CommandInteraction) -> None:
+        await inter.response.defer(ephemeral=True)
+
         pins = await inter.channel.pins()
 
         if pins:
             for pin in pins:
                 await pin.unpin()
 
-            await inter.send('All pins have been cleared!', ephemeral=True)
-        else:
-            await inter.send('There are no pins to clear!', ephemeral=True)
+            return await inter.send('All pins have been cleared!')
+
+        await inter.send('There are no pins to clear!')
 
     # slowmode
     @commands.slash_command(
@@ -417,6 +424,8 @@ class Moderation(commands.Cog):
         inter: disnake.CommandInteraction,
         keywords: str = Param(description='The keywords you want to ban, separated by commas.'),
     ) -> None:
+        await inter.response.defer(ephemeral=True)
+
         keywords = keywords.split(',')
 
         try:
@@ -453,7 +462,7 @@ class Moderation(commands.Cog):
             .set_title('Added these words to banned list:')
             .set_description(', '.join(keywords))
         )
-        await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed)
 
     # clearbannedwords
     @commands.slash_command(
@@ -463,16 +472,15 @@ class Moderation(commands.Cog):
     )
     @commands.has_role(LockRoles.admin)
     async def _clearbannedwords(self, inter: disnake.CommandInteraction) -> None:
+        await inter.response.defer(ephemeral=True)
+
         try:
             for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
                     await rule.delete(reason=f'Banwords removed by: {inter.author}')
 
         except disnake.NotFound:
-            embed = core.TypicalEmbed(inter, is_error=True).set_title(
-                "No AutoMod rules were found."
-            )
-            await inter.send(embed=embed)
+            await inter.send('No banned words were found.')
 
         else:
             await inter.send('Banwords removed!')
@@ -485,13 +493,14 @@ class Moderation(commands.Cog):
     )
     @commands.has_role(LockRoles.admin)
     async def _showbannedwords(self, inter: disnake.CommandInteraction) -> None:
+        await inter.response.defer(ephemeral=True)
+
         try:
             words = ''
 
             for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
-                    for item in rule.trigger_metadata.keyword_filter:
-                        words += f'{item} \n'
+                    words += (f'{item} \n' for item in rule.trigger_metadata.keyword_filter)
                     embed = (
                         core.TypicalEmbed(inter)
                         .set_title('Here\'s the list of banned words:')
@@ -500,10 +509,7 @@ class Moderation(commands.Cog):
                     await inter.send(embed=embed)
 
         except disnake.NotFound:
-            embed = core.TypicalEmbed(inter, is_error=True).set_title(
-                'No AutoMod rules were found.'
-            )
-            await inter.send(embed=embed)
+            await inter.send('No banned words were found.')
 
     # clearnicks
     @commands.slash_command(
@@ -513,6 +519,8 @@ class Moderation(commands.Cog):
     )
     @commands.has_role(LockRoles.admin)
     async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
+        await inter.response.defer(ephemeral=True)
+
         deletion_count = 0
 
         for member in inter.guild.members:
@@ -522,7 +530,9 @@ class Moderation(commands.Cog):
             except disnake.errors.Forbidden:
                 pass
 
-        await inter.send(f'Cleared the nicknames for **{deletion_count}** users.')
+        await inter.send(
+            f'Cleared the nicks for **{deletion_count} out of {inter.guild.member_count}** users.'
+        )
 
 
 # The setup() function for the cog.

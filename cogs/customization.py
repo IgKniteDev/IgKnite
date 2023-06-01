@@ -33,7 +33,7 @@ class Customization(commands.Cog):
         self.bot = bot
 
     async def cog_before_slash_command_invoke(self, inter: disnake.CommandInteraction) -> None:
-        return await inter.response.defer()
+        return await inter.response.defer(ephemeral=True)
 
     # makerole
     @commands.slash_command(
