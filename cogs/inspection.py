@@ -216,6 +216,8 @@ class Inspection(commands.Cog):
         self,
         inter: disnake.CommandInteraction,
     ) -> None:
+        await inter.response.defer(ephemeral=True)
+
         if len(invites := await inter.guild.invites()) == 0:
             return await inter.send('There are no invites to this server yet.')
 
@@ -283,7 +285,7 @@ class Inspection(commands.Cog):
         ),
     ) -> None:
         deletion_count = 0
-        await inter.response.defer()
+        await inter.response.defer(ephemeral=True)
 
         for invite in await inter.guild.invites():
             if (member and invite.inviter == member) or (not member):
@@ -293,12 +295,9 @@ class Inspection(commands.Cog):
                 pass
 
         if member:
-            await inter.send(
-                f'Revoked {deletion_count} invites made by {member.mention}.',
-                ephemeral=True,
-            )
+            await inter.send(f'Revoked {deletion_count} invites made by {member.mention}.')
         else:
-            await inter.send(f'Revoked {deletion_count} invites.', ephemeral=True)
+            await inter.send(f'Revoked {deletion_count} invites.')
 
     # audit
     @commands.slash_command(
@@ -317,8 +316,9 @@ class Inspection(commands.Cog):
             max_value=100,
         ),
     ):
-        embed = core.TypicalEmbed(inter).set_title(f'Audit Log ({limit} entries)')
+        await inter.response.defer(ephemeral=True)
 
+        embed = core.TypicalEmbed(inter).set_title(f'Audit Log ({limit} entries)')
         async for audit_entry in inter.guild.audit_logs(limit=limit):
             embed.add_field(
                 name=f'- {audit_entry.action}',
@@ -326,7 +326,7 @@ class Inspection(commands.Cog):
                 inline=False,
             )
 
-        await inter.send(embed=embed, ephemeral=True)
+        await inter.send(embed=embed)
 
 
 # The setup() function for the cog.
