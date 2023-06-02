@@ -1,4 +1,4 @@
-name: Create & Publish Docker Image
+name: Create, Publish & Deploy Docker Image
 
 on:
   release:
@@ -40,3 +40,12 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Setup Hop CLI
+        run: curl -fsSL https://download.hop.sh/install | sh
+
+      - name: Login to Hop
+        run: hop auth login --token ${{ secrets.HOP_PAT }}
+
+      - name: Deploy
+        run: hop deploy
