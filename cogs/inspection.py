@@ -287,7 +287,7 @@ class Inspection(commands.Cog):
         deletion_count = 0
         await inter.response.defer(ephemeral=True)
 
-        for invite in await inter.guild.invites():
+        async for invite in inter.guild.invites():
             if (member and invite.inviter == member) or (not member):
                 await invite.delete()
                 deletion_count += 1
