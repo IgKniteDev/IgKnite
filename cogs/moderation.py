@@ -293,7 +293,7 @@ class Moderation(commands.Cog):
             else:
                 pass
 
-        async for webhook in inter.channel.webhooks():
+        for webhook in await inter.channel.webhooks():
             if webhook.user == self.bot.user:
                 await webhook.delete()
 
@@ -429,7 +429,7 @@ class Moderation(commands.Cog):
         keywords = keywords.split(',')
 
         try:
-            async for item in inter.guild.fetch_automod_rules():
+            for item in await inter.guild.fetch_automod_rules():
                 if item.name == 'IgKnite Banwords':
                     rule = item
                     break
@@ -475,7 +475,7 @@ class Moderation(commands.Cog):
         await inter.response.defer(ephemeral=True)
 
         try:
-            async for rule in inter.guild.fetch_automod_rules():
+            for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
                     await rule.delete(reason=f'Banwords removed by: {inter.author}')
 
@@ -498,7 +498,7 @@ class Moderation(commands.Cog):
         try:
             words = ''
 
-            async for rule in inter.guild.fetch_automod_rules():
+            for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
                     words += (f'{item} \n' for item in rule.trigger_metadata.keyword_filter)
                     embed = (
