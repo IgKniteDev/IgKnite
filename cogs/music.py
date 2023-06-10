@@ -523,7 +523,6 @@ class Music(commands.Cog):
                 and state.is_playing
             ):
                 state.voice.pause()
-                await member.send('Playback has been paused since nobody\'s in the voice channel.')
 
             elif (
                 not before.channel
@@ -533,7 +532,6 @@ class Music(commands.Cog):
                 and state.voice.is_paused()
             ):
                 state.voice.resume()
-                await member.send('Playback from a previous listening session has been resumed.')
 
         else:
             if not member.voice:
