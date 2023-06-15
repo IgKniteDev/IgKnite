@@ -282,17 +282,17 @@ class VoiceState:
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-        self.current = None
         self.exists = True
-        self.voice: disnake.VoiceProtocol | None = None
-        self.next = asyncio.Event()
+        self.current = None
         self.songs = SongQueue()
+        self.next = asyncio.Event()
+        self.voice: disnake.VoiceProtocol | None = None
 
+        self.skip_votes = set()
         self._loop = False
         self._volume = 0.5
         self._boosted = False
-        self._locked = False
-        self.skip_votes = set()
+        self._locked: disnake.Member | None = None
 
         self.audio_player = bot.loop.create_task(self.audio_player_task())
 
@@ -324,11 +324,11 @@ class VoiceState:
         self._boosted = value
 
     @property
-    def locked(self) -> bool:
+    def locked(self) -> disnake.Member | None:
         return self._locked
 
     @locked.setter
-    def locked(self, value: bool) -> None:
+    def locked(self, value: disnake.Member | None) -> None:
         self._locked = value
 
     @property
@@ -587,8 +587,9 @@ class Music(commands.Cog):
         elif (
             not ignore_lock
             and inter.voice_state.locked
+            and inter.author != inter.voice_state.locked
         ):
-            return await inter.send(f'The voice state has been locked.')
+            return await inter.send(f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.')
 
         else:
             return True
@@ -688,9 +689,8 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter, ignore_lock=True):
             return
 
-        lock_state = not inter.voice_state.locked
-        inter.voice_state.locked = lock_state
-        await inter.send(f"{'Unlocked' if not lock_state else 'Locked'} the current voice state.")
+        inter.voice_state.locked = (inter.author if not inter.voice_state.locked else None)
+        await inter.send(f"{'Unlocked' if not inter.voice_state.locked else 'Locked'} the current voice state.")
 
     # now
     @commands.slash_command(
@@ -929,7 +929,7 @@ class Music(commands.Cog):
     async def _ensure_play_safety(self, inter: disnake.CommandInteraction) -> True | False:
         if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
             return False
-        elif not await self._ensure_voice_safety(inter, skip_self=True, ignore_lock=True):
+        elif not await self._ensure_voice_safety(inter, skip_self=True):
             return False
         else:
             return True
