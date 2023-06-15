@@ -27,6 +27,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 import core
 from core.chain import keychain
+from core.datacls import LockRoles
 
 # Suppress noise about console usage from errors.
 yt_dlp.utils.bug_reports_message = lambda: ''
@@ -280,16 +281,17 @@ class VoiceState:
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-        self.current = None
-        self.voice: disnake.VoiceProtocol | None = None
         self.exists = True
-        self.next = asyncio.Event()
+        self.current = None
         self.songs = SongQueue()
+        self.next = asyncio.Event()
+        self.voice: disnake.VoiceProtocol | None = None
 
+        self.skip_votes = set()
         self._loop = False
         self._volume = 0.5
         self._boosted = False
-        self.skip_votes = set()
+        self._locked: disnake.Member | None = None
 
         self.audio_player = bot.loop.create_task(self.audio_player_task())
 
@@ -319,6 +321,14 @@ class VoiceState:
     @boosted.setter
     def boosted(self, value: bool) -> None:
         self._boosted = value
+
+    @property
+    def locked(self) -> disnake.Member | None:
+        return self._locked
+
+    @locked.setter
+    def locked(self, value: disnake.Member | None) -> None:
+        self._locked = value
 
     @property
     def is_playing(self) -> Any:
@@ -563,14 +573,29 @@ class Music(commands.Cog):
 
     # A coroutine for ensuring proper voice safety during playback.
     async def _ensure_voice_safety(
-        self, inter: disnake.CommandInteraction, skip_self: bool = False
+        self,
+        inter: disnake.CommandInteraction,
+        *,
+        skip_self: bool = False,
+        ignore_lock: bool = False,
     ) -> Any | None:
         if (not skip_self) and (not inter.voice_state.voice):
             return await inter.send('I\'m not inside any voice channel.')
+
         elif (
             not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel
         ):
             return await inter.send('You\'re not in my voice channel.')
+
+        elif (
+            not ignore_lock
+            and inter.voice_state.locked
+            and inter.author != inter.voice_state.locked
+        ):
+            return await inter.send(
+                f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.'
+            )
+
         else:
             return True
 
@@ -658,6 +683,20 @@ class Music(commands.Cog):
             + (' (⚠️ reduced quality) ' if volume > 100 else '')
         )
 
+    # togglelock
+    @commands.slash_command(
+        name='togglelock', description='Locks / unlocks the current playback.', dm_permission=False
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _lock(self, inter: disnake.CommandInteraction) -> None:
+        if not await self._ensure_voice_safety(inter, ignore_lock=True):
+            return
+
+        inter.voice_state.locked = inter.author if not inter.voice_state.locked else None
+        await inter.send(
+            f"{'Unlocked' if not inter.voice_state.locked else 'Locked'} the current voice state."
+        )
+
     # now
     @commands.slash_command(
         name='now',
@@ -668,7 +707,6 @@ class Music(commands.Cog):
         if inter.voice_state.is_playing:
             embed, view = inter.voice_state.current.create_embed(inter)
             await inter.send(embed=embed, view=view)
-
         else:
             await inter.send('There\'s nothing being played at the moment.')
 
@@ -768,7 +806,7 @@ class Music(commands.Cog):
         name='queue', description='Shows the player\'s queue.', dm_permission=False
     )
     async def _queue(self, inter: disnake.CommandInteraction) -> None:
-        if not await self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter, ignore_lock=True):
             return
         elif len(songs := inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
@@ -829,7 +867,7 @@ class Music(commands.Cog):
             default=1,
         ),
     ):
-        if not await self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter, ignore_lock=True):
             return
         elif len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty, so nothing to be removed.')
@@ -842,7 +880,7 @@ class Music(commands.Cog):
         name='shuffle', description='Shuffles the current queue.', dm_permission=False
     )
     async def _shuffle(self, inter: disnake.CommandInteraction) -> None:
-        if not await self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter, ignore_lock=True):
             return
 
         inter.voice_state.songs.shuffle()
