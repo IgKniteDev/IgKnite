@@ -29,7 +29,6 @@ import core
 from core.chain import keychain
 from core.datacls import LockRoles
 
-
 # Suppress noise about console usage from errors.
 yt_dlp.utils.bug_reports_message = lambda: ''
 
@@ -574,7 +573,11 @@ class Music(commands.Cog):
 
     # A coroutine for ensuring proper voice safety during playback.
     async def _ensure_voice_safety(
-        self, inter: disnake.CommandInteraction, *, skip_self: bool = False, ignore_lock: bool = False
+        self,
+        inter: disnake.CommandInteraction,
+        *,
+        skip_self: bool = False,
+        ignore_lock: bool = False,
     ) -> Any | None:
         if (not skip_self) and (not inter.voice_state.voice):
             return await inter.send('I\'m not inside any voice channel.')
@@ -589,7 +592,9 @@ class Music(commands.Cog):
             and inter.voice_state.locked
             and inter.author != inter.voice_state.locked
         ):
-            return await inter.send(f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.')
+            return await inter.send(
+                f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.'
+            )
 
         else:
             return True
@@ -680,17 +685,17 @@ class Music(commands.Cog):
 
     # lock
     @commands.slash_command(
-        name='togglelock',
-        description='Locks / unlocks the current playback.',
-        dm_permission=False
+        name='togglelock', description='Locks / unlocks the current playback.', dm_permission=False
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _lock(self, inter: disnake.CommandInteraction) -> None:
         if not await self._ensure_voice_safety(inter, ignore_lock=True):
             return
 
-        inter.voice_state.locked = (inter.author if not inter.voice_state.locked else None)
-        await inter.send(f"{'Unlocked' if not inter.voice_state.locked else 'Locked'} the current voice state.")
+        inter.voice_state.locked = inter.author if not inter.voice_state.locked else None
+        await inter.send(
+            f"{'Unlocked' if not inter.voice_state.locked else 'Locked'} the current voice state."
+        )
 
     # now
     @commands.slash_command(
@@ -949,7 +954,7 @@ class Music(commands.Cog):
         boosted: bool = Param(
             description='Increases bass and slightly reduces the volume for high-frequency sounds.',
             default=False,
-        )
+        ),
     ) -> None:
         if not await self._ensure_play_safety(inter):
             return
