@@ -588,7 +588,7 @@ class Music(commands.Cog):
             not ignore_lock
             and inter.voice_state.locked
         ):
-            return await inter.send('The user has locked the playback.')
+            return await inter.send(f'The voice state has been locked.')
 
         else:
             return True
