@@ -683,7 +683,7 @@ class Music(commands.Cog):
             + (' (⚠️ reduced quality) ' if volume > 100 else '')
         )
 
-    # lock
+    # togglelock
     @commands.slash_command(
         name='togglelock', description='Locks / unlocks the current playback.', dm_permission=False
     )
