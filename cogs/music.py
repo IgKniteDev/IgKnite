@@ -574,7 +574,7 @@ class Music(commands.Cog):
 
     # A coroutine for ensuring proper voice safety during playback.
     async def _ensure_voice_safety(
-        self, inter: disnake.CommandInteraction, skip_self: bool = False, ignore_lock: bool = False
+        self, inter: disnake.CommandInteraction, *, skip_self: bool = False, ignore_lock: bool = False
     ) -> Any | None:
         if (not skip_self) and (not inter.voice_state.voice):
             return await inter.send('I\'m not inside any voice channel.')
@@ -685,7 +685,7 @@ class Music(commands.Cog):
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _lock(self, inter: disnake.CommandInteraction) -> None:
-        if not await self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter, ignore_lock=True):
             return
 
         lock_state = not inter.voice_state.locked
