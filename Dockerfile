@@ -2,12 +2,14 @@
 FROM python:3.11
 
 # Copy project files and set working directory.
-WORKDIR /app
-COPY . /app/
+WORKDIR /igknite
+COPY . /igknite/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install ffmpeg for music commands.
+# Set proper frontend for Debian and install external dependencies.
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y --no-install-recommends ffmpeg
+RUN rm -rf /var/lib/apt/lists/*
 
 # Real-time project view.
 ENV PYTHONUNBUFFERED 1
