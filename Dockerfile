@@ -1,9 +1,9 @@
-# Initialize Python 3.11 and set current directory.
-FROM python:3.11
+# Set image version and type.
+FROM python:3.11-slim
 
-# Copy project files and 
-COPY . /app/
+# Copy project files and set working directory.
 WORKDIR /app
+COPY . /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install ffmpeg for music commands.
