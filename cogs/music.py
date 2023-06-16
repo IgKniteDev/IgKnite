@@ -241,8 +241,7 @@ class Song:
         duration = self.source.duration or 'Live'
 
         embed = (
-            core.TypicalEmbed(inter)
-            .set_title(self.source.title)
+            core.TypicalEmbed(inter, title=self.source.title)
             .add_field(name='Duration', value=duration)
             .add_field(name='Requester', value=self.requester.mention)
             .set_image(url=self.source.thumbnail)
@@ -818,10 +817,8 @@ class Music(commands.Cog):
         async def page_loader(page_num: int) -> core.TypicalEmbed:
             page = page_num
 
-            embed = (
-                core.TypicalEmbed(inter)
-                .set_title('Current Queue')
-                .set_footer(text=f'{page}/{top_page}')
+            embed = core.TypicalEmbed(inter, title='Current Queue').set_footer(
+                text=f'{page}/{top_page}'
             )
 
             for i in range(
@@ -923,8 +920,8 @@ class Music(commands.Cog):
             await inter.voice_state.songs.put(song)
 
             if send_embed:
-                embed = core.TypicalEmbed(inter).set_title(
-                    value=f'Enqueued {song.source.title} from YouTube.'
+                embed = core.TypicalEmbed(
+                    inter, title=f'Enqueued {song.source.title} from YouTube.'
                 )
                 view = core.SmallView(inter).add_button(label='Redirect', url=song.source.url)
                 await inter.send(embed=embed, view=view)
@@ -969,9 +966,7 @@ class Music(commands.Cog):
             for track in tracks:
                 await self._play_backend(inter, track, send_embed=False, boosted=boosted)
 
-            embed = core.TypicalEmbed(inter).set_title(
-                value=f'{len(tracks)} tracks have been queued!'
-            )
+            embed = core.TypicalEmbed(inter, title=f'{len(tracks)} tracks have been queued!')
             await inter.send(embed=embed)
 
         if 'https://open.spotify.com/playlist/' in keyword or 'spotify:playlist:' in keyword:

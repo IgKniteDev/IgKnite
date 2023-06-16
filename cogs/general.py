@@ -74,14 +74,11 @@ class General(commands.Cog):
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: disnake.Reaction, member: disnake.Member) -> None:
         if reaction.emoji == '🔖':
-            embed = (
-                core.TypicalEmbed()
-                .set_title('You\'ve bookmarked a message.')
-                .set_description(
-                    reaction.message.content
-                    + f'\n\nSent by {reaction.message.author.name} '
-                    + f'on {member.guild.name}'
-                )
+            embed = core.TypicalEmbed(
+                title='You\'ve bookmarked a message.',
+                description=reaction.message.content
+                + f'\n\nSent by {reaction.message.author.name} '
+                + f'on {member.guild.name}',
             )
             view = core.SmallView().add_button(
                 label='Original Message', url=reaction.message.jump_url
@@ -93,9 +90,7 @@ class General(commands.Cog):
     async def _avatar_backend(
         self, inter: disnake.CommandInteraction, member: disnake.Member = None
     ) -> None:
-        embed = (
-            core.TypicalEmbed(inter).set_title('Here\'s what I found!').set_image(url=member.avatar)
-        )
+        embed = core.TypicalEmbed(inter, title='Here\'s what I found!').set_image(url=member.avatar)
 
         await inter.send(embed=embed)
 
@@ -129,15 +124,14 @@ class General(commands.Cog):
     # help
     @commands.slash_command(name='help', description='Get to know IgKnite!')
     async def help(inter: disnake.CommandInteraction):
-        embed = (
-            core.TypicalEmbed(inter, disabled_footer=True)
-            .set_title('Hey there! I\'m IgKnite.')
-            .set_description(
-                'I\'m a bot with no text commands (you heard that right) '
-                + 'and I\'m here to help you manage and moderate your Discord server alongside'
-                + 'having a midnight music party with your friends in a random voice channel. '
-                + 'Looking forward to being friends with you!'
-            )
+        embed = core.TypicalEmbed(
+            inter,
+            title='Hey there! I\'m IgKnite.',
+            description='I\'m a bot with no text commands (you heard that right) '
+            + 'and I\'m here to help you manage and moderate your Discord server alongside '
+            + 'having a midnight music party with your friends in a random voice channel. '
+            + 'Looking forward to being friends with you!',
+            disabled_footer=True,
         )
 
         view = (
