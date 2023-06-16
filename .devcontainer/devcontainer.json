@@ -3,7 +3,7 @@
 {
 	"name": "Python 3",
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
-	"postCreateCommand": "bash -c 'sudo apt update && sudo apt install -y --no-install-recommends ffmpeg'",
+	"postCreateCommand": "sudo apt update && sudo apt install -y --no-install-recommends ffmpeg && pip install -U pip && pip install -r requirements.txt && pip install flake8 black",
 	"customizations": {
 		"vscode": {
 			"extensions": [
