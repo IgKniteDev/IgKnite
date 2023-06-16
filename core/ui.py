@@ -22,12 +22,13 @@ class TypicalEmbed(disnake.Embed):
 
     def __init__(
         self,
+        *args,
         inter: disnake.CommandInteraction | None = None,
-        *,
         disabled_footer: bool = False,
-        is_error: bool = False
+        is_error: bool = False,
+        **kwargs,
     ) -> None:
-        super().__init__(color=(2764081 if not is_error else 16608388))
+        super().__init__(*args, **kwargs, color=(2764081 if not is_error else 16608388))
 
         if not disabled_footer and inter:
             self.set_footer(
@@ -45,20 +46,6 @@ class TypicalEmbed(disnake.Embed):
                 ),
                 icon_url=inter.author.avatar,
             )
-
-    def set_title(self, value: str) -> Self:
-        '''
-        Sets the title for the embed.
-        '''
-        self.title = value
-        return self
-
-    def set_description(self, value: str) -> Self:
-        '''
-        Sets the description for the embed.
-        '''
-        self.description = value
-        return self
 
 
 # Overwrite disnake.ui.View class to form custom views.
@@ -79,7 +66,7 @@ class SmallView(disnake.ui.View):
         label: str,
         url: str | None = None,
         style: disnake.ButtonStyle = disnake.ButtonStyle.gray,
-        disabled: bool = False
+        disabled: bool = False,
     ) -> Self:
         '''
         Adds a button to the view.

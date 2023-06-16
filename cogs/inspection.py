@@ -124,8 +124,7 @@ class Inspection(commands.Cog):
         self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
         embed = (
-            core.TypicalEmbed(inter)
-            .set_title(str(member))
+            core.TypicalEmbed(inter=inter, title=str(member))
             .add_field(name='Status', value=member.status)
             .add_field(
                 name='Birth',
@@ -188,8 +187,7 @@ class Inspection(commands.Cog):
         role: disnake.Role = Param(description='Mention the role.', default=None),
     ) -> None:
         embed = (
-            core.TypicalEmbed(inter)
-            .set_title(f'Role information: @{role.name}')
+            core.TypicalEmbed(inter=inter, title=f'Role information: @{role.name}')
             .add_field(
                 name='Birth',
                 value=datetime.strptime(str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime(
@@ -227,10 +225,8 @@ class Inspection(commands.Cog):
 
         async def page_loader(page_num: int) -> core.TypicalEmbed:
             page = page_num
-            embed = (
-                core.TypicalEmbed(inter)
-                .set_title('Active Invites')
-                .set_footer(text=f'{page}/{top_page}')
+            embed = core.TypicalEmbed(inter=inter, title='Active Invites').set_footer(
+                text=f'{page}/{top_page}'
             )
 
             for i in range(
@@ -318,7 +314,7 @@ class Inspection(commands.Cog):
     ):
         await inter.response.defer(ephemeral=True)
 
-        embed = core.TypicalEmbed(inter).set_title(f'Audit Log ({limit} entries)')
+        embed = core.TypicalEmbed(inter=inter, title=f'Audit Log ({limit} entries)')
         async for audit_entry in inter.guild.audit_logs(limit=limit):
             embed.add_field(
                 name=f'- {audit_entry.action}',

@@ -320,9 +320,10 @@ class Moderation(commands.Cog):
         await inter.response.defer(ephemeral=True)
 
         embed = (
-            core.TypicalEmbed(inter)
+            core.TypicalEmbed(
+                inter=inter, title=f'{inter.author.display_name} has sent you a message!'
+            )
             .add_field('Message: ', msg)
-            .set_title(f'{inter.author.display_name} has sent you a message!')
             .set_thumbnail(url=inter.author.avatar.url)
         )
 
@@ -342,7 +343,7 @@ class Moderation(commands.Cog):
         if not pins:
             await inter.send('There are no pinned messages in this channel.', ephemeral=True)
         else:
-            embed = core.TypicalEmbed(inter).set_title('Pinned Messages  📌')
+            embed = core.TypicalEmbed(inter=inter, title='Pinned Messages  📌')
 
             for count, pin in enumerate(pins):
                 embed.add_field(
@@ -457,10 +458,8 @@ class Moderation(commands.Cog):
             ),
         )
 
-        embed = (
-            core.TypicalEmbed(inter)
-            .set_title('Added these words to banned list:')
-            .set_description(', '.join(keywords))
+        embed = core.TypicalEmbed(
+            inter, title='Added these words to banned list:', description=', '.join(keywords)
         )
         await inter.send(embed=embed)
 
@@ -501,10 +500,8 @@ class Moderation(commands.Cog):
             for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
                     words += (f'{item} \n' for item in rule.trigger_metadata.keyword_filter)
-                    embed = (
-                        core.TypicalEmbed(inter)
-                        .set_title('Here\'s the list of banned words:')
-                        .set_description(words)
+                    embed = core.TypicalEmbed(
+                        inter, title='Here\'s the list of banned words:', description=words
                     )
                     await inter.send(embed=embed)
 
