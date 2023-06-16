@@ -51,7 +51,7 @@ class Customization(commands.Cog):
         color = get_color(color)
         await inter.guild.create_role(name=name, color=color)
 
-        embed = core.TypicalEmbed().set_description(f'Role `{name}` has been created.')
+        embed = core.TypicalEmbed(description=f'Role `{name}` has been created.')
         await inter.send(embed=embed)
 
     # assignrole
@@ -117,8 +117,7 @@ class Customization(commands.Cog):
         )
 
         embed = (
-            core.TypicalEmbed(inter)
-            .set_title('Created a new invite!')
+            core.TypicalEmbed(inter, title='Created a new invite!')
             .add_field(name='Link', value=f'https://discord.gg/{invite.code}')
             .add_field(name='Code', value=f'`{invite.code}`')
             .add_field(
