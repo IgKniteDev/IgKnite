@@ -320,7 +320,9 @@ class Moderation(commands.Cog):
         await inter.response.defer(ephemeral=True)
 
         embed = (
-            core.TypicalEmbed(inter, title=f'{inter.author.display_name} has sent you a message!')
+            core.TypicalEmbed(
+                inter=inter, title=f'{inter.author.display_name} has sent you a message!'
+            )
             .add_field('Message: ', msg)
             .set_thumbnail(url=inter.author.avatar.url)
         )
@@ -341,7 +343,7 @@ class Moderation(commands.Cog):
         if not pins:
             await inter.send('There are no pinned messages in this channel.', ephemeral=True)
         else:
-            embed = core.TypicalEmbed(inter, title='Pinned Messages  📌')
+            embed = core.TypicalEmbed(inter=inter, title='Pinned Messages  📌')
 
             for count, pin in enumerate(pins):
                 embed.add_field(

@@ -117,7 +117,7 @@ class Customization(commands.Cog):
         )
 
         embed = (
-            core.TypicalEmbed(inter, title='Created a new invite!')
+            core.TypicalEmbed(inter=inter, title='Created a new invite!')
             .add_field(name='Link', value=f'https://discord.gg/{invite.code}')
             .add_field(name='Code', value=f'`{invite.code}`')
             .add_field(

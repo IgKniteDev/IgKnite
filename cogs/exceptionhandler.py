@@ -33,7 +33,7 @@ class ExceptionHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
-        embed = core.TypicalEmbed(inter, is_error=True)
+        embed = core.TypicalEmbed(inter=inter, is_error=True)
 
         # MissingPermissions
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
@@ -56,7 +56,7 @@ class ExceptionHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_user_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
-        embed = core.TypicalEmbed(inter, is_error=True)
+        embed = core.TypicalEmbed(inter=inter, is_error=True)
 
         # MissingPermissions
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
@@ -79,7 +79,7 @@ class ExceptionHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_message_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
         error = getattr(error, 'original', error)
-        embed = core.TypicalEmbed(inter, is_error=True)
+        embed = core.TypicalEmbed(inter=inter, is_error=True)
 
         # MissingPermissions
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
