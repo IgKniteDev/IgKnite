@@ -50,7 +50,7 @@ class ExceptionHandler(commands.Cog):
         else:
             embed.title = 'Whoops! An alien error occured.'
 
-        embed.set_description(str(error))
+        embed.description = str(error)
         await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
@@ -73,7 +73,7 @@ class ExceptionHandler(commands.Cog):
         else:
             embed.title = 'Whoops! An alien error occured.'
 
-        embed.set_description(str(error))
+        embed.description = str(error)
         await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
@@ -96,7 +96,7 @@ class ExceptionHandler(commands.Cog):
         else:
             embed.title = 'Whoops! An alien error occured.'
 
-        embed.set_description(str(error))
+        embed.description = str(error)
         await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
 
