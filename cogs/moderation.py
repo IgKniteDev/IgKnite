@@ -1,10 +1,5 @@
-'''
-The `Moderation` cog for IgKnite.
----
+# SPDX-License-Identifier: MIT
 
-License can be found here:
-https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
-'''
 
 # Imports.
 from typing import List

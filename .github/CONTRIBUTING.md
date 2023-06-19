@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT -->
+
 # Contribution Guidelines
 
 We're glad to have you here with us in this project. Hope your ideas will shine in the whole workspace, and to do just that, we have written this comprehensive guide to help you set up, initialize and properly code on IgKnite.

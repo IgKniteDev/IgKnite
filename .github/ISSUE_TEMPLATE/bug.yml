@@ -1,6 +1,9 @@
+# SPDX-License-Identifier: MIT
+
 name: 🐛 Bug
 description: Report an issue to help improve the project.
 labels: ["bug"]
+
 body:
   - type: textarea
     id: description

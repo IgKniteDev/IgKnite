@@ -1,7 +1,10 @@
+# SPDX-License-Identifier: MIT
+
 name: 💡 General Feature Request
 description: Have a new idea/feature for IgKnite? Please suggest!
 title: "[FEATURE] <description>"
 labels: ["feat"]
+
 body:
   - type: textarea
     id: description

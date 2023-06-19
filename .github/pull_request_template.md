@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT -->
+
 ### Things changed:
 
 - [ ] Start by listing your changes one by one.

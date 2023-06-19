@@ -1,10 +1,4 @@
-'''
-The `Inspection` cog for IgKnite.
----
-
-License can be found here:
-https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
-'''
+# SPDX-License-Identifier: MIT
 
 
 # Imports.

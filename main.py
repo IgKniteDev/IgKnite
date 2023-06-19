@@ -1,7 +1,4 @@
-'''
-License can be found here:
-https://github.com/IgKniteDev/IgKnite/blob/main/LICENSE
-'''
+# SPDX-License-Identifier: MIT
 
 
 # Imports.
@@ -22,6 +19,7 @@ bot = core.IgKnite(
         'cogs.music',
     ],
 )
+
 
 # Run!
 if __name__ == '__main__':
