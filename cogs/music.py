@@ -921,7 +921,7 @@ class Music(commands.Cog):
 
             if send_embed:
                 embed = core.TypicalEmbed(
-                    inter, title=f'Enqueued {song.source.title} from YouTube.'
+                    inter=inter, title=f'Enqueued {song.source.title} from YouTube.'
                 )
                 view = core.SmallView(inter).add_button(label='Redirect', url=song.source.url)
                 await inter.send(embed=embed, view=view)
