@@ -96,7 +96,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _guildinfo(self, inter: disnake.CommandInteraction) -> None:
         embed = (
-            core.TypicalEmbed(inter)
+            core.TypicalEmbed(inter=inter)
             .add_field(
                 name='Birth',
                 value=datetime.strptime(

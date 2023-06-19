@@ -28,7 +28,11 @@ class TypicalEmbed(disnake.Embed):
         is_error: bool = False,
         **kwargs,
     ) -> None:
-        super().__init__(*args, **kwargs, color=(2764081 if not is_error else 16608388))
+        super().__init__(
+            *args,
+            **kwargs,
+            color=(2764081 if not is_error else 16608388),
+        )
 
         if not disabled_footer and inter:
             self.set_footer(
