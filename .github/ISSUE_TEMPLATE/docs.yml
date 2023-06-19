@@ -1,7 +1,10 @@
+# SPDX-License-Identifier: MIT
+
 name: 📄 Documentation issue
 description: Found an issue in the documentation? You can use this one!
 title: "[DOCS] <description>"
 labels: ["docs"]
+
 body:
   - type: textarea
     id: description

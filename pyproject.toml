@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 [tool.black]
 line-length = 100
 skip-string-normalization = true
