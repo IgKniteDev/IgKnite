@@ -145,13 +145,14 @@ class Moderation(commands.Cog):
     async def _unban(
         self,
         inter: disnake.CommandInteraction,
-        user: str = Param(description='Mention the user.'),
+        id: int = Param(description='The identifier of the user to unban.', large=True),
         reason: str = Param(
             description='Give a reason for the unban.', default='No reason provided.'
         ),
     ) -> None:
+        user = await self.bot.getch_user(id)
         await inter.guild.unban(user, reason=reason)
-        await inter.send(f'User **{user}** has been unbanned!')
+        await inter.send(f'User **{user.display_name}** has been unbanned!')
 
     # purge
     @commands.slash_command(
