@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 {
 	"[python]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll.ruff": true,
-			"source.organizeImports.ruff": true
-		}
-	}
-}
+	  "editor.codeActionsOnSave": {
+		"source.fixAll": true,
+		"source.organizeImports": true
+	  }
+	},
+	"ruff.organizeImports": false
+  }

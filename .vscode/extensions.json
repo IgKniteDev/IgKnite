@@ -6,10 +6,7 @@
     "recommendations": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "charliermarsh.ruff"
-    ],
-    // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-    "unwantedRecommendations": [
-        "ms-python.isort"
+        "charliermarsh.ruff",
+        "ms-python.isort",
     ]
 }
