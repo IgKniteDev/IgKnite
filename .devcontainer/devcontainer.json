@@ -9,9 +9,7 @@
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
-				"ms-python.vscode-pylance",
-				"charliermarsh.ruff",
-				"ms-python.isort"
+				"charliermarsh.ruff"
 			]
 		}
 	}
