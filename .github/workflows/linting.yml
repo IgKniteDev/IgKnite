@@ -23,10 +23,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python environment
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
       - name: Run Ruff
         uses: chartboost/ruff-action@v1
