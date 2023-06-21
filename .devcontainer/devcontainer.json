@@ -4,13 +4,12 @@
 {
 	"name": "Python 3",
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
-	"postCreateCommand": "sudo apt update && sudo apt install -y --no-install-recommends ffmpeg && pip install -U pip && pip install -r requirements.txt && pip install flake8 black",
+	"postCreateCommand": "sudo apt update && sudo apt install -y --no-install-recommends ffmpeg && pip install -U pip && pip install -r requirements.txt && pip install ruff",
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
-				"ms-python.vscode-pylance",
-				"ms-python.isort"
+				"charliermarsh.ruff"
 			]
 		}
 	}

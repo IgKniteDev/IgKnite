@@ -134,4 +134,5 @@ dmypy.json
 .pyre/
 
 # Additional stuff
+.ruff_cache
 .DS_Store
