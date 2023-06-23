@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 {
 	"[python]": {
-		"editor.defaultFormatter": null,
 		"editor.codeActionsOnSave": {
 			"source.fixAll.ruff": true,
 			"source.organizeImports.ruff": true
-		}
-	}
+		},
+		"editor.formatOnSave": true
+	},
+	"python.formatting.provider": "black"
 }

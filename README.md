@@ -19,6 +19,7 @@
 <br> <img src="static/banner.png">
 
 [![CodeSee](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml)
+[![Formatting](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
 [![Linting](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
 
 </div>
