@@ -2,6 +2,8 @@
 
 
 # Imports.
+from typing import List
+
 import disnake
 from disnake import ChannelType, OptionChoice
 from disnake.ext import commands
@@ -23,6 +25,23 @@ def get_color(hex: str) -> disnake.Colour:
 
 # The actual cog.
 class Customization(commands.Cog):
+    __slowmode_choices__: List[OptionChoice] = [
+        OptionChoice('Remove Slowmode', 0),
+        OptionChoice('5s', 5),
+        OptionChoice('10s', 10),
+        OptionChoice('15s', 15),
+        OptionChoice('30s', 30),
+        OptionChoice('1m', 60),
+        OptionChoice('2m', 120),
+        OptionChoice('5m', 300),
+        OptionChoice('10m', 600),
+        OptionChoice('15m', 900),
+        OptionChoice('30m', 1800),
+        OptionChoice('1h', 3600),
+        OptionChoice('2h', 7200),
+        OptionChoice('6h', 21600),
+    ]
+
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
@@ -152,22 +171,7 @@ class Customization(commands.Cog):
             description='The amount of seconds to set the slowmode to. Set 0 to disable.',
             min_value=0,
             max_value=21600,
-            choices=[
-                OptionChoice('Remove Slowmode', 0),
-                OptionChoice('5s', 5),
-                OptionChoice('10s', 10),
-                OptionChoice('15s', 15),
-                OptionChoice('30s', 30),
-                OptionChoice('1m', 60),
-                OptionChoice('2m', 120),
-                OptionChoice('5m', 300),
-                OptionChoice('10m', 600),
-                OptionChoice('15m', 900),
-                OptionChoice('30m', 1800),
-                OptionChoice('1h', 3600),
-                OptionChoice('2h', 7200),
-                OptionChoice('6h', 21600),
-            ],
+            choices=__slowmode_choices__
         ),
     ) -> None:
         await inter.channel.edit(slowmode_delay=duration)
@@ -194,8 +198,20 @@ class Customization(commands.Cog):
             channel_types=[ChannelType.category],
         ),
         topic: str = Param(description='Give a topic for the new channel.', default=None),
+        slowmode: int = Param(
+            description='The amount of seconds to set the slowmode to. Default is 0.',
+            default=0,
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__
+        )
     ) -> None:
-        channel = await inter.guild.create_text_channel(name=name, topic=topic, category=category)
+        channel = await inter.guild.create_text_channel(
+            name=name, 
+            topic=topic, 
+            category=category, 
+            slowmode_delay=slowmode
+        )
         await inter.send(f'Channel {channel.mention} has been created!')
 
     # makevc
@@ -214,8 +230,19 @@ class Customization(commands.Cog):
             default=None,
             channel_types=[ChannelType.category],
         ),
+        slowmode: int = Param(
+            description='The amount of seconds to set the slowmode to. Default is 0.',
+            default=0,
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__
+        )
     ) -> None:
-        vc = await inter.guild.create_voice_channel(name=name, category=category)
+        vc = await inter.guild.create_voice_channel(
+            name=name, 
+            category=category, 
+            slowmode_delay=slowmode
+        )
         await inter.send(f'{vc.mention} has been created!')
 
     # makestage
@@ -234,8 +261,19 @@ class Customization(commands.Cog):
             default=None,
             channel_types=[ChannelType.category],
         ),
+        slowmode: int = Param(
+            description='The amount of seconds to set the slowmode to. Default is 0.',
+            default=0,
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__
+        )
     ):
-        stage = await inter.guild.create_stage_channel(name=name, category=category)
+        stage = await inter.guild.create_stage_channel(
+            name=name, 
+            category=category, 
+            slowmode_delay=slowmode
+        )
         await inter.send(f'{stage.mention} has been created!')
 
 
