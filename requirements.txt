@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-disnake[voice]==2.8.1
+disnake[voice]==2.9.0
 python-decouple==3.8
 spotipy==2.23.0
-yt-dlp==2023.6.21
+yt-dlp==2023.6.22

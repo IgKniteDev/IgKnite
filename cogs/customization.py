@@ -2,6 +2,8 @@
 
 
 # Imports.
+from typing import List
+
 import disnake
 from disnake import ChannelType, OptionChoice
 from disnake.ext import commands
@@ -23,6 +25,23 @@ def get_color(hex: str) -> disnake.Colour:
 
 # The actual cog.
 class Customization(commands.Cog):
+    __slowmode_choices__: List[OptionChoice] = [
+        OptionChoice('Remove Slowmode', 0),
+        OptionChoice('5s', 5),
+        OptionChoice('10s', 10),
+        OptionChoice('15s', 15),
+        OptionChoice('30s', 30),
+        OptionChoice('1m', 60),
+        OptionChoice('2m', 120),
+        OptionChoice('5m', 300),
+        OptionChoice('10m', 600),
+        OptionChoice('15m', 900),
+        OptionChoice('30m', 1800),
+        OptionChoice('1h', 3600),
+        OptionChoice('2h', 7200),
+        OptionChoice('6h', 21600),
+    ]
+
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
@@ -138,6 +157,30 @@ class Customization(commands.Cog):
         await member.edit(nick=nickname)
         await inter.send(f'Member {member.mention} has been nicked to **{nickname}**!')
 
+    # slowmode
+    @commands.slash_command(
+        name='slowmode',
+        description='Sets slowmode for the current channel.',
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _slowmode(
+        self,
+        inter: disnake.CommandInteraction,
+        duration: int = Param(
+            description='The amount of seconds to set the slowmode to. Set 0 to disable.',
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__,
+        ),
+    ) -> None:
+        await inter.channel.edit(slowmode_delay=duration)
+
+        if duration == 0:
+            await inter.send('Slowmode has been disabled!')
+        else:
+            await inter.send(f'Slowmode has been set to **{duration}** seconds.')
+
     # makechannel
     @commands.slash_command(
         name='makechannel',
@@ -155,13 +198,22 @@ class Customization(commands.Cog):
             channel_types=[ChannelType.category],
         ),
         topic: str = Param(description='Give a topic for the new channel.', default=None),
+        slowmode: int = Param(
+            description='The amount of seconds to set the slowmode to. Default is 0.',
+            default=0,
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__,
+        ),
     ) -> None:
-        channel = await inter.guild.create_text_channel(name=name, topic=topic, category=category)
+        channel = await inter.guild.create_text_channel(
+            name=name, topic=topic, category=category, slowmode_delay=slowmode
+        )
         await inter.send(f'Channel {channel.mention} has been created!')
 
     # makevc
     @commands.slash_command(
-        name='makevc',
+        name='makevoice',
         description='Create a new voice channel.',
         dm_permission=False,
     )
@@ -175,9 +227,47 @@ class Customization(commands.Cog):
             default=None,
             channel_types=[ChannelType.category],
         ),
+        slowmode: int = Param(
+            description='The amount of seconds to set the slowmode to. Default is 0.',
+            default=0,
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__,
+        ),
     ) -> None:
-        vc = await inter.guild.create_voice_channel(name=name, category=category)
-        await inter.send(f'VC {vc.mention} has been created!')
+        vc = await inter.guild.create_voice_channel(
+            name=name, category=category, slowmode_delay=slowmode
+        )
+        await inter.send(f'{vc.mention} has been created!')
+
+    # makestage
+    @commands.slash_command(
+        name='makestage',
+        description='Creates a new stage channel.',
+        dm_permission=False,
+    )
+    @commands.has_role(LockRoles.admin)
+    async def _makestage(
+        self,
+        inter: disnake.CommandInteraction,
+        name: str = Param(description='Give a name for the new voice channel.'),
+        category: disnake.CategoryChannel = Param(
+            description='Specify the category to put the channel into. Defaults to none.',
+            default=None,
+            channel_types=[ChannelType.category],
+        ),
+        slowmode: int = Param(
+            description='The amount of seconds to set the slowmode to. Default is 0.',
+            default=0,
+            min_value=0,
+            max_value=21600,
+            choices=__slowmode_choices__,
+        ),
+    ):
+        stage = await inter.guild.create_stage_channel(
+            name=name, category=category, slowmode_delay=slowmode
+        )
+        await inter.send(f'{stage.mention} has been created!')
 
     # makecategory
     @commands.slash_command(
@@ -206,7 +296,16 @@ class Customization(commands.Cog):
         inter: disnake.CommandInteraction,
         channel: disnake.TextChannel
         | disnake.VoiceChannel
-        | disnake.StageChannel = Param(description='Specify the channel that you want to delete.'),
+        | disnake.StageChannel
+        | disnake.CategoryChannel = Param(
+            description='Specify the channel that you want to delete.',
+            channel_types=[
+                ChannelType.text,
+                ChannelType.voice,
+                ChannelType.category,
+                ChannelType.stage_voice,
+            ],
+        ),
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
