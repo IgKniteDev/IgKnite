@@ -138,6 +138,45 @@ class Customization(commands.Cog):
         await member.edit(nick=nickname)
         await inter.send(f'Member {member.mention} has been nicked to **{nickname}**!')
 
+    # slowmode
+    @commands.slash_command(
+        name='slowmode',
+        description='Sets slowmode for the current channel.',
+        dm_permission=False,
+    )
+    @commands.has_any_role(LockRoles.mod, LockRoles.admin)
+    async def _slowmode(
+        self,
+        inter: disnake.CommandInteraction,
+        duration: int = Param(
+            description='The amount of seconds to set the slowmode to. Set 0 to disable.',
+            min_value=0,
+            max_value=21600,
+            choices=[
+                OptionChoice('Remove Slowmode', 0),
+                OptionChoice('5s', 5),
+                OptionChoice('10s', 10),
+                OptionChoice('15s', 15),
+                OptionChoice('30s', 30),
+                OptionChoice('1m', 60),
+                OptionChoice('2m', 120),
+                OptionChoice('5m', 300),
+                OptionChoice('10m', 600),
+                OptionChoice('15m', 900),
+                OptionChoice('30m', 1800),
+                OptionChoice('1h', 3600),
+                OptionChoice('2h', 7200),
+                OptionChoice('6h', 21600),
+            ],
+        ),
+    ) -> None:
+        await inter.channel.edit(slowmode_delay=duration)
+
+        if duration == 0:
+            await inter.send('Slowmode has been disabled!')
+        else:
+            await inter.send(f'Slowmode has been set to **{duration}** seconds.')
+
     # makechannel
     @commands.slash_command(
         name='makechannel',
