@@ -171,7 +171,7 @@ class Customization(commands.Cog):
             description='The amount of seconds to set the slowmode to. Set 0 to disable.',
             min_value=0,
             max_value=21600,
-            choices=__slowmode_choices__
+            choices=__slowmode_choices__,
         ),
     ) -> None:
         await inter.channel.edit(slowmode_delay=duration)
@@ -203,14 +203,11 @@ class Customization(commands.Cog):
             default=0,
             min_value=0,
             max_value=21600,
-            choices=__slowmode_choices__
-        )
+            choices=__slowmode_choices__,
+        ),
     ) -> None:
         channel = await inter.guild.create_text_channel(
-            name=name, 
-            topic=topic, 
-            category=category, 
-            slowmode_delay=slowmode
+            name=name, topic=topic, category=category, slowmode_delay=slowmode
         )
         await inter.send(f'Channel {channel.mention} has been created!')
 
@@ -235,13 +232,11 @@ class Customization(commands.Cog):
             default=0,
             min_value=0,
             max_value=21600,
-            choices=__slowmode_choices__
-        )
+            choices=__slowmode_choices__,
+        ),
     ) -> None:
         vc = await inter.guild.create_voice_channel(
-            name=name, 
-            category=category, 
-            slowmode_delay=slowmode
+            name=name, category=category, slowmode_delay=slowmode
         )
         await inter.send(f'{vc.mention} has been created!')
 
@@ -266,16 +261,13 @@ class Customization(commands.Cog):
             default=0,
             min_value=0,
             max_value=21600,
-            choices=__slowmode_choices__
-        )
+            choices=__slowmode_choices__,
+        ),
     ):
         stage = await inter.guild.create_stage_channel(
-            name=name, 
-            category=category, 
-            slowmode_delay=slowmode
+            name=name, category=category, slowmode_delay=slowmode
         )
         await inter.send(f'{stage.mention} has been created!')
-
 
     # makecategory
     @commands.slash_command(
@@ -312,7 +304,7 @@ class Customization(commands.Cog):
                 ChannelType.voice,
                 ChannelType.category,
                 ChannelType.stage_voice,
-            ]
+            ],
         ),
     ) -> None:
         await channel.delete()
