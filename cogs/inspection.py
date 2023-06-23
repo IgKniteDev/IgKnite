@@ -118,7 +118,7 @@ class Inspection(commands.Cog):
         self, inter: disnake.CommandInteraction, member: disnake.Member
     ) -> None:
         embed = (
-            core.TypicalEmbed(inter=inter, title=str(member))
+            core.TypicalEmbed(inter=inter, title=f'{member.global_name} ({member.display_name})')
             .add_field(name='Status', value=member.status)
             .add_field(
                 name='Birth',
