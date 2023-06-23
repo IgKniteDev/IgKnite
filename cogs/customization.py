@@ -161,7 +161,7 @@ class Customization(commands.Cog):
 
     # makevc
     @commands.slash_command(
-        name='makevc',
+        name='makevoice',
         description='Create a new voice channel.',
         dm_permission=False,
     )
@@ -177,7 +177,28 @@ class Customization(commands.Cog):
         ),
     ) -> None:
         vc = await inter.guild.create_voice_channel(name=name, category=category)
-        await inter.send(f'VC {vc.mention} has been created!')
+        await inter.send(f'{vc.mention} has been created!')
+
+    # makestage
+    @commands.slash_command(
+        name='makestage',
+        description='Creates a new stage channel.',
+        dm_permission=False,
+    )
+    @commands.has_role(LockRoles.admin)
+    async def _makestage(
+        self,
+        inter: disnake.CommandInteraction,
+        name: str = Param(description='Give a name for the new voice channel.'),
+        category: disnake.CategoryChannel = Param(
+            description='Specify the category to put the channel into. Defaults to none.',
+            default=None,
+            channel_types=[ChannelType.category],
+        ),
+    ):
+        stage = await inter.guild.create_stage_channel(name=name, category=category)
+        await inter.send(f'{stage.mention} has been created!')
+
 
     # makecategory
     @commands.slash_command(
@@ -204,9 +225,9 @@ class Customization(commands.Cog):
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.TextChannel
-        | disnake.VoiceChannel
-        | disnake.StageChannel = Param(description='Specify the channel that you want to delete.'),
+        channel: disnake.abc.Messageable = Param(
+            description='Specify the channel that you want to delete.'
+        ),
     ) -> None:
         await channel.delete()
         await inter.send('Channel has been deleted!')
