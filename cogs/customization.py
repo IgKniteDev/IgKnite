@@ -302,8 +302,17 @@ class Customization(commands.Cog):
     async def _removechannel(
         self,
         inter: disnake.CommandInteraction,
-        channel: disnake.abc.Messageable = Param(
-            description='Specify the channel that you want to delete.'
+        channel: disnake.TextChannel
+        | disnake.VoiceChannel
+        | disnake.StageChannel
+        | disnake.CategoryChannel = Param(
+            description='Specify the channel that you want to delete.',
+            channel_types=[
+                ChannelType.text,
+                ChannelType.voice,
+                ChannelType.category,
+                ChannelType.stage_voice,
+            ]
         ),
     ) -> None:
         await channel.delete()
