@@ -17,7 +17,7 @@ class TypicalEmbed(disnake.Embed):
     def __init__(
         self,
         *args,
-        inter: disnake.CommandInteraction | None = None,
+        inter: disnake.CommandInter | None = None,
         disabled_footer: bool = False,
         is_error: bool = False,
         **kwargs,
@@ -52,9 +52,7 @@ class SmallView(disnake.ui.View):
     Can be used for simple views with buttons.
     '''
 
-    def __init__(
-        self, inter: disnake.CommandInteraction | None = None, *, timeout: float = 60
-    ) -> None:
+    def __init__(self, inter: disnake.CommandInter | None = None, *, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
 

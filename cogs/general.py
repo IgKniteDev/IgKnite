@@ -14,7 +14,7 @@ import core
 
 # Common backend for ping-labelled commands.
 # Do not use it within other commands unless really necessary.
-async def _ping_backend(inter: disnake.CommandInteraction) -> core.TypicalEmbed:
+async def _ping_backend(inter: disnake.CommandInter) -> core.TypicalEmbed:
     system_latency = round(inter.bot.latency * 1000)
 
     start_time = time.time()
@@ -43,7 +43,7 @@ async def _ping_backend(inter: disnake.CommandInteraction) -> core.TypicalEmbed:
 
 # View for the `ping` command.
 class PingCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInteraction, *, timeout: float = 60) -> None:
+    def __init__(self, inter: disnake.CommandInter, *, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
 
@@ -82,7 +82,7 @@ class General(commands.Cog):
     # Common backend for avatar-labelled commands.
     # Do not use it within other commands unless really necessary.
     async def _avatar_backend(
-        self, inter: disnake.CommandInteraction, member: disnake.Member = None
+        self, inter: disnake.CommandInter, member: disnake.Member = None
     ) -> None:
         embed = core.TypicalEmbed(inter=inter, title='Here\'s what I found!').set_image(
             url=member.avatar
@@ -98,7 +98,7 @@ class General(commands.Cog):
     )
     async def _avatar(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(
             description='Mention the server member. Defaults to you.',
             default=lambda inter: inter.author,
@@ -108,18 +108,18 @@ class General(commands.Cog):
 
     # avatar (user)
     @commands.user_command(name='Show Avatar', dm_permission=False)
-    async def _avatar_user(self, inter: disnake.CommandInteraction, member: disnake.Member) -> None:
+    async def _avatar_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
         await self._avatar_backend(inter, member)
 
     # ping
     @commands.slash_command(name='ping', description='Shows my current response time.')
-    async def _ping(self, inter: disnake.CommandInteraction) -> None:
+    async def _ping(self, inter: disnake.CommandInter) -> None:
         embed = await _ping_backend(inter)
         await inter.send(embed=embed, view=PingCommandView(inter))
 
     # help
     @commands.slash_command(name='help', description='Get to know IgKnite!')
-    async def help(inter: disnake.CommandInteraction):
+    async def help(inter: disnake.CommandInter):
         embed = core.TypicalEmbed(
             inter,
             title='Hey there! I\'m IgKnite.',

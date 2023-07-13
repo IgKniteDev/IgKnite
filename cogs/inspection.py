@@ -19,7 +19,7 @@ from core.datacls import LockRoles
 class InviteCommandView(disnake.ui.View):
     def __init__(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         *,
         page_loader,
         top_page: int = 1,
@@ -88,7 +88,7 @@ class Inspection(commands.Cog):
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _guildinfo(self, inter: disnake.CommandInteraction) -> None:
+    async def _guildinfo(self, inter: disnake.CommandInter) -> None:
         embed = (
             core.TypicalEmbed(inter=inter)
             .add_field(
@@ -114,9 +114,7 @@ class Inspection(commands.Cog):
 
     # Common backend for userinfo-labelled commands.
     # Do not use it within other commands unless really necessary.
-    async def _userinfo_backend(
-        self, inter: disnake.CommandInteraction, member: disnake.Member
-    ) -> None:
+    async def _userinfo_backend(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
         embed = (
             core.TypicalEmbed(inter=inter, title=f'{member.global_name} ({member.display_name})')
             .add_field(name='Status', value=member.status)
@@ -144,7 +142,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _userinfo(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(
             description='Mention the server member. Defaults to you.',
             default=lambda inter: inter.author,
@@ -155,16 +153,14 @@ class Inspection(commands.Cog):
     # userinfo (user)
     @commands.user_command(name='Show User Information', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _userinfo_user(
-        self, inter: disnake.CommandInteraction, member: disnake.Member
-    ) -> None:
+    async def _userinfo_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
         await self._userinfo_backend(inter, member)
 
     # userinfo (message)
     @commands.message_command(name='Show Author Information', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _userinfo_message(
-        self, inter: disnake.CommandInteraction, message: disnake.Message
+        self, inter: disnake.CommandInter, message: disnake.Message
     ) -> None:
         await self._userinfo_backend(inter, message.author)
 
@@ -177,7 +173,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _roleinfo(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         role: disnake.Role = Param(description='Mention the role.', default=None),
     ) -> None:
         embed = (
@@ -206,7 +202,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _invites(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
     ) -> None:
         await inter.response.defer(ephemeral=True)
 
@@ -269,7 +265,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _revokeinvites(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(
             description='Mention the server member. Defaults to all.', default=None
         ),
@@ -298,7 +294,7 @@ class Inspection(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _audit(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         limit: int = Param(
             description='The limit for showing audit log entries.',
             default=5,
