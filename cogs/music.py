@@ -7,7 +7,7 @@ import functools
 import itertools
 import math
 import random
-from typing import Any, Self, Tuple
+from typing import Any, Callable, Self, Tuple
 
 import disnake
 import spotipy
@@ -409,7 +409,7 @@ class QueueCommandView(disnake.ui.View):
         self,
         inter: disnake.CommandInteraction,
         *,
-        page_loader,
+        page_loader: Callable,
         top_page: int = 1,
         page: int = 1,
         timeout: float = 60,
