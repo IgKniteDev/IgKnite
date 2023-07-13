@@ -552,17 +552,20 @@ class Music(commands.Cog):
             elif before.mute and not after.mute and state.voice.is_paused():
                 state.voice.resume()
 
-    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
+    # A coroutine for setting the common logic behind the three before-invocation functions
+    # which have been modified below.
+    async def _app_command_invoke_logic(self, inter: disnake.CommandInter) -> None:
         inter.voice_state = self.init_voice_state(inter)
         return await inter.response.defer()
+
+    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
+        await self._app_command_invoke_logic(inter)
 
     async def cog_before_message_command_invoke(self, inter: disnake.CommandInter) -> None:
-        inter.voice_state = self.init_voice_state(inter)
-        return await inter.response.defer()
+        await self._app_command_invoke_logic(inter)
 
     async def cog_before_user_command_invoke(self, inter: disnake.CommandInter) -> None:
-        inter.voice_state = self.init_voice_state(inter)
-        return await inter.response.defer()
+        await self._app_command_invoke_logic(inter)
 
     # A coroutine for ensuring proper voice safety during playback.
     async def _ensure_voice_safety(
@@ -592,8 +595,8 @@ class Music(commands.Cog):
         else:
             return True
 
-    # A coroutine for commands which sets the destination voice channel of the bot
-    # as needed. Commonly used in play-labelled commands.
+    # A coroutine for commands which sets the destination voice channel of the bot as needed.
+    # Commonly used in play-labelled commands.
     async def _join_logic(
         self,
         inter: disnake.CommandInter,
