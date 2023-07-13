@@ -965,7 +965,7 @@ class Music(commands.Cog):
             for track in tracks:
                 await self._play_backend(inter, track, send_embed=False, boosted=boosted)
 
-            embed = core.TypicalEmbed(inter=inter, title=f'{len(tracks)} tracks have been queued!')
+            embed = core.TypicalEmbed(inter=inter, title='The tracks have been enqueued!')
             await inter.send(embed=embed)
 
         if 'https://open.spotify.com/playlist/' in keyword or 'spotify:playlist:' in keyword:
