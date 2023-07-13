@@ -83,6 +83,22 @@ class Customization(commands.Cog):
         await member.add_roles(role)
         await inter.send(f'Role {role.mention} has been assigned to **{member.display_name}**!')
 
+    # unassignrole
+    @commands.slash_command(
+        name='unassignrole',
+        description='Removes a role from a server member.',
+        dm_permission=False,
+    )
+    @commands.has_role(LockRoles.admin)
+    async def _unassignrole(
+        self,
+        inter: disnake.CommandInteraction,
+        member: disnake.Member = Param(description='Mention the server member.'),
+        role: disnake.Role = Param(description='Mention the role to remove from the user.'),
+    ) -> None:
+        await member.remove_roles(role)
+        await inter.send(f'Role {role.mention} has been removed from **{member.display_name}**!')
+
     # removerole
     @commands.slash_command(
         name='deleterole',

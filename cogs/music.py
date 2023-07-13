@@ -905,7 +905,9 @@ class Music(commands.Cog):
 
         except Exception as e:
             if isinstance(e, YTDLError):
-                await inter.send(f'An error occurred while processing this request: {str(e)}')
+                await inter.send(
+                    f'An error occurred while processing this request: {str(e)}', ephemeral=True
+                )
             else:
                 pass
 
