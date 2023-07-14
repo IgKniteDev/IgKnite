@@ -16,16 +16,16 @@ class ExceptionHandler(commands.Cog):
     def __init__(self, bot: core.IgKnite) -> None:
         self.bot = bot
 
-    def get_view(self, inter: disnake.CommandInteraction) -> core.SmallView:
+    def get_view(self, inter: disnake.CommandInter) -> core.SmallView:
         view = core.SmallView(inter).add_button(
-            label='It\'s a bug?',
+            label='Think it\'s a bug?',
             url=core.BotData.repo + '/issues/new?template=bug.yml',
             style=disnake.ButtonStyle.red,
         )
         return view
 
     @commands.Cog.listener()
-    async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
+    async def on_slash_command_error(self, inter: disnake.CommandInter, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter=inter, is_error=True)
 
@@ -48,7 +48,7 @@ class ExceptionHandler(commands.Cog):
         await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
-    async def on_user_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
+    async def on_user_command_error(self, inter: disnake.CommandInter, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter=inter, is_error=True)
 
@@ -71,7 +71,7 @@ class ExceptionHandler(commands.Cog):
         await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
-    async def on_message_command_error(self, inter: disnake.CommandInteraction, error: Any) -> None:
+    async def on_message_command_error(self, inter: disnake.CommandInter, error: Any) -> None:
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter=inter, is_error=True)
 

@@ -28,7 +28,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _ban(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(description='Mention the server member.'),
         reason: str = Param(
             description='Give a reason for the ban.', default='No reason provided.'
@@ -41,7 +41,7 @@ class Moderation(commands.Cog):
     # Do not use it within other commands unless really necessary.
     async def _softban_backend(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member,
         *,
         days: int = 7,
@@ -60,7 +60,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _softban(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(description='Mention the server member.'),
         reason: str = Param(
             description='Give a reason for the softban.', default='No reason provided.'
@@ -84,9 +84,7 @@ class Moderation(commands.Cog):
     # softban (user)
     @commands.user_command(name='Wipe (Softban)', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _softban_user(
-        self, inter: disnake.CommandInteraction, member: disnake.Member
-    ) -> None:
+    async def _softban_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
         await self._softban_backend(inter, member)
 
     # kick
@@ -98,7 +96,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _kick(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(description='Mention the server member.'),
         reason: str = Param(
             description='Give a reason for the kick.', default='No reason provided.'
@@ -116,7 +114,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _timeout(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(description='Mention the server member.'),
         duration: int = Param(
             description='Give a duration for the timeout in seconds. Defaults to 30.',
@@ -139,7 +137,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _unban(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         id: int = Param(description='The identifier of the user to unban.', large=True),
         reason: str = Param(
             description='Give a reason for the unban.', default='No reason provided.'
@@ -158,7 +156,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _purge(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         amount: int = Param(
             description='The amount of messages to purge. Defaults to 1.', default=1, min_value=1
         ),
@@ -182,7 +180,7 @@ class Moderation(commands.Cog):
     # Do not use it within other commands unless really necessary.
     async def _ripplepurge_backend(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member,
         amount: int = 10,
     ) -> None:
@@ -210,7 +208,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _ripplepurge(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(description='Mention the server member.'),
         amount: int = Param(
             description='The amount of messages to purge. Defaults to 10.', default=10, min_value=1
@@ -221,16 +219,14 @@ class Moderation(commands.Cog):
     # ripplepurge (user)
     @commands.user_command(name='Ripple Purge', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _ripplepurge_user(
-        self, inter: disnake.CommandInteraction, member: disnake.Member
-    ) -> None:
+    async def _ripplepurge_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
         await self._ripplepurge_backend(inter, member)
 
     # ripplepurge (message)
     @commands.message_command(name='Ripple Purge', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _ripplepurge_message(
-        self, inter: disnake.CommandInteraction, message: disnake.Message
+        self, inter: disnake.CommandInter, message: disnake.Message
     ) -> None:
         await self._ripplepurge_backend(inter, message.author)
 
@@ -243,7 +239,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _snipe(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         author: disnake.Member = Param(
             description='Mention the author of the messages to snipe. Defaults to none.',
             default=None,
@@ -309,7 +305,7 @@ class Moderation(commands.Cog):
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def senddm(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         member: disnake.Member = Param(description='Mention the server member.'),
         msg: str = Param(description='The message you want to send.'),
     ) -> None:
@@ -332,7 +328,7 @@ class Moderation(commands.Cog):
         description='Shows all pinned messages in the current channel.',
         dm_permission=False,
     )
-    async def _pins(self, inter: disnake.CommandInteraction) -> None:
+    async def _pins(self, inter: disnake.CommandInter) -> None:
         await inter.response.defer()
 
         pins = await inter.channel.pins()
@@ -357,7 +353,7 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _clearpins(self, inter: disnake.CommandInteraction) -> None:
+    async def _clearpins(self, inter: disnake.CommandInter) -> None:
         await inter.response.defer(ephemeral=True)
 
         pins = await inter.channel.pins()
@@ -379,7 +375,7 @@ class Moderation(commands.Cog):
     @commands.has_role(LockRoles.admin)
     async def _banword(
         self,
-        inter: disnake.CommandInteraction,
+        inter: disnake.CommandInter,
         keywords: str = Param(description='The keywords you want to ban, separated by commas.'),
     ) -> None:
         await inter.response.defer(ephemeral=True)
@@ -427,7 +423,7 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _clearbannedwords(self, inter: disnake.CommandInteraction) -> None:
+    async def _clearbannedwords(self, inter: disnake.CommandInter) -> None:
         await inter.response.defer(ephemeral=True)
 
         try:
@@ -448,7 +444,7 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _showbannedwords(self, inter: disnake.CommandInteraction) -> None:
+    async def _showbannedwords(self, inter: disnake.CommandInter) -> None:
         await inter.response.defer(ephemeral=True)
 
         try:
@@ -472,7 +468,7 @@ class Moderation(commands.Cog):
         dm_permission=False,
     )
     @commands.has_role(LockRoles.admin)
-    async def _clearnicks(self, inter: disnake.CommandInteraction) -> None:
+    async def _clearnicks(self, inter: disnake.CommandInter) -> None:
         await inter.response.defer(ephemeral=True)
 
         deletion_count = 0
