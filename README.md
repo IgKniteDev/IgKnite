@@ -23,36 +23,29 @@
 
 </div>
 
-IgKnite is a Discord bot built for the community, by the community. Written for stability and user-friendliness, IgKnite focuses on interaction-based commands rather than prefix-based commands (no `!play` anymore) to make moderating your server (and playing music) a breeze!
-
 ---
 
 ## Table of Contents
 
-- [Motive](#⚔️-motive)
-- [Mission](#📦-mission)
+- [Mission](#⚔️-our-mission)
 - [Features](#🗡-features)
 - [Usage](#📝-usage)
 - [Contributing](#🔨-contributing)
 - [License](#🔖-license)
 
-## ⚔️ Motive
+## ⚔️ Mission
 
-Most Discord bots require a prefix (textual commands) and a clear head to use their commands. This can be intimidating at times, especially if you embarrass yourself in front of your friends by entering a command that isn't perfect. 
+Most Discord bots these days are closed-source and incomplete. This is due to every developer having specific goals on what to make with Discord's API. Thus, there has recently not been a fully open-sourced approach to creating Discord bots that are both easy to access and stable at the frontend.
 
-IgKnite, a Discord moderation and music bot built entirely on interactions such as slashes, buttons, views, selects, colors, and a slew of unique instructions, was created specifically for this purpose! <br>
-
-## 📦 Mission
-
-Our mission is to create a Discord bot which promotes ease-of-access for everyone with high-quality commands. Let it be the general members of a Discord server or the sole moderators, we aim to create an experience equally fluid for everyone. We also want to do it without never having to think about making IgKnite closed-source. Which means, this project will remain **open-source and free forever.** <br>
+Our mission with IgKnite is to fulfill that gap. Meaning that, we're creating a Discord bot that is aimed at both the moderators of Discord servers and the casual, everyday users. We aim to make the moderation experience easier with simple yet stable, fail-safe commands while also entertaining users with music and a handful of easily accessible commands. All of this while also keeping this project **open-source and free forever!**<br>
 
 ## ⚡ Features
 
 - Moderation commands, made creative and easy.
-- State-of-the-art music system (YouTube).
+- Low-level & polished music system (support for both YouTube & Spotify).
 - Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
 - A playground all by itself for creative commands.
-- Fully open-source (including assets).
+- Fully open-source including assets.
 - No buzz, all buff! <br>
 
 ## 📝 Usage

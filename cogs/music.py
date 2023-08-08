@@ -487,34 +487,13 @@ class Music(commands.Cog):
         for state in self.voice_states.values():
             self.bot.loop.create_task(state.stop())
 
-    def init_voice_state(self, inter: disnake.CommandInter) -> VoiceState:
-        '''
-        A method that initializes the `VoiceState` object for a specific guild.
-        '''
-
-        state = self.voice_states.get(inter.guild.id)
-
-        if not state or not state.exists:
-            state = VoiceState(self.bot)
-            self.voice_states[inter.guild.id] = state
-
-        return state
-
-    def get_voice_state(self, guild_id: int) -> VoiceState | None:
-        '''
-        A method that returns the `VoiceState` object for the given guild ID (if any).
-        '''
-
-        try:
-            return self.voice_states[guild_id]
-        except KeyError:
-            pass
-
     @commands.Cog.listener()
     async def on_voice_state_update(
         self, member: disnake.Member, before: disnake.VoiceState, after: disnake.VoiceState
     ) -> None:
-        if not (state := self.get_voice_state(member.guild.id)):
+        try:
+            state = self.voice_states[member.guild.id]
+        except KeyError:
             return
 
         if member != self.bot.user:
@@ -552,22 +531,19 @@ class Music(commands.Cog):
             elif before.mute and not after.mute and state.voice.is_paused():
                 state.voice.resume()
 
-    # A coroutine for setting the common logic behind the three before-invocation functions
-    # which have been modified below.
-    async def _app_command_invoke_logic(self, inter: disnake.CommandInter) -> None:
-        inter.voice_state = self.init_voice_state(inter)
-        return await inter.response.defer()
+    def _init_voice_state(self, inter: disnake.CommandInter) -> VoiceState:
+        '''
+        A method that initializes the `VoiceState` object for a specific guild.
+        '''
 
-    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
-        await self._app_command_invoke_logic(inter)
+        state = self.voice_states.get(inter.guild.id)
 
-    async def cog_before_message_command_invoke(self, inter: disnake.CommandInter) -> None:
-        await self._app_command_invoke_logic(inter)
+        if not state or not state.exists:
+            state = VoiceState(self.bot)
+            self.voice_states[inter.guild.id] = state
 
-    async def cog_before_user_command_invoke(self, inter: disnake.CommandInter) -> None:
-        await self._app_command_invoke_logic(inter)
+        return state
 
-    # A coroutine for ensuring proper voice safety during playback.
     async def _ensure_voice_safety(
         self,
         inter: disnake.CommandInter,
@@ -575,6 +551,10 @@ class Music(commands.Cog):
         skip_self: bool = False,
         ignore_lock: bool = False,
     ) -> Any | None:
+        '''
+        A coroutine for ensuring proper voice safety during playback.
+        '''
+
         if (not skip_self) and (not inter.voice_state.voice):
             return await inter.send('I\'m not inside any voice channel.')
 
@@ -614,6 +594,31 @@ class Music(commands.Cog):
 
         except AttributeError:
             await inter.send('Please switch to a voice or stage channel to use this command.')
+
+    # Separate coroutine for ensuring voice safety especially for play-labelled commands.
+    # Note: This coroutine is used in conjunction with _ensure_voice_safety() and _join_logic().
+    async def _ensure_play_safety(self, inter: disnake.CommandInter) -> True | False:
+        if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
+            return False
+        elif not await self._ensure_voice_safety(inter, skip_self=True):
+            return False
+        else:
+            return True
+
+    # A coroutine for setting the common logic behind the three before-invocation functions
+    # which have been modified below.
+    async def _app_command_invoke_logic(self, inter: disnake.CommandInter) -> None:
+        inter.voice_state = self._init_voice_state(inter)
+        return await inter.response.defer()
+
+    async def cog_before_slash_command_invoke(self, inter: disnake.CommandInter) -> None:
+        await self._app_command_invoke_logic(inter)
+
+    async def cog_before_message_command_invoke(self, inter: disnake.CommandInter) -> None:
+        await self._app_command_invoke_logic(inter)
+
+    async def cog_before_user_command_invoke(self, inter: disnake.CommandInter) -> None:
+        await self._app_command_invoke_logic(inter)
 
     # join
     @commands.slash_command(
@@ -924,16 +929,6 @@ class Music(commands.Cog):
                 )
                 view = core.SmallView(inter).add_button(label='Redirect', url=song.source.url)
                 await inter.send(embed=embed, view=view)
-
-    # Separate coroutine for ensuring voice safety especially for play-labelled commands.
-    # Note: This coroutine is used in conjunction with _ensure_voice_safety() and _join_logic().
-    async def _ensure_play_safety(self, inter: disnake.CommandInter) -> True | False:
-        if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
-            return False
-        elif not await self._ensure_voice_safety(inter, skip_self=True):
-            return False
-        else:
-            return True
 
     # play (slash)
     @commands.slash_command(
