@@ -9,4 +9,4 @@ from time import sleep
 # the event of an HTTP exception.
 print('Blocked by HTTP exception, rebooting in 10 seconds...')
 sleep(10)
-system('python main..py')
+system('python main.py')
