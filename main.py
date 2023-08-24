@@ -2,6 +2,8 @@
 
 
 # Imports.
+from os import system
+
 import disnake
 
 import core
@@ -23,4 +25,7 @@ bot = core.IgKnite(
 
 # Run!
 if __name__ == '__main__':
-    bot.run(keychain.discord_token)
+    try:
+        bot.run(keychain.discord_token)
+    except disnake.errors.HTTPException:
+        system('python reboot.py && kill 1')
