@@ -66,18 +66,18 @@ class General(commands.Cog):
 
     # Listener for the bookmark feature.
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: disnake.Reaction, member: disnake.Member) -> None:
-        if reaction.emoji == '🔖':
+    async def on_raw_reaction_add(self, payload: disnake.RawReactionActionEvent) -> None:
+        if payload.emoji.name == '🔖' and payload.event_type == 'REACTION_ADD':
+            chnl = self.bot.get_channel(payload.channel_id)
+            msg = disnake.utils.get(await chnl.history(limit=5).flatten(), id=payload.message_id)
             embed = core.TypicalEmbed(
                 title='You\'ve bookmarked a message.',
-                description=reaction.message.content
-                + f'\n\nSent by {reaction.message.author.name} '
-                + f'on {member.guild.name}',
+                description=msg.content
+                + f'\n\nSent by {msg.author.name} '
+                + f'on {payload.member.guild.name}',
             )
-            view = core.SmallView().add_button(
-                label='Original Message', url=reaction.message.jump_url
-            )
-            await member.send(embed=embed, view=view)
+            view = core.SmallView().add_button(label='Original Message', url=msg.jump_url)
+            await payload.member.send(embed=embed, view=view)
 
     # Common backend for avatar-labelled commands.
     # Do not use it within other commands unless really necessary.
@@ -119,7 +119,7 @@ class General(commands.Cog):
 
     # help
     @commands.slash_command(name='help', description='Get to know IgKnite!')
-    async def help(inter: disnake.CommandInter):
+    async def help(self, inter: disnake.CommandInter):
         embed = core.TypicalEmbed(
             inter,
             title='Hey there! I\'m IgKnite.',
