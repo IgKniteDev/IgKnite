@@ -70,16 +70,16 @@ class General(commands.Cog):
         if payload.emoji.name == '🔖':
             if payload.event_type == 'REACTION_ADD':
                 chnl = self.bot.get_channel(payload.channel_id)
-                msg = disnake.utils.get(await chnl.history(limit=5).flatten(), id=payload.message_id)
+                msg = disnake.utils.get(
+                    await chnl.history(limit=5).flatten(), id=payload.message_id
+                )
                 embed = core.TypicalEmbed(
                     title='You\'ve bookmarked a message.',
                     description=msg.content
                     + f'\n\nSent by {msg.author.name} '
                     + f'on {payload.member.guild.name}',
                 )
-                view = core.SmallView().add_button(
-                    label='Original Message', url=msg.jump_url
-                )
+                view = core.SmallView().add_button(label='Original Message', url=msg.jump_url)
                 await payload.member.send(embed=embed, view=view)
 
     # Common backend for avatar-labelled commands.
