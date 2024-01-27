@@ -556,32 +556,22 @@ class Music(commands.Cog):
         A coroutine for ensuring proper voice safety during playback.
         """
 
-        if (
-            not skip_self
-            and not inter.voice_state.voice
-        ):
+        if (not skip_self and not inter.voice_state.voice):
             return await inter.send("I'm not inside any voice channel.")
 
-        elif (
-            not inter.author.voice 
-            or inter.author.voice.channel != inter.voice_state.voice.channel
-        ):
+        elif (not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel):
             return await inter.send("You're not in my voice channel.")
 
-        elif (
-            not ignore_lock
-            and inter.voice_state.locked
-            and inter.author != inter.voice_state.locked
-        ):
+        elif (not ignore_lock and inter.voice_state.locked and inter.author != inter.voice_state.locked):
             return await inter.send(
                 f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.'
             )
 
-        elif (
-            not skip_play
-            and not inter.voice_state.is_playing
-        ):
-            return await inter.send("There's nothing being played at the moment.")
+        elif (not skip_play and not inter.voice_state.is_playing):
+            if inter.voice_state.voice.is_paused():
+                return await inter.send('Playback is paused, resume to execute.')
+            else:
+                return await inter.send('No playback detected.')
 
         else:
             return True
