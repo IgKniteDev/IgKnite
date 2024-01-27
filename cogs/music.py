@@ -573,7 +573,7 @@ class Music(commands.Cog):
                 f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.'
             )
 
-        elif (not skip_play and not inter.voice_state.current):
+        elif not skip_play and not inter.voice_state.current:
             return await inter.send("There's nothing being played at the moment.")
 
         else:
@@ -726,7 +726,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.pause()
             await inter.send('Paused voice state.')
         else:
-            await inter.send("Already paused.")
+            await inter.send('Already paused.')
 
     # resume
     @commands.slash_command(
@@ -742,7 +742,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.resume()
             await inter.send('Resumed voice state.')
         else:
-            await inter.send("Already playing.")
+            await inter.send('Already playing.')
 
     # stop
     @commands.slash_command(
