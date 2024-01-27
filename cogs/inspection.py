@@ -125,7 +125,7 @@ class Inspection(commands.Cog):
                 ),
             )
             .add_field(name='On Mobile', value=member.is_on_mobile())
-            .add_field(name='Race', value="Bot" if member.bot else "Human")
+            .add_field(name='Race', value='Bot' if member.bot else 'Human')
             .add_field(name='Roles', value=len(member.roles))
             .add_field(name='Position', value=member.top_role.mention)
             .add_field(name='Identifier', value=member.id)

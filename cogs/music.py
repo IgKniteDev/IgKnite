@@ -117,7 +117,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         data = await loop.run_in_executor(None, partial)
 
         if data is None:
-            raise YTDLError(f'Anything matching **{search}** couldn\'t be found.')
+            raise YTDLError(f"Anything matching **{search}** couldn't be found.")
 
         if 'entries' not in data:
             process_info = data
@@ -130,14 +130,14 @@ class YTDLSource(disnake.PCMVolumeTransformer):
                     break
 
             if process_info is None:
-                raise YTDLError(f'Anything matching **{search}** couldn\'t be found.')
+                raise YTDLError(f"Anything matching **{search}** couldn't be found.")
 
         webpage_url = process_info['webpage_url']
         partial = functools.partial(cls.ytdl.extract_info, webpage_url, download=False)
         processed_info = await loop.run_in_executor(None, partial)
 
         if processed_info is None:
-            raise YTDLError(f'Couldn\'t fetch **{webpage_url}**')
+            raise YTDLError(f"Couldn't fetch **{webpage_url}**")
 
         if 'entries' not in processed_info:
             info = processed_info
@@ -148,7 +148,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
                 try:
                     info = processed_info['entries'].pop(0)
                 except IndexError:
-                    raise YTDLError(f'Any matches for {webpage_url} couldn\'t be retrieved.')
+                    raise YTDLError(f"Any matches for {webpage_url} couldn't be retrieved.")
 
         return cls(inter, disnake.FFmpegPCMAudio(info['url'], **cls.FFMPEG_OPTIONS), data=info)
 
@@ -174,9 +174,9 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 # YTDLSource class with equalized playback.
 # Note: This feature is still work-in-progress and the audio filters need to be improved.
 class YTDLSourceBoosted(YTDLSource):
-    '''
+    """
     A child class of `YTDLSource` for serving equalized playback.
-    '''
+    """
 
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
@@ -532,9 +532,9 @@ class Music(commands.Cog):
                 state.voice.resume()
 
     def _init_voice_state(self, inter: disnake.CommandInter) -> VoiceState:
-        '''
+        """
         A method that initializes the `VoiceState` object for a specific guild.
-        '''
+        """
 
         state = self.voice_states.get(inter.guild.id)
 
@@ -551,17 +551,17 @@ class Music(commands.Cog):
         skip_self: bool = False,
         ignore_lock: bool = False,
     ) -> Any | None:
-        '''
+        """
         A coroutine for ensuring proper voice safety during playback.
-        '''
+        """
 
         if (not skip_self) and (not inter.voice_state.voice):
-            return await inter.send('I\'m not inside any voice channel.')
+            return await inter.send("I'm not inside any voice channel.")
 
         elif (
             not inter.author.voice or inter.author.voice.channel != inter.voice_state.voice.channel
         ):
-            return await inter.send('You\'re not in my voice channel.')
+            return await inter.send("You're not in my voice channel.")
 
         elif (
             not ignore_lock
@@ -623,15 +623,14 @@ class Music(commands.Cog):
     # join
     @commands.slash_command(
         name='join',
-        description='Joins the voice channel you\'re in. '
+        description="Joins the voice channel you're in. "
         + 'You can also specify which channel to join.',
         dm_permission=False,
     )
     async def _join(
         self,
         inter: disnake.CommandInter,
-        channel: disnake.VoiceChannel
-        | disnake.StageChannel = Param(
+        channel: disnake.VoiceChannel | disnake.StageChannel = Param(
             description='Specify a channel to join.',
             default=None,
             channel_types=[ChannelType.voice, ChannelType.stage_voice],
@@ -674,7 +673,7 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter):
             return
         elif not inter.voice_state.is_playing:
-            return await inter.send('There\'s nothing being played at the moment.')
+            return await inter.send("There's nothing being played at the moment.")
 
         inter.voice_state.current.source.volume = (vol_mod := volume / 100)
         inter.voice_state.volume = vol_mod
@@ -709,7 +708,7 @@ class Music(commands.Cog):
             embed, view = inter.voice_state.current.create_embed(inter)
             await inter.send(embed=embed, view=view)
         else:
-            await inter.send('There\'s nothing being played at the moment.')
+            await inter.send("There's nothing being played at the moment.")
 
     # pause
     @commands.slash_command(
@@ -725,7 +724,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.pause()
             await inter.send('Paused voice state.')
         else:
-            await inter.send('There\'s nothing being played at the moment.')
+            await inter.send("There's nothing being played at the moment.")
 
     # resume
     @commands.slash_command(
@@ -741,7 +740,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.resume()
             await inter.send('Resumed voice state.')
         else:
-            await inter.send('Playback isn\'t paused to be resumed in the first place.')
+            await inter.send("Playback isn't paused to be resumed in the first place.")
 
     # stop
     @commands.slash_command(
@@ -772,7 +771,7 @@ class Music(commands.Cog):
         if not await self._ensure_voice_safety(inter):
             return
         elif not inter.voice_state.is_playing:
-            return await inter.send('There\'s nothing being played at the moment.')
+            return await inter.send("There's nothing being played at the moment.")
 
         if inter.voice_state.loop:
             inter.voice_state.loop = not inter.voice_state.loop
@@ -804,7 +803,7 @@ class Music(commands.Cog):
 
     # queue
     @commands.slash_command(
-        name='queue', description='Shows the player\'s queue.', dm_permission=False
+        name='queue', description="Shows the player's queue.", dm_permission=False
     )
     async def _queue(self, inter: disnake.CommandInter) -> None:
         if not await self._ensure_voice_safety(inter, ignore_lock=True):
@@ -1022,7 +1021,7 @@ class Music(commands.Cog):
     # playrich (slash)
     @commands.slash_command(
         name='playrich',
-        description='Tries to enqueue a song from one\'s Spotify rich presence.',
+        description="Tries to enqueue a song from one's Spotify rich presence.",
         dm_permission=False,
     )
     async def _playrich(

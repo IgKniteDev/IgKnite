@@ -18,9 +18,9 @@ __version__ = '.'.join(__version_info__)
 # Set bot metadata.
 @dataclass(frozen=True)
 class BotData:
-    '''
+    """
     A dataclass used for storing bot metadata.
-    '''
+    """
 
     repo: str = 'https://github.com/IgKniteDev/IgKnite'
     documentation: str = 'https://igknitedev.github.io/docs'
