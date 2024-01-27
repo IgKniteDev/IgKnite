@@ -5,7 +5,7 @@ target-version = "py311"
 line-length = 100
 exclude = ["venv"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "core/__init__.py" = ["F401", "F403"]
 "core/global_.py" = ["F841"]
 "cogs/customization.py" = ["E203"]
