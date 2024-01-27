@@ -18,17 +18,17 @@ class ExceptionHandler(commands.Cog):
 
     def get_view(self, inter: disnake.CommandInter) -> core.SmallView:
         view = core.SmallView(inter).add_button(
-            label='Think it\'s a bug?',
+            label="Think it's a bug?",
             url=core.BotData.repo + '/issues/new?template=bug.yml',
             style=disnake.ButtonStyle.red,
         )
         return view
 
     async def process_error(self, inter: disnake.CommandInter, error: Any) -> None:
-        '''
+        """
         A method for processing the exceptions caused in interaction commands and responding
         accordingly.
-        '''
+        """
 
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter=inter, is_error=True)
@@ -37,13 +37,13 @@ class ExceptionHandler(commands.Cog):
         if isinstance(error, commands.errors.MissingPermissions) or isinstance(
             error, errors.Forbidden
         ):
-            embed.title = 'Nice try! I don\'t have permission to do that.'
+            embed.title = "Nice try! I don't have permission to do that."
 
         # MissingRole
         elif isinstance(error, commands.errors.MissingRole) or isinstance(
             error, commands.errors.MissingAnyRole
         ):
-            embed.title = 'Oops! You\'re missing a role.'
+            embed.title = "Oops! You're missing a role."
 
         # Anything else...
         else:

@@ -13,10 +13,10 @@ from core.chain import keychain
 
 # Set up a custom class for core functionality.
 class IgKnite(commands.AutoShardedInteractionBot):
-    '''
+    """
     A subclassed version of `commands.AutoShardedInteractionBot`.\n
     Basically works as the core class for all-things IgKnite!
-    '''
+    """
 
     def __init__(self, *args, initial_extensions: List[str], **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -25,9 +25,9 @@ class IgKnite(commands.AutoShardedInteractionBot):
             self.load_extension(extension)
 
     async def _update_presence(self) -> None:
-        '''
+        """
         Updates the rich presence of IgKnite.
-        '''
+        """
 
         await self.change_presence(
             status=disnake.Status.dnd,

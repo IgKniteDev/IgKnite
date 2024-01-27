@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: MIT
+
+name: Format
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check
+        id: formatcheck
+        uses: chartboost/ruff-action@v1
+        continue-on-error: true
+        with:
+          args: format --check .
+
+      - name: Format
+        uses: chartboost/ruff-action@v1
+        with:
+          args: format .
+
+      - name: Create pull request
+        if: steps.formatcheck.outcome != 'success'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "🎨 Automated formatting errors fix"
+          commit-message: "fixed formatting errors (ruff)"
+          body: |
+            Formatter errors found in: ${{ github.sha }}.
+          base: ${{ github.head_ref }}
+          branch: actions/ruff
+          delete-branch: true
+          reviewers: hitblast

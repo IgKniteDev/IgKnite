@@ -71,7 +71,7 @@ class General(commands.Cog):
             chnl = self.bot.get_channel(payload.channel_id)
             msg = disnake.utils.get(await chnl.history(limit=5).flatten(), id=payload.message_id)
             embed = core.TypicalEmbed(
-                title='You\'ve bookmarked a message.',
+                title="You've bookmarked a message.",
                 description=msg.content
                 + f'\n\nSent by {msg.author.name} '
                 + f'on {payload.member.guild.name}',
@@ -84,7 +84,7 @@ class General(commands.Cog):
     async def _avatar_backend(
         self, inter: disnake.CommandInter, member: disnake.Member = None
     ) -> None:
-        embed = core.TypicalEmbed(inter=inter, title='Here\'s what I found!').set_image(
+        embed = core.TypicalEmbed(inter=inter, title="Here's what I found!").set_image(
             url=member.avatar
         )
 
@@ -121,10 +121,10 @@ class General(commands.Cog):
     @commands.slash_command(name='help', description='Get to know IgKnite!')
     async def help(self, inter: disnake.CommandInter):
         embed = core.TypicalEmbed(
-            inter,
-            title='Hey there! I\'m IgKnite.',
-            description='I\'m a bot with no text commands (you heard that right) '
-            + 'and I\'m here to help you manage and moderate your Discord server alongside '
+            inter=inter,
+            title="Hey there! I'm IgKnite.",
+            description="I'm a bot with no text commands (you heard that right) "
+            + "and I'm here to help you manage and moderate your Discord server alongside "
             + 'having a midnight music party with your friends in a random voice channel. '
             + 'Looking forward to being friends with you!',
             disabled_footer=True,

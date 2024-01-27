@@ -10,9 +10,9 @@ import disnake
 
 # Overwrite disnake.Embed class to form custom embeds.
 class TypicalEmbed(disnake.Embed):
-    '''
+    """
     Represents an embed common to all the normal commands.
-    '''
+    """
 
     def __init__(
         self,
@@ -34,8 +34,8 @@ class TypicalEmbed(disnake.Embed):
                     [
                         'When pigs fly...',
                         'Stunned stork!',
-                        'A perfect debugged life doesn\'t exist.',
-                        'Haven\'t I made it obvious?',
+                        "A perfect debugged life doesn't exist.",
+                        "Haven't I made it obvious?",
                         'Hello World, from the other side!',
                         'A computer is like air conditioning'
                         + '- it becomes useless when you open Windows.',
@@ -48,9 +48,9 @@ class TypicalEmbed(disnake.Embed):
 
 # Overwrite disnake.ui.View class to form custom views.
 class SmallView(disnake.ui.View):
-    '''
+    """
     Can be used for simple views with buttons.
-    '''
+    """
 
     def __init__(self, inter: disnake.CommandInter | None = None, *, timeout: float = 60) -> None:
         super().__init__(timeout=timeout)
@@ -64,9 +64,9 @@ class SmallView(disnake.ui.View):
         style: disnake.ButtonStyle = disnake.ButtonStyle.gray,
         disabled: bool = False,
     ) -> Self:
-        '''
+        """
         Adds a button to the view.
-        '''
+        """
 
         self.add_item(disnake.ui.Button(label=label, url=url, style=style, disabled=disabled))
         return self
