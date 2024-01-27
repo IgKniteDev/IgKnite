@@ -121,7 +121,7 @@ class General(commands.Cog):
     @commands.slash_command(name='help', description='Get to know IgKnite!')
     async def help(self, inter: disnake.CommandInter):
         embed = core.TypicalEmbed(
-            inter,
+            inter=inter,
             title="Hey there! I'm IgKnite.",
             description="I'm a bot with no text commands (you heard that right) "
             + "and I'm here to help you manage and moderate your Discord server alongside "
