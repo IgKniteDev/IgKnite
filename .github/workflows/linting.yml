@@ -1,0 +1,50 @@
+# SPDX-License-Identifier: MIT
+
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check
+        id: lintcheck
+        uses: chartboost/ruff-action@v1
+        continue-on-error: true
+        with:
+          args: check .
+
+      - name: Lint
+        uses: chartboost/ruff-action@v1
+        with:
+          args: check . --fix
+
+      - name: Create pull request
+        if: steps.lintcheck.outcome != 'success'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "🎨 Automated linting errors fix"
+          commit-message: "fixed linting errors (ruff)"
+          body: |
+            Linter errors found in: ${{ github.sha }}.
+          base: ${{ github.head_ref }}
+          branch: actions/ruff
+          reviewers: hitblast
+          delete-branch: true
