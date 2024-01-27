@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: MIT
 
-[tool.black]
-line-length = 100
-skip-string-normalization = true
-
 [tool.ruff]
 target-version = "py311"
 line-length = 100
+exclude = ["venv"]
 
 [tool.ruff.per-file-ignores]
 "core/__init__.py" = ["F401", "F403"]
 "core/global_.py" = ["F841"]
 "cogs/customization.py" = ["E203"]
+
+[tool.ruff.format]
+quote-style = "single"
