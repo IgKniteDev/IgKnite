@@ -549,6 +549,7 @@ class Music(commands.Cog):
         inter: disnake.CommandInter,
         *,
         skip_self: bool = False,
+        skip_play: bool = False,
         ignore_lock: bool = False,
     ) -> Any | None:
         """
@@ -571,6 +572,9 @@ class Music(commands.Cog):
             return await inter.send(
                 f'The voice state has been locked by **{inter.voice_state.locked.display_name}**.'
             )
+
+        elif (not skip_play and not inter.voice_state.current):
+            return await inter.send("There's nothing being played at the moment.")
 
         else:
             return True
@@ -600,7 +604,7 @@ class Music(commands.Cog):
     async def _ensure_play_safety(self, inter: disnake.CommandInter) -> True | False:
         if (not inter.voice_state.voice) and (not await self._join_logic(inter)):
             return False
-        elif not await self._ensure_voice_safety(inter, skip_self=True):
+        elif not await self._ensure_voice_safety(inter, skip_self=True, skip_play=True):
             return False
         else:
             return True
@@ -650,7 +654,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _leave(self, inter: disnake.CommandInter) -> None:
-        if not await self._ensure_voice_safety(inter):
+        if not await self._ensure_voice_safety(inter, skip_play=True):
             return
 
         await inter.voice_state.stop()
@@ -672,8 +676,6 @@ class Music(commands.Cog):
     ) -> None:
         if not await self._ensure_voice_safety(inter):
             return
-        elif not inter.voice_state.is_playing:
-            return await inter.send("There's nothing being played at the moment.")
 
         inter.voice_state.current.source.volume = (vol_mod := volume / 100)
         inter.voice_state.volume = vol_mod
@@ -704,7 +706,7 @@ class Music(commands.Cog):
         dm_permission=False,
     )
     async def _now(self, inter: disnake.CommandInter) -> None:
-        if inter.voice_state.is_playing:
+        if inter.voice_state.current:
             embed, view = inter.voice_state.current.create_embed(inter)
             await inter.send(embed=embed, view=view)
         else:
@@ -724,7 +726,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.pause()
             await inter.send('Paused voice state.')
         else:
-            await inter.send("There's nothing being played at the moment.")
+            await inter.send("Already paused.")
 
     # resume
     @commands.slash_command(
@@ -740,7 +742,7 @@ class Music(commands.Cog):
             inter.voice_state.voice.resume()
             await inter.send('Resumed voice state.')
         else:
-            await inter.send("Playback isn't paused to be resumed in the first place.")
+            await inter.send("Already playing.")
 
     # stop
     @commands.slash_command(
@@ -754,12 +756,12 @@ class Music(commands.Cog):
 
         inter.voice_state.songs.clear()
 
-        if inter.voice_state.is_playing:
-            if inter.voice_state.loop:
-                inter.voice_state.loop = not inter.voice_state.loop
+        if inter.voice_state.loop:
+            inter.voice_state.loop = not inter.voice_state.loop
 
-            inter.voice_state.voice.stop()
-            await inter.send('Stopped voice state.')
+        inter.voice_state.voice.stop()
+        inter.voice_state.current = None
+        await inter.send('Stopped voice state.')
 
     # skip
     @commands.slash_command(
@@ -770,8 +772,6 @@ class Music(commands.Cog):
     async def _skip(self, inter: disnake.CommandInter) -> None:
         if not await self._ensure_voice_safety(inter):
             return
-        elif not inter.voice_state.is_playing:
-            return await inter.send("There's nothing being played at the moment.")
 
         if inter.voice_state.loop:
             inter.voice_state.loop = not inter.voice_state.loop
@@ -806,7 +806,7 @@ class Music(commands.Cog):
         name='queue', description="Shows the player's queue.", dm_permission=False
     )
     async def _queue(self, inter: disnake.CommandInter) -> None:
-        if not await self._ensure_voice_safety(inter, ignore_lock=True):
+        if not await self._ensure_voice_safety(inter, skip_play=True, ignore_lock=True):
             return
         elif len(songs := inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty.')
@@ -865,7 +865,7 @@ class Music(commands.Cog):
             default=1,
         ),
     ):
-        if not await self._ensure_voice_safety(inter, ignore_lock=True):
+        if not await self._ensure_voice_safety(inter, skip_play=True, ignore_lock=True):
             return
         elif len(inter.voice_state.songs) == 0:
             return await inter.send('The queue is empty, so nothing to be removed.')
