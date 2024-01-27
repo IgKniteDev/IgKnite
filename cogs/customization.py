@@ -100,7 +100,7 @@ class Customization(commands.Cog):
         role: disnake.Role = Param(description='Mention the role to remove from the user.'),
     ) -> None:
         if role not in member.roles:
-            return await inter.send('The member doesn\'t has this role.', ephemeral=True)
+            return await inter.send("The member doesn't has this role.", ephemeral=True)
 
         await member.remove_roles(role)
         await inter.send(f'Role {role.mention} has been removed from **{member.display_name}**!')

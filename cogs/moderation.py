@@ -454,7 +454,7 @@ class Moderation(commands.Cog):
                 if rule.name == 'IgKnite Banwords':
                     words += (f'{item} \n' for item in rule.trigger_metadata.keyword_filter)
                     embed = core.TypicalEmbed(
-                        inter, title='Here\'s the list of banned words:', description=words
+                        inter, title="Here's the list of banned words:", description=words
                     )
                     await inter.send(embed=embed)
 
