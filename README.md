@@ -20,7 +20,6 @@
 [![Formatting](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
 [![Linting](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
 
-
 </div>
 
 ---

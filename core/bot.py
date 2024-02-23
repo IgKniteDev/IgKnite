@@ -7,8 +7,10 @@ from typing import List
 
 import disnake
 from disnake.ext import commands
+from disnake.interactions import ApplicationCommandInteraction
 
 from core.chain import keychain
+from core.ui import TypicalEmbed
 
 
 # Set up a custom class for core functionality.
@@ -53,6 +55,14 @@ class IgKnite(commands.AutoShardedInteractionBot):
     async def on_message(self, message: disnake.Message) -> None:
         if message.author == self.user:
             return
+
+    # 23.02.2024 - The end.
+    async def on_application_command(self, interaction: ApplicationCommandInteraction) -> None:
+        embed = TypicalEmbed(inter=interaction, title='🌇 Sunsetting IgKnite.').add_field(
+            name='Why?',
+            value="It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!",
+        )
+        await interaction.channel.send(embed=embed)
 
     async def on_message_delete(self, message: disnake.Message) -> None:
         keychain.snipeables.append(message)
