@@ -8,13 +8,11 @@
 
 # IgKnite
 
-<img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
-<a aria-label="Join the community on Discord" href="https://discord.gg/XF9ATvUjgs" target="_blank">
-    <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
-</a>
-<a aria-label="Inject to your Discord server" href="https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands" target="_blank">
-    <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
-</a>
+<!-- a table below -->
+| | |
+|-------------------|-------------------|
+| 🌇 | **As of 2024, we have decided that we'd like to sunset IgKnite. We know it sounds unexpectedly straightforward, but we have taken this decision so that we can take the experience we've gained while building this favorite project of ours and apply it to something that'd carry on IgKnite's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!** |
+
 
 <br> <img src="static/banner.png">
 
