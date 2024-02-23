@@ -10,7 +10,7 @@ from disnake.ext import commands
 from disnake.interactions import ApplicationCommandInteraction
 
 from core.chain import keychain
-from core.ui import TypicalEmbed
+from core.ui import SmallView, TypicalEmbed
 
 
 # Set up a custom class for core functionality.
@@ -62,7 +62,10 @@ class IgKnite(commands.AutoShardedInteractionBot):
             name='Why?',
             value="It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!",
         )
-        await interaction.channel.send(embed=embed)
+        view = SmallView(inter=interaction).add_button(
+            label='GitHub', url='https://github.com/IgKniteDev'
+        )
+        await interaction.channel.send(embed=embed, view=view)
 
     async def on_message_delete(self, message: disnake.Message) -> None:
         keychain.snipeables.append(message)
