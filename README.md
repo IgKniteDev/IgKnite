@@ -8,20 +8,17 @@
 
 # IgKnite
 
-<img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
-<a aria-label="Join the community on Discord" href="https://discord.gg/XF9ATvUjgs" target="_blank">
-    <img src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
-</a>
-<a aria-label="Inject to your Discord server" href="https://discord.com/api/oauth2/authorize?client_id=1016637486702792735&permissions=1505385246135&scope=bot%20applications.commands" target="_blank">
-    <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
-</a>
+<!-- a table below -->
+| | |
+|-------------------|-------------------|
+| 🌇 | **As of 24th February 2024, we have decided to sunset IgKnite. It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!** |
+
 
 <br> <img src="static/banner.png">
 
 [![CodeSee](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml)
 [![Formatting](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
 [![Linting](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
-
 
 </div>
 
