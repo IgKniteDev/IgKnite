@@ -4,4 +4,4 @@ async-timeout==4.0.3
 disnake[voice]==2.9.1
 python-decouple==3.8
 spotipy==2.23.0
-yt-dlp==2023.12.30
+yt-dlp==2024.3.10
