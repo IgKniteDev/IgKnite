@@ -9,9 +9,8 @@
 # IgKnite
 
 <!-- a table below -->
-| | |
-|-------------------|-------------------|
-| 🌇 | **As of 24th February 2024, we have decided to sunset IgKnite. It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!** |
+> [!IMPORTANT]
+> 🌇 **As of 24th February 2024, we have decided to sunset IgKnite. It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!**
 
 
 <br> <img src="static/banner.png">
