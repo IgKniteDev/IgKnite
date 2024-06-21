@@ -8,9 +8,10 @@
 
 # IgKnite
 
-<!-- a table below -->
-> 🌇 As of 24th February 2024, we have decided to **sunset IgKnite.** It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!
-
+<img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
+<a aria-label="Inject to your Discord server" href="https://discord.com/oauth2/authorize?client_id=1253589350957056020&permissions=28587302284791&integration_type=0&scope=bot+applications.commands" target="_blank">
+    <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
+</a>
 
 <br> <img src="static/banner.png">
 
