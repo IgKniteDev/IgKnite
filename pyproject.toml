@@ -16,7 +16,7 @@ quote-style = "single"
 [tool.poetry]
 name = "igknite"
 version = "2024.6.21"
-description = "The Swiss Army Knife for Moderation 🔪 Music on Discord"
+description = "A unified, Swiss-grade bot for moderation & music on Discord"
 authors = ["HitBlast <hitblastlive@gmail.com>"]
 license = "MIT"
 readme = "README.md"
