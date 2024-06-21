@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 line-length = 100
 exclude = ["venv"]
 
@@ -12,3 +12,25 @@ exclude = ["venv"]
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.poetry]
+name = "igknite"
+version = "2024.6.21"
+description = "The Swiss Army Knife for Moderation 🔪 Music on Discord"
+authors = ["HitBlast <hitblastlive@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+disnake = {extras = ["voice"], version = "^2.9.2"}
+python-decouple = "^3.8"
+spotipy = "^2.24.0"
+yt-dlp = "^2024.5.27"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
