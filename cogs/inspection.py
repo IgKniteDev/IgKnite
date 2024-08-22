@@ -47,8 +47,12 @@ class InviteCommandView(disnake.ui.View):
         else:
             self.children[1].disabled = False
 
-    @disnake.ui.button(label='< Previous', style=disnake.ButtonStyle.gray, disabled=True)
-    async def previous(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
+    @disnake.ui.button(
+        label='< Previous', style=disnake.ButtonStyle.gray, disabled=True
+    )
+    async def previous(
+        self, _: disnake.ui.Button, inter: disnake.MessageInteraction
+    ) -> None:
         self.page -= 1
         self.paginator_logic()
 
@@ -59,7 +63,9 @@ class InviteCommandView(disnake.ui.View):
         )
 
     @disnake.ui.button(label='Next >', style=disnake.ButtonStyle.gray)
-    async def next(self, _: disnake.ui.Button, inter: disnake.MessageInteraction) -> None:
+    async def next(
+        self, _: disnake.ui.Button, inter: disnake.MessageInteraction
+    ) -> None:
         self.page += 1
         self.paginator_logic()
 
@@ -102,7 +108,8 @@ class Inspection(commands.Cog):
             .add_field(name='Roles', value=len(inter.guild.roles))
             .add_field(
                 name='Channels',
-                value=len(inter.guild.text_channels) + len(inter.guild.voice_channels),
+                value=len(inter.guild.text_channels)
+                + len(inter.guild.voice_channels),
             )
             .add_field(name='Identifier', value=inter.guild_id)
         )
@@ -114,15 +121,20 @@ class Inspection(commands.Cog):
 
     # Common backend for userinfo-labelled commands.
     # Do not use it within other commands unless really necessary.
-    async def _userinfo_backend(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
+    async def _userinfo_backend(
+        self, inter: disnake.CommandInter, member: disnake.Member
+    ) -> None:
         embed = (
-            core.TypicalEmbed(inter=inter, title=f'{member.global_name} ({member.display_name})')
+            core.TypicalEmbed(
+                inter=inter,
+                title=f'{member.global_name} ({member.display_name})',
+            )
             .add_field(name='Status', value=member.status)
             .add_field(
                 name='Birth',
-                value=datetime.strptime(str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime(
-                    '%b %d, %Y'
-                ),
+                value=datetime.strptime(
+                    str(member.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
+                ).strftime('%b %d, %Y'),
             )
             .add_field(name='On Mobile', value=member.is_on_mobile())
             .add_field(name='Race', value='Bot' if member.bot else 'Human')
@@ -153,11 +165,15 @@ class Inspection(commands.Cog):
     # userinfo (user)
     @commands.user_command(name='Show User Information', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _userinfo_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
+    async def _userinfo_user(
+        self, inter: disnake.CommandInter, member: disnake.Member
+    ) -> None:
         await self._userinfo_backend(inter, member)
 
     # userinfo (message)
-    @commands.message_command(name='Show Author Information', dm_permission=False)
+    @commands.message_command(
+        name='Show Author Information', dm_permission=False
+    )
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
     async def _userinfo_message(
         self, inter: disnake.CommandInter, message: disnake.Message
@@ -174,15 +190,19 @@ class Inspection(commands.Cog):
     async def _roleinfo(
         self,
         inter: disnake.CommandInter,
-        role: disnake.Role = Param(description='Mention the role.', default=None),
+        role: disnake.Role = Param(
+            description='Mention the role.', default=None
+        ),
     ) -> None:
         embed = (
-            core.TypicalEmbed(inter=inter, title=f'Role information: @{role.name}')
+            core.TypicalEmbed(
+                inter=inter, title=f'Role information: @{role.name}'
+            )
             .add_field(
                 name='Birth',
-                value=datetime.strptime(str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z').strftime(
-                    '%b %d, %Y'
-                ),
+                value=datetime.strptime(
+                    str(role.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
+                ).strftime('%b %d, %Y'),
             )
             .add_field(name='Mentionable', value=role.mentionable)
             .add_field(name='Managed By Integration', value=role.managed)
@@ -215,9 +235,9 @@ class Inspection(commands.Cog):
 
         async def page_loader(page_num: int) -> core.TypicalEmbed:
             page = page_num
-            embed = core.TypicalEmbed(inter=inter, title='Active Invites').set_footer(
-                text=f'{page}/{top_page}'
-            )
+            embed = core.TypicalEmbed(
+                inter=inter, title='Active Invites'
+            ).set_footer(text=f'{page}/{top_page}')
 
             for i in range(
                 (page_num * invites_per_page) - invites_per_page,
@@ -267,7 +287,8 @@ class Inspection(commands.Cog):
         self,
         inter: disnake.CommandInter,
         member: disnake.Member = Param(
-            description='Mention the server member. Defaults to all.', default=None
+            description='Mention the server member. Defaults to all.',
+            default=None,
         ),
     ) -> None:
         deletion_count = 0
@@ -281,7 +302,9 @@ class Inspection(commands.Cog):
                 pass
 
         if member:
-            await inter.send(f'Revoked {deletion_count} invites made by {member.mention}.')
+            await inter.send(
+                f'Revoked {deletion_count} invites made by {member.mention}.'
+            )
         else:
             await inter.send(f'Revoked {deletion_count} invites.')
 
@@ -304,7 +327,9 @@ class Inspection(commands.Cog):
     ):
         await inter.response.defer(ephemeral=True)
 
-        embed = core.TypicalEmbed(inter=inter, title=f'Audit Log ({limit} entries)')
+        embed = core.TypicalEmbed(
+            inter=inter, title=f'Audit Log ({limit} entries)'
+        )
         async for audit_entry in inter.guild.audit_logs(limit=limit):
             embed.add_field(
                 name=f'- {audit_entry.action}',

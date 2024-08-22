@@ -29,13 +29,18 @@ class Moderation(commands.Cog):
     async def _ban(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(description='Mention the server member.'),
+        member: disnake.Member = Param(
+            description='Mention the server member.'
+        ),
         reason: str = Param(
-            description='Give a reason for the ban.', default='No reason provided.'
+            description='Give a reason for the ban.',
+            default='No reason provided.',
         ),
     ) -> None:
         await inter.guild.ban(member, reason=reason)
-        await inter.send(f'Member **{member.display_name}** has been banned! Reason: {reason}')
+        await inter.send(
+            f'Member **{member.display_name}** has been banned! Reason: {reason}'
+        )
 
     # Common backend for softban-labelled commands.
     # Do not use it within other commands unless really necessary.
@@ -49,7 +54,9 @@ class Moderation(commands.Cog):
     ) -> None:
         await inter.guild.ban(member, delete_message_days=days, reason=reason)
         await inter.guild.unban(member)
-        await inter.send(f'Member **{member.display_name}** has been softbanned! Reason: {reason}')
+        await inter.send(
+            f'Member **{member.display_name}** has been softbanned! Reason: {reason}'
+        )
 
     # softban (slash)
     @commands.slash_command(
@@ -61,9 +68,12 @@ class Moderation(commands.Cog):
     async def _softban(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(description='Mention the server member.'),
+        member: disnake.Member = Param(
+            description='Mention the server member.'
+        ),
         reason: str = Param(
-            description='Give a reason for the softban.', default='No reason provided.'
+            description='Give a reason for the softban.',
+            default='No reason provided.',
         ),
         daycount: int = Param(
             description='The amount of days to check for deleting messages. Defaults to 7.',
@@ -84,7 +94,9 @@ class Moderation(commands.Cog):
     # softban (user)
     @commands.user_command(name='Wipe (Softban)', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _softban_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
+    async def _softban_user(
+        self, inter: disnake.CommandInter, member: disnake.Member
+    ) -> None:
         await self._softban_backend(inter, member)
 
     # kick
@@ -97,13 +109,18 @@ class Moderation(commands.Cog):
     async def _kick(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(description='Mention the server member.'),
+        member: disnake.Member = Param(
+            description='Mention the server member.'
+        ),
         reason: str = Param(
-            description='Give a reason for the kick.', default='No reason provided.'
+            description='Give a reason for the kick.',
+            default='No reason provided.',
         ),
     ) -> None:
         await inter.guild.kick(member, reason=reason)
-        await inter.send(f'Member **{member.display_name}** has been kicked! Reason: {reason}')
+        await inter.send(
+            f'Member **{member.display_name}** has been kicked! Reason: {reason}'
+        )
 
     # timeout
     @commands.slash_command(
@@ -115,18 +132,23 @@ class Moderation(commands.Cog):
     async def _timeout(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(description='Mention the server member.'),
+        member: disnake.Member = Param(
+            description='Mention the server member.'
+        ),
         duration: int = Param(
             description='Give a duration for the timeout in seconds. Defaults to 30.',
             default=30,
             min_value=1,
         ),
         reason: str = Param(
-            description='Give a reason for the timeout.', default='No reason provided.'
+            description='Give a reason for the timeout.',
+            default='No reason provided.',
         ),
     ) -> None:
         await member.timeout(duration=duration, reason=reason)
-        await inter.send(f'Member **{member.display_name}** has been timed out! Reason: {reason}')
+        await inter.send(
+            f'Member **{member.display_name}** has been timed out! Reason: {reason}'
+        )
 
     # unban
     @commands.slash_command(
@@ -138,9 +160,12 @@ class Moderation(commands.Cog):
     async def _unban(
         self,
         inter: disnake.CommandInter,
-        id: int = Param(description='The identifier of the user to unban.', large=True),
+        id: int = Param(
+            description='The identifier of the user to unban.', large=True
+        ),
         reason: str = Param(
-            description='Give a reason for the unban.', default='No reason provided.'
+            description='Give a reason for the unban.',
+            default='No reason provided.',
         ),
     ) -> None:
         user = await self.bot.getch_user(id)
@@ -158,10 +183,13 @@ class Moderation(commands.Cog):
         self,
         inter: disnake.CommandInter,
         amount: int = Param(
-            description='The amount of messages to purge. Defaults to 1.', default=1, min_value=1
+            description='The amount of messages to purge. Defaults to 1.',
+            default=1,
+            min_value=1,
         ),
         onlyme: bool = Param(
-            description='Only deletes messages sent by me. Defaults to false.', default=False
+            description='Only deletes messages sent by me. Defaults to false.',
+            default=False,
         ),
     ) -> None:
         await inter.response.defer(ephemeral=True)
@@ -209,9 +237,13 @@ class Moderation(commands.Cog):
     async def _ripplepurge(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(description='Mention the server member.'),
+        member: disnake.Member = Param(
+            description='Mention the server member.'
+        ),
         amount: int = Param(
-            description='The amount of messages to purge. Defaults to 10.', default=10, min_value=1
+            description='The amount of messages to purge. Defaults to 10.',
+            default=10,
+            min_value=1,
         ),
     ) -> None:
         await self._ripplepurge_backend(inter, member, amount)
@@ -219,7 +251,9 @@ class Moderation(commands.Cog):
     # ripplepurge (user)
     @commands.user_command(name='Ripple Purge', dm_permission=False)
     @commands.has_any_role(LockRoles.mod, LockRoles.admin)
-    async def _ripplepurge_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
+    async def _ripplepurge_user(
+        self, inter: disnake.CommandInter, member: disnake.Member
+    ) -> None:
         await self._ripplepurge_backend(inter, member)
 
     # ripplepurge (message)
@@ -252,7 +286,8 @@ class Moderation(commands.Cog):
             [
                 snipeable
                 for snipeable in keychain.snipeables
-                if (snipeable.guild == inter.guild) and (snipeable.channel == inter.channel)
+                if (snipeable.guild == inter.guild)
+                and (snipeable.channel == inter.channel)
             ],
             key=lambda x: x.created_at.timestamp(),
         )
@@ -272,7 +307,9 @@ class Moderation(commands.Cog):
                 webhook = find_hook(snipeable.author.display_name)
 
                 if not webhook:
-                    webhook = await inter.channel.create_webhook(name=snipeable.author.display_name)
+                    webhook = await inter.channel.create_webhook(
+                        name=snipeable.author.display_name
+                    )
                     webhooks.append(webhook)
 
                 await webhook.send(
@@ -306,14 +343,17 @@ class Moderation(commands.Cog):
     async def senddm(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(description='Mention the server member.'),
+        member: disnake.Member = Param(
+            description='Mention the server member.'
+        ),
         msg: str = Param(description='The message you want to send.'),
     ) -> None:
         await inter.response.defer(ephemeral=True)
 
         embed = (
             core.TypicalEmbed(
-                inter=inter, title=f'{inter.author.display_name} has sent you a message!'
+                inter=inter,
+                title=f'{inter.author.display_name} has sent you a message!',
             )
             .add_field('Message: ', msg)
             .set_thumbnail(url=inter.author.avatar.url)
@@ -333,7 +373,9 @@ class Moderation(commands.Cog):
 
         pins = await inter.channel.pins()
         if not pins:
-            await inter.send('There are no pinned messages in this channel.', ephemeral=True)
+            await inter.send(
+                'There are no pinned messages in this channel.', ephemeral=True
+            )
         else:
             embed = core.TypicalEmbed(inter=inter, title='Pinned Messages  📌')
 
@@ -376,7 +418,9 @@ class Moderation(commands.Cog):
     async def _banword(
         self,
         inter: disnake.CommandInter,
-        keywords: str = Param(description='The keywords you want to ban, separated by commas.'),
+        keywords: str = Param(
+            description='The keywords you want to ban, separated by commas.'
+        ),
     ) -> None:
         await inter.response.defer(ephemeral=True)
 
@@ -398,7 +442,9 @@ class Moderation(commands.Cog):
                 name='IgKnite Banwords',
                 event_type=disnake.AutoModEventType.message_send,
                 trigger_type=disnake.AutoModTriggerType.keyword,
-                trigger_metadata=disnake.AutoModTriggerMetadata(keyword_filter=[]),
+                trigger_metadata=disnake.AutoModTriggerMetadata(
+                    keyword_filter=[]
+                ),
                 actions=[disnake.AutoModBlockMessageAction()],
                 enabled=True,
                 reason=f'Banwords added by: {inter.author}',
@@ -412,7 +458,9 @@ class Moderation(commands.Cog):
         )
 
         embed = core.TypicalEmbed(
-            inter, title='Added these words to banned list:', description=', '.join(keywords)
+            inter,
+            title='Added these words to banned list:',
+            description=', '.join(keywords),
         )
         await inter.send(embed=embed)
 
@@ -429,7 +477,9 @@ class Moderation(commands.Cog):
         try:
             for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
-                    await rule.delete(reason=f'Banwords removed by: {inter.author}')
+                    await rule.delete(
+                        reason=f'Banwords removed by: {inter.author}'
+                    )
 
         except disnake.NotFound:
             await inter.send('No banned words were found.')
@@ -452,9 +502,14 @@ class Moderation(commands.Cog):
 
             for rule in await inter.guild.fetch_automod_rules():
                 if rule.name == 'IgKnite Banwords':
-                    words += (f'{item} \n' for item in rule.trigger_metadata.keyword_filter)
+                    words += (
+                        f'{item} \n'
+                        for item in rule.trigger_metadata.keyword_filter
+                    )
                     embed = core.TypicalEmbed(
-                        inter, title="Here's the list of banned words:", description=words
+                        inter,
+                        title="Here's the list of banned words:",
+                        description=words,
                     )
                     await inter.send(embed=embed)
 
