@@ -19,10 +19,6 @@
 [![Formatting](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
 [![Linting](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/linting.yml)
 
----
-
-### 🪄 Star the project if you like it! :D 🌟
-
 </div>
 
 ## 📌 Table of Contents
@@ -48,12 +44,18 @@ IgKnite is built on top of the [disnake](https://github.com/DisnakeDev/disnake) 
 - Fully open-sourced with love (including assets!).
 - No buzz, all buff! <br>
 
-## 🔖 Usage
+## 🚀 Usage
 
-IgKnite has its own [documentation webpage](https://igknitedev.github.io/docs) where you can learn about everything, starting from the commands to even self-hosting the bot on your local computer. <br>
+- **Invite the bot to your server:** [Click here!](https://discord.com/oauth2/authorize?client_id=1274430156928319489)
+- **Look at the documentation:** [Click here!](https://igknitedev.github.io/docs/)
+- Voila! You're all set to use the bot! <br>
 
 ## 🔨 Contributing
 
 If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./.github/CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
+
+---
+
+### 🪄 Star the project if you like it! :D 🌟
 
 ---
