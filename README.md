@@ -13,7 +13,7 @@
      <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
  </a>
 
-<br> <img src="static/banner.jpeg">
+<br> <img src="static/banner.png">
 
 [![CodeSee](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/codesee-arch-diagram.yml)
 [![Formatting](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml/badge.svg)](https://github.com/IgKniteDev/IgKnite/actions/workflows/formatting.yml)
