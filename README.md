@@ -56,6 +56,8 @@ If you'd like to add your own features to this project, consider having a look a
 
 ---
 
+<div align="center">
+
 ### 🪄 Star the project if you like it! :D 🌟
 
----
+</div>
