@@ -8,9 +8,10 @@
 
 # IgKnite
 
-<!-- a table below -->
-> 🌇 As of 24th February 2024, we have decided to **sunset IgKnite.** It might sound unexpectedly straightforward, but we've taken this decision so that we can take the experience we've gained while building this awesome project and apply it to something that'd carry on it's legacy. It has been a very nice journey, and hopefully you'll stay around for updates. Something's on the way!
-
+<img src="https://img.shields.io/github/license/IgKniteDev/IgKnite?color=black&logo=github&style=for-the-badge">
+ <a aria-label="Inject to your Discord server" href="https://discord.com/oauth2/authorize?client_id=1274430156928319489" target="_blank">
+     <img src="https://img.shields.io/badge/-Inject%20to%20Server-black?style=for-the-badge&logo=Discord">
+ </a>
 
 <br> <img src="static/banner.png">
 
@@ -20,39 +21,43 @@
 
 </div>
 
+## 📌 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#️-features)
+- [Usage](#-usage)
+- [Contributing](#-contributing)
+
 ---
 
-## Table of Contents
+## ⚡ Overview
 
-- [Mission](#⚔️-our-mission)
-- [Features](#🗡-features)
-- [Usage](#📝-usage)
-- [Contributing](#🔨-contributing)
-- [License](#🔖-license)
+Most Discord bots available to the end-users nowadays are either built to be a jack-of-all-trades or are too specific to a particular niche. IgKnite is a Discord bot that aims to be the middle ground between these two extremes. It is a bot that is designed to be a playground for creative commands, while also providing a polished experience for moderation and music commands.
 
-## ⚔️ Mission
+IgKnite is built on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper for Discord, and is easily self-hostable to the point where you can easily run it on your local computer. The bot's codebase is asynchronous and easily extendable since it's made fully open-source. <br>
 
-Most Discord bots these days are closed-source and incomplete. This is due to every developer having specific goals on what to make with Discord's API. Thus, there has recently not been a fully open-sourced approach to creating Discord bots that are both easy to access and stable at the frontend.
+## ⚔️ Features
 
-Our mission with IgKnite is to fulfill that gap. Meaning that, we're creating a Discord bot that is aimed at both the moderators of Discord servers and the casual, everyday users. We aim to make the moderation experience easier with simple yet stable, fail-safe commands while also entertaining users with music and a handful of easily accessible commands. All of this while also keeping this project **open-source and free forever!**<br>
-
-## ⚡ Features
-
-- Moderation commands, made creative and easy.
-- Low-level & polished music system (support for both YouTube & Spotify).
-- Asynchronous code on top of the [disnake](https://github.com/DisnakeDev/disnake) API wrapper.
-- A playground all by itself for creative commands.
-- Fully open-source including assets.
+- Battle-tested moderation commands for stable community moderation.
+- Low-level & polished music system (YouTube + Spotify) for everyday use.
+- Both developer and user friendly at once.
+- Fully open-sourced with love (including assets!).
 - No buzz, all buff! <br>
 
-## 📝 Usage
+## 🚀 Usage
 
-IgKnite has its own [documentation webpage](https://igknitedev.github.io/docs) where you can learn about everything, starting from the commands to even self-hosting the bot on your local computer. <br>
+- **Invite the bot to your server:** [Click here!](https://discord.com/oauth2/authorize?client_id=1274430156928319489)
+- **Look at the documentation:** [Click here!](https://igknitedev.github.io/docs/)
+- Voila! You're all set to use the bot! <br>
 
 ## 🔨 Contributing
 
 If you'd like to add your own features to this project, consider having a look at the [contribution guidelines.](./.github/CONTRIBUTING.md) It contains all the critical information for you to hack and deploy! The official documentation for IgKnite, as hyperlinked in the previous section, also has similar text (possibly more) written within to help you understand the core functionalities of the project. We're eagerly waiting for your contribution! :D <br>
 
-## 🔖 License
+---
 
-Licensed under the [MIT License](LICENSE).
+<div align="center">
+
+### 🪄 Star the project if you like it! :D 🌟
+
+</div>

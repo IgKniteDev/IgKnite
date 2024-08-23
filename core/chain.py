@@ -14,7 +14,9 @@ class KeyChain:
     def __init__(self) -> None:
         try:
             self.discord_token = config('DISCORD_TOKEN', cast=str)
-            self.spotify_client_secret = config('SPOTIFY_CLIENT_SECRET', cast=str)
+            self.spotify_client_secret = config(
+                'SPOTIFY_CLIENT_SECRET', cast=str
+            )
             self.spotify_client_id = config('SPOTIFY_CLIENT_ID', cast=str)
 
         except UndefinedValueError:

@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
 
-[tool.ruff]
-target-version = "py311"
-line-length = 100
-exclude = ["venv"]
+ [tool.ruff]
+ target-version = "py312"
+ line-length = 80
+ exclude = ["venv"]
 
 [tool.ruff.lint.per-file-ignores]
 "core/__init__.py" = ["F401", "F403"]
@@ -12,3 +12,26 @@ exclude = ["venv"]
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.poetry]
+name = "igknite"
+version = "2024.8.24"
+description = "A unified, Swiss-grade bot, designed for providing fine moderation & music on Discord"
+authors = ["HitBlast <hitblastlive@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+disnake = {extras = ["voice"], version = "^2.9.2"}
+python-decouple = "^3.8"
+spotipy = "^2.24.0"
+yt-dlp = "^2024.5.27"
+async-timeout = "^4.0.3"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

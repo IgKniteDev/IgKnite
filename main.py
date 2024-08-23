@@ -2,7 +2,7 @@
 
 
 # Imports.
-from os import system
+from time import sleep
 
 import disnake
 
@@ -25,7 +25,10 @@ bot = core.IgKnite(
 
 # Run!
 if __name__ == '__main__':
-    try:
-        bot.run(keychain.discord_token)
-    except disnake.errors.HTTPException:
-        system('python reboot.py && kill 1')
+    while (tries := 0) <= 5:
+        tries += 1
+        try:
+            bot.run(keychain.discord_token)
+        except disnake.errors.HTTPException:
+            print('Failed to connect, retrying...')
+            sleep(2)

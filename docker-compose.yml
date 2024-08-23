@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: MIT
 
-version: '3'
-
 services:
   bot:
     build:

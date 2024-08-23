@@ -23,7 +23,9 @@ async def _ping_backend(inter: disnake.CommandInter) -> core.TypicalEmbed:
 
     api_latency = round((end_time - start_time) * 1000)
 
-    uptime = round(datetime.timestamp(datetime.now())) - core.BotData.running_since
+    uptime = (
+        round(datetime.timestamp(datetime.now())) - core.BotData.running_since
+    )
     h, m, s = uptime // 3600, uptime % 3600 // 60, uptime % 3600 % 60
 
     embed = (
@@ -35,7 +37,9 @@ async def _ping_backend(inter: disnake.CommandInter) -> core.TypicalEmbed:
         )
         .add_field(name='API Latency', value=f'{api_latency}ms', inline=False)
         .add_field(name='Uptime', value=f'{h}h {m}m {s}s')
-        .add_field(name='Patch Version', value=core.BotData.version, inline=False)
+        .add_field(
+            name='Patch Version', value=core.BotData.version, inline=False
+        )
     )
 
     return embed
@@ -43,12 +47,16 @@ async def _ping_backend(inter: disnake.CommandInter) -> core.TypicalEmbed:
 
 # View for the `ping` command.
 class PingCommandView(disnake.ui.View):
-    def __init__(self, inter: disnake.CommandInter, *, timeout: float = 60) -> None:
+    def __init__(
+        self, inter: disnake.CommandInter, *, timeout: float = 60
+    ) -> None:
         super().__init__(timeout=timeout)
         self.inter = inter
 
     @disnake.ui.button(label='Refresh', style=disnake.ButtonStyle.gray)
-    async def _refresh(self, _: disnake.ui.Button, inter: disnake.Interaction) -> None:
+    async def _refresh(
+        self, _: disnake.ui.Button, inter: disnake.Interaction
+    ) -> None:
         embed = await _ping_backend(inter)
         await inter.edit_original_message(embed=embed, view=self)
 
@@ -66,17 +74,23 @@ class General(commands.Cog):
 
     # Listener for the bookmark feature.
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload: disnake.RawReactionActionEvent) -> None:
+    async def on_raw_reaction_add(
+        self, payload: disnake.RawReactionActionEvent
+    ) -> None:
         if payload.emoji.name == '🔖' and payload.event_type == 'REACTION_ADD':
             chnl = self.bot.get_channel(payload.channel_id)
-            msg = disnake.utils.get(await chnl.history(limit=5).flatten(), id=payload.message_id)
+            msg = disnake.utils.get(
+                await chnl.history(limit=5).flatten(), id=payload.message_id
+            )
             embed = core.TypicalEmbed(
                 title="You've bookmarked a message.",
                 description=msg.content
                 + f'\n\nSent by {msg.author.name} '
                 + f'on {payload.member.guild.name}',
             )
-            view = core.SmallView().add_button(label='Original Message', url=msg.jump_url)
+            view = core.SmallView().add_button(
+                label='Original Message', url=msg.jump_url
+            )
             await payload.member.send(embed=embed, view=view)
 
     # Common backend for avatar-labelled commands.
@@ -84,9 +98,9 @@ class General(commands.Cog):
     async def _avatar_backend(
         self, inter: disnake.CommandInter, member: disnake.Member = None
     ) -> None:
-        embed = core.TypicalEmbed(inter=inter, title="Here's what I found!").set_image(
-            url=member.avatar
-        )
+        embed = core.TypicalEmbed(
+            inter=inter, title="Here's what I found!"
+        ).set_image(url=member.avatar)
 
         await inter.send(embed=embed)
 
@@ -108,11 +122,15 @@ class General(commands.Cog):
 
     # avatar (user)
     @commands.user_command(name='Show Avatar', dm_permission=False)
-    async def _avatar_user(self, inter: disnake.CommandInter, member: disnake.Member) -> None:
+    async def _avatar_user(
+        self, inter: disnake.CommandInter, member: disnake.Member
+    ) -> None:
         await self._avatar_backend(inter, member)
 
     # ping
-    @commands.slash_command(name='ping', description='Shows my current response time.')
+    @commands.slash_command(
+        name='ping', description='Shows my current response time.'
+    )
     async def _ping(self, inter: disnake.CommandInter) -> None:
         embed = await _ping_backend(inter)
         await inter.send(embed=embed, view=PingCommandView(inter))

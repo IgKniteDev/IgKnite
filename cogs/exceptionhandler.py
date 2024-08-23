@@ -24,7 +24,9 @@ class ExceptionHandler(commands.Cog):
         )
         return view
 
-    async def process_error(self, inter: disnake.CommandInter, error: Any) -> None:
+    async def process_error(
+        self, inter: disnake.CommandInter, error: Any
+    ) -> None:
         """
         A method for processing the exceptions caused in interaction commands and responding
         accordingly.
@@ -53,15 +55,21 @@ class ExceptionHandler(commands.Cog):
         await inter.send(embed=embed, view=self.get_view(inter), ephemeral=True)
 
     @commands.Cog.listener()
-    async def on_slash_command_error(self, inter: disnake.CommandInter, error: Any) -> None:
+    async def on_slash_command_error(
+        self, inter: disnake.CommandInter, error: Any
+    ) -> None:
         await self.process_error(inter, error)
 
     @commands.Cog.listener()
-    async def on_user_command_error(self, inter: disnake.CommandInter, error: Any) -> None:
+    async def on_user_command_error(
+        self, inter: disnake.CommandInter, error: Any
+    ) -> None:
         await self.process_error(inter, error)
 
     @commands.Cog.listener()
-    async def on_message_command_error(self, inter: disnake.CommandInter, error: Any) -> None:
+    async def on_message_command_error(
+        self, inter: disnake.CommandInter, error: Any
+    ) -> None:
         await self.process_error(inter, error)
 
 

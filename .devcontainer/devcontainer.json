@@ -3,8 +3,8 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
 	"name": "Python 3",
-	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
-	"postCreateCommand": "sudo apt update && sudo apt install -y --no-install-recommends ffmpeg && pip install -U pip && pip install -r requirements.txt && pip install ruff",
+	"image": "mcr.microsoft.com/devcontainers/python:3.12",
+	"postCreateCommand": "sudo apt update && sudo apt install -y --no-install-recommends ffmpeg python3-poetry && python -m venv venv && . venv/bin/activate && poetry install --no-root --sync --all-extras",
 	"customizations": {
 		"vscode": {
 			"extensions": [
