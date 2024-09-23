@@ -30,7 +30,7 @@ yt-dlp = "^2024.5.27"
 async-timeout = "^4.0.3"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.6.5"
+ruff = "^0.6.7"
 
 [build-system]
 requires = ["poetry-core"]
