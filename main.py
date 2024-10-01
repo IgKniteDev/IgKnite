@@ -18,7 +18,7 @@ bot = core.IgKnite(
         'cogs.general',
         'cogs.inspection',
         'cogs.moderation',
-        'cogs.music',
+        # 'cogs.music', // load this cog if you want to use the music commands
     ],
 )
 
