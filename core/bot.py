@@ -3,11 +3,12 @@
 
 # Imports.
 import asyncio
-from typing import List
+from typing import Optional, Set
 
 import disnake
 from disnake.ext import commands
 
+from cogs import EXTENTIONS
 from core.chain import keychain
 
 
@@ -18,10 +19,19 @@ class IgKnite(commands.AutoShardedInteractionBot):
     Basically works as the core class for all-things IgKnite!
     """
 
-    def __init__(self, *args, initial_extensions: List[str], **kwargs) -> None:
+    def __init__(
+        self, *args, ignored_extensions: Optional[Set[str]] = None, **kwargs
+    ) -> None:
         super().__init__(*args, **kwargs)
 
-        for extension in initial_extensions:
+        to_load = EXTENTIONS
+        if ignored_extensions is not None:
+            # ignored_extensions need's to be a set, can add a check
+            # but not worth it since these are gonna be passed by a
+            # developer
+            to_load -= ignored_extensions
+
+        for extension in to_load:
             self.load_extension(extension)
 
     async def _update_presence(self) -> None:
