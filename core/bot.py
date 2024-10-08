@@ -13,7 +13,7 @@ from core.chain import keychain
 
 
 # Set up a custom class for core functionality.
-class IgKnite(commands.Bot):
+class IgKnite(commands.AutoShardedBot):
     """
     A subclassed version of `commands.AutoShardedBot`.\n
     Basically works as the core class for all-things IgKnite!
