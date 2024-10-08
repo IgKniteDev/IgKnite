@@ -13,16 +13,23 @@ from core.chain import keychain
 
 
 # Set up a custom class for core functionality.
-class IgKnite(commands.AutoShardedInteractionBot):
+class IgKnite(commands.Bot):
     """
-    A subclassed version of `commands.AutoShardedInteractionBot`.\n
+    A subclassed version of `commands.AutoShardedBot`.\n
     Basically works as the core class for all-things IgKnite!
     """
 
     def __init__(
         self, *args, ignored_extensions: Optional[Set[str]] = None, **kwargs
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            command_prefix=commands.when_mentioned_or('.'),
+            strip_after_prefix=True,
+            case_insensitive=True,
+            # owner_ids={}, # provide this if you dont want a api call to fetch the owner
+            *args,
+            **kwargs,
+        )
 
         to_load = EXTENTIONS
         if ignored_extensions is not None:
@@ -61,10 +68,6 @@ class IgKnite(commands.AutoShardedInteractionBot):
 
     async def on_guild_remove(self, _: disnake.Guild) -> None:
         await self._update_presence()
-
-    async def on_message(self, message: disnake.Message) -> None:
-        if message.author == self.user:
-            return
 
     async def on_message_delete(self, message: disnake.Message) -> None:
         keychain.snipeables.append(message)
