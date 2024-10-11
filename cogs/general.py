@@ -4,12 +4,16 @@
 # Imports.
 import time
 from datetime import datetime
+import logging
 
 import disnake
 from disnake.ext import commands
 from disnake.ext.commands import Param
 
 import core
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 # Common backend for ping-labelled commands.
@@ -140,7 +144,7 @@ class General(commands.Cog):
     async def help(self, inter: disnake.CommandInter):
         embed = core.TypicalEmbed(
             inter=inter,
-            title="Hey there! I'm IgKnite.",
+            title="Hey there! I'm IgKnite help.",
             description="I'm a bot with no text commands (you heard that right) "
             + "and I'm here to help you manage and moderate your Discord server alongside "
             + 'having a midnight music party with your friends in a random voice channel. '

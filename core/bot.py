@@ -8,9 +8,14 @@ from typing import Optional, Set
 import disnake
 from disnake.ext import commands
 
+import logging
+
 from cogs import EXTENTIONS
 from core.chain import keychain
 
+#setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("core")
 
 # Set up a custom class for core functionality.
 class IgKnite(commands.AutoShardedBot):
@@ -30,6 +35,7 @@ class IgKnite(commands.AutoShardedBot):
             *args,
             **kwargs,
         )
+        logger.info("[+]=======Starting IgKnite=======")
 
         to_load = EXTENTIONS
         if ignored_extensions is not None:
@@ -37,9 +43,16 @@ class IgKnite(commands.AutoShardedBot):
             # but not worth it since these are gonna be passed by a
             # developer
             to_load -= ignored_extensions
+        
+        logger.info(f"Selected cogs to load: {", ".join(to_load)}")
 
         for extension in to_load:
-            self.load_extension(extension)
+            try:
+                self.load_extension(extension)
+                logger.info(f"[+]Loaded {extension} successfully")
+            except Exception as e:
+                logger.error(f"[-]Failed to load extension {extension}")
+                logger.error(e)
 
     async def _update_presence(self) -> None:
         """
@@ -55,11 +68,11 @@ class IgKnite(commands.AutoShardedBot):
         )
 
     async def on_connect(self) -> None:
-        print(f'\nConnected to Discord as {self.user}.')
+        logger.info(f'[+]Connected to Discord as {self.user}!')
 
     async def on_ready(self) -> None:
-        print(
-            f'Inside {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.'
+        logger.info(
+            f'[+]Inside {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.'
         )
         await self._update_presence()
 
