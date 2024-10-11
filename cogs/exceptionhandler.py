@@ -3,6 +3,8 @@
 
 # Imports.
 from typing import Any
+import logging
+import traceback
 
 import disnake
 from disnake import errors
@@ -10,6 +12,8 @@ from disnake.ext import commands
 
 import core
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # The actual cog.
 class ExceptionHandler(commands.Cog):
@@ -47,6 +51,10 @@ class ExceptionHandler(commands.Cog):
         ):
             embed.title = "Oops! You're missing a role."
 
+        #cooldown
+        elif isinstance(error, commands.errors.CommandOnCooldown):
+            embed.title = "Hold your horses!"
+
         # Anything else...
         else:
             embed.title = 'Oops! An alien error occured.'
@@ -58,19 +66,35 @@ class ExceptionHandler(commands.Cog):
     async def on_slash_command_error(
         self, inter: disnake.CommandInter, error: Any
     ) -> None:
+        traceback.print_exc()
+        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: \"{inter.author}\". Guild: \"{inter.guild}\". Channel: \"{inter.channel if inter.guild else None}\". Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
+        
         await self.process_error(inter, error)
 
     @commands.Cog.listener()
     async def on_user_command_error(
         self, inter: disnake.CommandInter, error: Any
     ) -> None:
+        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: \"{inter.author}\". Guild: \"{inter.guild}\". Channel: \"{inter.channel}\". Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
+        
         await self.process_error(inter, error)
 
     @commands.Cog.listener()
     async def on_message_command_error(
         self, inter: disnake.CommandInter, error: Any
     ) -> None:
+        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: \"{inter.author}\". Guild: \"{inter.guild}\". Channel: \"{inter.channel}\". Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
         await self.process_error(inter, error)
+
+    @commands.slash_command(
+        name='logerrors',
+    )
+    @commands.is_owner()
+    async def error_group(self, inter: disnake.CommandInter) -> None:
+        """
+        A group of commands to test the error handler.
+        """
+
 
 
 # The setup() function for the cog.

@@ -117,7 +117,7 @@ class General(commands.Cog):
     async def _avatar(
         self,
         inter: disnake.CommandInter,
-        member: disnake.Member = Param(
+        ember: disnake.Member = Param(
             description='Mention the server member. Defaults to you.',
             default=lambda inter: inter.author,
         ),
