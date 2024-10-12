@@ -1,0 +1,37 @@
+[
+    {
+        "name": "moderation",
+        "description": "Moderation commands for the bot.",
+        "is_enabled": true
+    },
+    {
+        "name": "admin",
+        "description": "Cog handler commands for the bot.",
+        "is_enabled": true
+    },
+    {
+        "name": "exceptionhandler",
+        "description": "Exception handler for the bot.",
+        "is_enabled": true
+    },
+    {
+        "name": "music",
+        "description": "Music commands for the bot.",
+        "is_enabled": false
+    },
+    {
+        "name": "general",
+        "description": "General commands for the bot.",
+        "is_enabled": false
+    },
+    {
+        "name": "customization",
+        "description": "Customization commands for the bot.",
+        "is_enabled": true
+    },
+    {
+        "name": "inspection",
+        "description": "Inspection commands for the bot.",
+        "is_enabled": true
+    }
+]

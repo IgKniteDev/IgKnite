@@ -11,8 +11,7 @@ from core.chain import keychain
 
 # Set up an instance of IgKnite.
 bot = core.IgKnite(
-    intents=disnake.Intents.all(),
-    ignored_extensions={'cogs.music'},  # lets say we dont wanna load music.py
+    intents=disnake.Intents.all()
 )
 
 

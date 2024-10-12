@@ -10,7 +10,7 @@ from disnake.ext import commands
 
 import logging
 
-from cogs import EXTENTIONS
+from cogs import loaded_cogs,update_cogs
 from core.chain import keychain
 
 #setup logging
@@ -25,7 +25,7 @@ class IgKnite(commands.AutoShardedBot):
     """
 
     def __init__(
-        self, *args, ignored_extensions: Optional[Set[str]] = None, **kwargs
+        self, *args, **kwargs
     ) -> None:
         super().__init__(
             command_prefix=commands.when_mentioned_or('.'),
@@ -37,22 +37,19 @@ class IgKnite(commands.AutoShardedBot):
         )
         logger.info("[+]=======Starting IgKnite=======")
 
-        to_load = EXTENTIONS
-        if ignored_extensions is not None:
-            # ignored_extensions need's to be a set, can add a check
-            # but not worth it since these are gonna be passed by a
-            # developer
-            to_load -= ignored_extensions
-        
-        logger.info(f"Selected cogs to load: {", ".join(to_load)}")
+        logger.info(f"Selected cogs to load: {", ".join(loaded_cogs)}")
 
-        for extension in to_load:
+        for extension in loaded_cogs:
             try:
-                self.load_extension(extension)
+                self.load_extension(f"cogs.{extension}")
                 logger.info(f"[+]Loaded {extension} successfully")
             except Exception as e:
+                #removing the failed cog from the loaded cogs list
+                loaded_cogs.remove(extension)
                 logger.error(f"[-]Failed to load extension {extension}")
                 logger.error(e)
+        #update the failed cogs in the cogs.json file
+        update_cogs(loaded_cogs)
 
     async def _update_presence(self) -> None:
         """
