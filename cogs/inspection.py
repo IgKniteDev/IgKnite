@@ -101,7 +101,7 @@ class Inspection(commands.Cog):
                 name='Birth',
                 value=datetime.strptime(
                     str(inter.guild.created_at), '%Y-%m-%d %H:%M:%S.%f%z'
-                ).strftime('%b %d, %fY'),
+                ).strftime('%b %d, %Y'),
             )
             .add_field(name='Owner', value=inter.guild.owner.mention)
             .add_field(name='Members', value=inter.guild.member_count)

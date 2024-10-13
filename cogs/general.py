@@ -144,7 +144,7 @@ class General(commands.Cog):
     async def help(self, inter: disnake.CommandInter):
         embed = core.TypicalEmbed(
             inter=inter,
-            title="Hey there! I'm IgKnite help.",
+            title="Hey there! I'm IgKnite.",
             description="I'm a bot with no text commands (you heard that right) "
             + "and I'm here to help you manage and moderate your Discord server alongside "
             + 'having a midnight music party with your friends in a random voice channel. '

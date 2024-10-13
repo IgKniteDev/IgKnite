@@ -3,19 +3,18 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-cogs=[]
+cogs = []
 loaded_cogs = []
-all_cogs=[]
+all_cogs = []
 def load_cogs():
+    """load the cogs from the cogs.json file"""
     global cogs, loaded_cogs, all_cogs
     try:
         cogs = json.load(open("./cogs/cogs.json"))
     except FileNotFoundError:
         logger.error("cogs.json not found... please see if the file exists in the cogs directory.")
-        cogs = []
     except json.JSONDecodeError:
         logger.error("cogs.json is not a valid json file...")
-        cogs = []
 
     for cog in cogs:
         if cog['is_enabled']:
@@ -23,6 +22,7 @@ def load_cogs():
         all_cogs.append(cog['name'])
 load_cogs()
 def update_cogs(loaded):
+    """update the cogs.json file with the loaded cogs"""
     global cogs
     for cog in cogs:
         if cog['name'] in loaded:

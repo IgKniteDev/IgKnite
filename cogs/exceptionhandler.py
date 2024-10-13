@@ -87,12 +87,12 @@ class ExceptionHandler(commands.Cog):
             
 
     def get_view(self, inter: disnake.CommandInter) -> core.SmallView:
-        view = core.SmallView(inter).add_button(
+        return core.SmallView(inter).add_button(
             label="Think it's a bug?",
             url=core.BotData.repo + '/issues/new?template=bug.yml',
             style=disnake.ButtonStyle.red,
         )
-        return view
+        
 
     async def process_error(
         self, inter: disnake.CommandInter, error: Any
@@ -101,6 +101,13 @@ class ExceptionHandler(commands.Cog):
         A method for processing the exceptions caused in interaction commands and responding
         accordingly.
         """
+
+        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: `{inter.author}`. Guild: `{inter.guild}`. Channel: `{inter.channel if inter.guild else None}`. Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
+        if self.config:
+            try:
+                await self.bot.get_channel(self.config['channel_id']).send(f"[!]Error in command \"{inter.application_command.qualified_name}\". \nError: \"{error}\". \nUser: `{inter.author}`. Guild: `{inter.guild}`. Channel: `{inter.channel if inter.guild else None}`. Cog: \"{inter.application_command.cog_name}\"")
+            except Exception as e:
+                logger.error(f"Failed to log error in the specified channel. Error: {e}")
 
         error = getattr(error, 'original', error)
         embed = core.TypicalEmbed(inter=inter, is_error=True)
@@ -132,28 +139,18 @@ class ExceptionHandler(commands.Cog):
     async def on_slash_command_error(
         self, inter: disnake.CommandInter, error: Any
     ) -> None:
-        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: `{inter.author}`. Guild: `{inter.guild}`. Channel: `{inter.channel if inter.guild else None}`. Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
-        if self.config:
-            await self.bot.get_channel(self.config['channel_id']).send(f"[!]Error in command \"{inter.application_command.qualified_name}\". \nError: \"{error}\". \nUser: `{inter.author}`. Guild: `{inter.guild}`. Channel: `{inter.channel if inter.guild else None}`. Cog: \"{inter.application_command.cog_name}\"")
-        
         await self.process_error(inter, error)
 
     @commands.Cog.listener()
     async def on_user_command_error(
         self, inter: disnake.CommandInter, error: Any
     ) -> None:
-        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: \"{inter.author}\". Guild: \"{inter.guild}\". Channel: \"{inter.channel}\". Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
-        if self.config:
-            await self.bot.get_channel(self.config['channel_id']).send(f"[!]Error in command \"{inter.application_command.qualified_name}\". \nError: \"{error}\". \nUser: `{inter.author}`. Guild: `{inter.guild}`. Channel: `{inter.channel}`. Cog: \"{inter.application_command.cog_name}\"")
         await self.process_error(inter, error)
 
     @commands.Cog.listener()
     async def on_message_command_error(
         self, inter: disnake.CommandInter, error: Any
     ) -> None:
-        logger.error(f"[!]Error in command \"{inter.application_command.qualified_name}\". Error: \"{error}\". User: \"{inter.author}\". Guild: \"{inter.guild}\". Channel: \"{inter.channel}\". Cog: \"{inter.application_command.cog_name}\"",exc_info=True)
-        if self.config:
-            await self.bot.get_channel(self.config['channel_id']).send(f"[!]Error in command \"{inter.application_command.qualified_name}\". \nError: \"{error}\". \nUser: `{inter.author}`. Guild: `{inter.guild}`. Channel: `{inter.channel}`. Cog: \"{inter.application_command.cog_name}\"")
         await self.process_error(inter, error)
 
     @commands.slash_command(
@@ -168,7 +165,7 @@ class ExceptionHandler(commands.Cog):
         msg=""
         if self.config:
             msg=f"Error logging is already enabled in the channel `{self.config.get('channel_name')}` in the guild `{self.config.get('guild_name')}`."
-        msg+="Are you sure you want to enable error logging in this channel?"
+        msg+=" Are you sure you want to enable error logging in this channel?"
         embed = core.TypicalEmbed(inter=inter, title="Log errors here?", description=msg,disabled_footer=True)
 
         await inter.send(embed=embed, view=LogerrorsCommandView(inter,timeout=15))

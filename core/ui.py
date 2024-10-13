@@ -83,22 +83,6 @@ class SmallView(disnake.ui.View):
         )
         return self
     
-    # async def disable_button(self,inter: disnake.CommandInter) -> None:
-    #     """disables the button in the view
-    #     """
-        
-    #     #check if interacted user is the author of the message
-    #     logger.info(f"Interacted user: {inter.author}")
-
-    #     if self.inter.author == inter.author:
-    #         for child in self.children:
-    #             if child.style != disnake.ButtonStyle.link:
-    #                 child.disabled = True
-
-    #         await inter.edit_original_message(view=self)
-    #         logger.info("Button disabled")
-        
-
 
     async def on_timeout(self) -> None:
         if self.inter:
@@ -109,9 +93,5 @@ class SmallView(disnake.ui.View):
             await self.inter.edit_original_message(view=self)
 
 
-    # async def on_error(self, error: Exception, item: Item, interaction: disnake.MessageInteraction) -> None:
-    #     logger.error(f"Error in button click: {error}")
-    #     return await super().on_error(error, item, interaction)
-        
 
 

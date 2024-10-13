@@ -319,7 +319,7 @@ class Customization(commands.Cog):
             max_value=21600,
             choices=__slowmode_choices__,
         ),
-    ):
+    ) -> None:
         stage = await inter.guild.create_stage_channel(
             name=name, category=category, slowmode_delay=slowmode
         )

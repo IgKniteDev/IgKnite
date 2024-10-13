@@ -9,6 +9,7 @@ from disnake.ext.commands import errors
 import logging
 import time
 import json
+import os
 
 import core
 
@@ -79,7 +80,7 @@ class Admin(commands.Cog):
 
         self.loaded_cogs=[] #cogs which are loaded
         self.all_cogs=[] #cogs which are present in the cogs.json file
-        self.cog_object=None #cogs.json object
+        self.cog_object=[] #cogs.json object
 
         #read cog configuration from file
         
@@ -91,10 +92,9 @@ class Admin(commands.Cog):
             self.cog_object=json.load(open(Cog_config_path))
         except FileNotFoundError:
             logger.error("cogs.json not found... please see if the file exists in the cogs directory.")
-            self.cog_object=[]
+            
         except json.JSONDecodeError:
             logger.error("cogs.json is not a valid json file...")
-            self.cog_object=[]
         for cog in self.cog_object:
             if cog['is_enabled']:
                 self.loaded_cogs.append(cog['name'])
@@ -179,14 +179,14 @@ class Admin(commands.Cog):
                 msg = f'Something went wrong while loading `{name}` extension.'
 
             logger.error(f"Loading extension failed. Reason: {msg}")
-
-            embed = core.TypicalEmbed(description=msg, is_error=True)
-            await inter.send(embed=embed)
+            is_error=True
         else:
-            embed = core.TypicalEmbed(
-                description=f'Successfully reloaded `{name}` extension.'
-            )
-            await inter.send(embed=embed)
+            msg = f'Successfully reloaded `{name}` extension.'
+            is_error=False
+        embed = core.TypicalEmbed(
+            description=f'Successfully reloaded `{name}` extension.',is_error=is_error
+        )
+        await inter.send(embed=embed)
 
     
     @_cog.sub_command(name='unload', description='Unload an cog extension.')
@@ -219,13 +219,14 @@ class Admin(commands.Cog):
 
             logger.error(f"Unloading extension failed. Reason: {msg}")
 
-            embed = core.TypicalEmbed(description=msg, is_error=True)
-            await inter.send(embed=embed)
+            is_error=True
         else:
-            embed = core.TypicalEmbed(
-                description=f'Successfully unloaded `{name}` extension.'
-            )
-            await inter.send(embed=embed)
+            msg = f'Successfully unloaded `{name}` extension.'
+            is_error=False
+        embed = core.TypicalEmbed(
+            description=f'Successfully unloaded `{name}` extension.',is_error=is_error
+        )
+        await inter.send(embed=embed)
     
     @_cog.sub_command(
             name='load',
@@ -259,13 +260,15 @@ class Admin(commands.Cog):
 
             logger.error(f"Loading extension failed. Reason: {msg} Error: {e}")
 
-            embed = core.TypicalEmbed(description=msg, is_error=True)
-            await inter.send(embed=embed)
+            is_error=True
+            
         else:
-            embed = core.TypicalEmbed(
-                description=f'Successfully loaded `{name}` extension.'
-            )
-            await inter.send(embed=embed)
+            msg = f'Successfully loaded `{name}` extension.'
+            is_error=False
+        embed = core.TypicalEmbed(
+            description=f'Successfully loaded `{name}` extension.',is_error=is_error
+        )
+        await inter.send(embed=embed)
 
     @_cog.sub_command(
         name='register',
@@ -283,24 +286,22 @@ class Admin(commands.Cog):
                 description=f'`{name}` extension is already registered.',
                 is_error=True
             )
-            return await inter.send(embed=embed)
+            
         #check if cog file is present
-        try:
-            open(f"./cogs/{name}.py")
-        except FileNotFoundError:
+        elif not os.path.exists(f"./cogs/{name}.py"):
             embed = core.TypicalEmbed(
                 description=f'`{name}` extension file is not found. Make sure it is present in the cogs directory.',
                 is_error=True
             )
-            return await inter.send(embed=embed)
-
-        self.cog_object.append({'name':name, 'description':description,'is_enabled':False})
-        self.all_cogs.append(name)
-        with open(Cog_config_path, 'w') as f:
-            json.dump(self.cog_object,f,indent=4)
-        embed = core.TypicalEmbed(
-            description=f'Successfully registered `{name}` extension.'
-        )
+            
+        else:
+            self.cog_object.append({'name':name, 'description':description,'is_enabled':False})
+            self.all_cogs.append(name)
+            with open(Cog_config_path, 'w') as f:
+                json.dump(self.cog_object,f,indent=4)
+            embed = core.TypicalEmbed(
+                description=f'Successfully registered `{name}` extension.'
+            )
         await inter.send(embed=embed)
 
     @_cog.sub_command(
@@ -319,20 +320,21 @@ class Admin(commands.Cog):
                 description=f'`{name}` extension is not registered.',
                 is_error=True
             )
-            return await inter.send(embed=embed)
+            
         elif name in self.loaded_cogs:
             embed = core.TypicalEmbed(
                 description=f'`{name}` extension is loaded. Unload it first.',
                 is_error=True
             )
-            return await inter.send(embed=embed)
-        self.cog_object=[cog for cog in self.cog_object if cog['name']!=name]
-        self.all_cogs.remove(name)
-        with open(Cog_config_path, 'w') as f:
-            json.dump(self.cog_object,f,indent=4)
-        embed = core.TypicalEmbed(
-            description=f'Successfully unregistered `{name}` extension.'
-        )
+            
+        else:
+            self.cog_object=[cog for cog in self.cog_object if cog['name']!=name]
+            self.all_cogs.remove(name)
+            with open(Cog_config_path, 'w') as f:
+                json.dump(self.cog_object,f,indent=4)
+            embed = core.TypicalEmbed(
+                description=f'Successfully unregistered `{name}` extension.'
+            )
         await inter.send(embed=embed)
 
     @commands.slash_command(

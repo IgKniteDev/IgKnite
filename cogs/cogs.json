@@ -22,7 +22,7 @@
     {
         "name": "general",
         "description": "General commands for the bot.",
-        "is_enabled": false
+        "is_enabled": true
     },
     {
         "name": "customization",
