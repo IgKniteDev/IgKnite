@@ -27,7 +27,7 @@ disnake = {extras = ["voice"], version = "^2.9.2"}
 python-decouple = "^3.8"
 spotipy = "^2.24.0"
 yt-dlp = "^2024.10.22"
-async-timeout = "^4.0.3"
+async-timeout = "^5.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.7.1"
