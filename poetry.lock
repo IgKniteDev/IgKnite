@@ -727,13 +727,13 @@ files = [
 
 [[package]]
 name = "spotipy"
-version = "2.24.0"
+version = "2.25.0"
 description = "A light weight Python library for the Spotify Web API"
 optional = false
 python-versions = ">3.8"
 files = [
-    {file = "spotipy-2.24.0-py3-none-any.whl", hash = "sha256:c5aa7338c624a05a8a80dcf9c6761ded3d6bc2bc5df5f22d9398a895b11bd2ae"},
-    {file = "spotipy-2.24.0.tar.gz", hash = "sha256:396af81e642086551af157270cdfe742c1739405871ba9dac1fa651b8649ef0d"},
+    {file = "spotipy-2.25.0-py3-none-any.whl", hash = "sha256:92ef16577adab22aeac7d699b9aa6abb8e38d3023d865c0a233cdcfa0dca9583"},
+    {file = "spotipy-2.25.0.tar.gz", hash = "sha256:c72720ef85355aff959f7fe8d89ded48504d8c33b92583db90ec16daac0da54f"},
 ]
 
 [package.dependencies]
@@ -743,7 +743,6 @@ urllib3 = ">=1.26.0"
 
 [package.extras]
 memcache = ["pymemcache (>=3.5.2)"]
-test = ["mock (==2.0.0)"]
 
 [[package]]
 name = "urllib3"
@@ -889,4 +888,4 @@ test = ["pytest (>=8.1,<9.0)", "pytest-rerunfailures (>=14.0,<15.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "fce31b5a26117d274357c88be11012ea29b7542d7b2de20a22ea298e26479f61"
+content-hash = "0076a02ea0e6af9fe074ee9fc892cf63ea97dd32567ec7b0effb26a3e17450e4"

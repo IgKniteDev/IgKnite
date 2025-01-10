@@ -25,7 +25,7 @@ readme = "README.md"
 python = "^3.12"
 disnake = {extras = ["voice"], version = "^2.10.1"}
 python-decouple = "^3.8"
-spotipy = "^2.24.0"
+spotipy = "^2.25.0"
 yt-dlp = "^2024.12.23"
 async-timeout = "^5.0.1"
 
