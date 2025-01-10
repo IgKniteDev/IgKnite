@@ -421,7 +421,7 @@ class NowCommandView(disnake.ui.View):
         super().__init__(timeout=timeout)
 
         self.add_item(disnake.ui.Button(label='Redirect', url=url))
-        self.add_item(disnake.ui.Button(label=f'Volume: {int(volume*100)}'))
+        self.add_item(disnake.ui.Button(label=f'Volume: {int(volume * 100)}'))
 
 
 # View for the `queue` command.
@@ -758,7 +758,7 @@ class Music(commands.Cog):
             inter.author if not inter.voice_state.locked else None
         )
         await inter.send(
-            f"{'Unlocked' if not inter.voice_state.locked else 'Locked'} the current voice state."
+            f'{"Unlocked" if not inter.voice_state.locked else "Locked"} the current voice state.'
         )
 
     # now
@@ -970,7 +970,7 @@ class Music(commands.Cog):
 
         inter.voice_state.loop = not inter.voice_state.loop
         await inter.send(
-            f"Loop has been {'enabled' if inter.voice_state.loop else 'disabled'}!"
+            f'Loop has been {"enabled" if inter.voice_state.loop else "disabled"}!'
         )
 
     # Common backend for play-labelled commands.
