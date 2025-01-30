@@ -2,6 +2,6 @@
 
 .env
 .github
+.venv
 .vscode
 static
-venv
