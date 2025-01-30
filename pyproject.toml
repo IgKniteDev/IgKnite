@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 [project]
 name = "igknite"
 version = "2025.1.31"
