@@ -26,6 +26,7 @@ class IgKnite(commands.AutoShardedBot):
             command_prefix=commands.when_mentioned_or('.'),
             strip_after_prefix=True,
             case_insensitive=True,
+            # TODO: attach this with keychain
             # owner_ids={}, # provide this if you dont want a api call to fetch the owner
             *args,
             **kwargs,
@@ -33,9 +34,6 @@ class IgKnite(commands.AutoShardedBot):
 
         to_load = EXTENTIONS
         if ignored_extensions is not None:
-            # ignored_extensions need's to be a set, can add a check
-            # but not worth it since these are gonna be passed by a
-            # developer
             to_load -= ignored_extensions
 
         for extension in to_load:
@@ -55,11 +53,11 @@ class IgKnite(commands.AutoShardedBot):
         )
 
     async def on_connect(self) -> None:
-        print(f'\nConnected to Discord as {self.user}.')
+        print(f'\nConnected to Discord as: {self.user}')
 
     async def on_ready(self) -> None:
         print(
-            f'Inside {len(self.guilds)} server(s) with {self.shard_count} shard(s) active.'
+                f'Server count: {len(self.guilds)} [{self.shard_count} shard(s) active]'
         )
         await self._update_presence()
 
